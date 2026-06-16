@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gsm-repair-erp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gsm_user
+      POSTGRES_PASSWORD: gsm_password
+      POSTGRES_DB: gsm_repair_erp
+    ports:
+      - "5544:5432"
+    volumes:
+      - gsm_repair_erp_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  gsm_repair_erp_postgres_data:

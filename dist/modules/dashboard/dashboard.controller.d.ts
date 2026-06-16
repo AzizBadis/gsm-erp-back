@@ -1,0 +1,35 @@
+import { AuthUser } from '../../common/decorators/current-user.decorator';
+import { DashboardService } from './dashboard.service';
+export declare class DashboardController {
+    private readonly dashboard;
+    constructor(dashboard: DashboardService);
+    admin(): Promise<{
+        users: number;
+        contacts: number;
+        repairs: number;
+        openRepairs: number;
+        unpaidInvoices: number;
+        lowStockProducts: number;
+    }>;
+    repairsByStatus(): Promise<{
+        status: import(".prisma/client").$Enums.RepairStatus;
+        count: number;
+    }[]>;
+    repairsByTechnician(): Promise<{
+        technicianId: string | null;
+        technician: string | undefined;
+        count: number;
+    }[]>;
+    cashierPartRequests(): import(".prisma/client").Prisma.GetPartRequestGroupByPayload<{
+        by: "status"[];
+        _count: {
+            status: true;
+        };
+    }>;
+    myStats(user: AuthUser): Promise<{
+        assigned: number;
+        finished: number;
+        waitingParts: number;
+        totalDurationSec: number;
+    }>;
+}

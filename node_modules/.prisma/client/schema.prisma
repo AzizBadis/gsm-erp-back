@@ -1,0 +1,242 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  TECHNICIAN
+  CASHIER
+}
+
+enum RepairStatus {
+  RECEIVED
+  ASSIGNED
+  IN_PROGRESS
+  PAUSED
+  WAITING_PARTS
+  PARTS_READY
+  FINISHED
+  DELIVERED
+  CANCELLED
+}
+
+enum PartRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DELIVERED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIAL
+  PAID
+}
+
+enum StockMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  fullName     String
+  role         UserRole
+  isActive     Boolean     @default(true)
+  technician   Technician?
+  payments     Payment[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Contact {
+  id        String    @id @default(cuid())
+  fullName  String
+  phone     String
+  email     String?
+  address   String?
+  repairs   Repair[]
+  invoices  Invoice[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Technician {
+  id           String        @id @default(cuid())
+  userId       String        @unique
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialty    String?
+  repairs      Repair[]
+  partRequests PartRequest[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Brand {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  devices   DeviceModel[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Device {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  models    DeviceModel[]
+  repairs   Repair[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model DeviceModel {
+  id        String   @id @default(cuid())
+  name      String
+  brandId   String
+  deviceId  String
+  brand     Brand    @relation(fields: [brandId], references: [id])
+  device    Device   @relation(fields: [deviceId], references: [id])
+  repairs   Repair[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([brandId, deviceId, name])
+}
+
+model Product {
+  id           String            @id @default(cuid())
+  name         String
+  sku          String            @unique
+  description  String?
+  unitPrice    Decimal           @db.Decimal(12, 2)
+  stockQty     Int               @default(0)
+  minStockQty  Int               @default(0)
+  movements    StockMovement[]
+  requestItems PartRequestItem[]
+  invoiceItems InvoiceItem[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model StockMovement {
+  id        String            @id @default(cuid())
+  productId String
+  product   Product           @relation(fields: [productId], references: [id])
+  type      StockMovementType
+  quantity  Int
+  reason    String?
+  repairId  String?
+  repair    Repair?           @relation(fields: [repairId], references: [id])
+  createdAt DateTime          @default(now())
+}
+
+model Repair {
+  id             String           @id @default(cuid())
+  reference      String           @unique
+  contactId      String
+  contact        Contact          @relation(fields: [contactId], references: [id])
+  deviceId       String
+  device         Device           @relation(fields: [deviceId], references: [id])
+  deviceModelId  String?
+  deviceModel    DeviceModel?     @relation(fields: [deviceModelId], references: [id])
+  technicianId   String?
+  technician     Technician?      @relation(fields: [technicianId], references: [id])
+  status         RepairStatus     @default(RECEIVED)
+  imei           String?
+  problem        String
+  diagnosis      String?
+  notes          String?
+  photos         String[]         @default([])
+  estimatedCost  Decimal?         @db.Decimal(12, 2)
+  timerLogs      RepairTimerLog[]
+  partRequests   PartRequest[]
+  invoices       Invoice[]
+  stockMovements StockMovement[]
+  receivedAt     DateTime         @default(now())
+  deliveredAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model RepairTimerLog {
+  id          String    @id @default(cuid())
+  repairId    String
+  repair      Repair    @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  startedAt   DateTime
+  endedAt     DateTime?
+  durationSec Int?
+  createdAt   DateTime  @default(now())
+}
+
+model PartRequest {
+  id              String            @id @default(cuid())
+  repairId        String
+  repair          Repair            @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  technicianId    String
+  technician      Technician        @relation(fields: [technicianId], references: [id])
+  status          PartRequestStatus @default(PENDING)
+  reason          String?
+  rejectionReason String?
+  items           PartRequestItem[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model PartRequestItem {
+  id            String      @id @default(cuid())
+  partRequestId String
+  partRequest   PartRequest @relation(fields: [partRequestId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product     @relation(fields: [productId], references: [id])
+  quantity      Int
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  number        String        @unique
+  repairId      String?
+  repair        Repair?       @relation(fields: [repairId], references: [id])
+  contactId     String
+  contact       Contact       @relation(fields: [contactId], references: [id])
+  paymentStatus PaymentStatus @default(UNPAID)
+  subtotal      Decimal       @db.Decimal(12, 2)
+  tax           Decimal       @default(0) @db.Decimal(12, 2)
+  total         Decimal       @db.Decimal(12, 2)
+  paidAmount    Decimal       @default(0) @db.Decimal(12, 2)
+  items         InvoiceItem[]
+  payments      Payment[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id])
+  description String
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(12, 2)
+  total       Decimal  @db.Decimal(12, 2)
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  invoiceId String
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  cashierId String
+  cashier   User     @relation(fields: [cashierId], references: [id])
+  amount    Decimal  @db.Decimal(12, 2)
+  method    String
+  reference String?
+  createdAt DateTime @default(now())
+}

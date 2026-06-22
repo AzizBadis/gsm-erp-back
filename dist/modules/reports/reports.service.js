@@ -1,0 +1,94 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReportsService = void 0;
+const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../../prisma/prisma.service");
+let ReportsService = class ReportsService {
+    constructor(p) {
+        this.p = p;
+    }
+    async get(type) {
+        const money = (n) => `${n.toFixed(2)} DT`;
+        const invoices = await this.p.invoice.findMany({ include: { contact: true, items: { include: { product: true } }, payments: true } });
+        const purchases = await this.p.purchase.findMany({ include: { items: { include: { product: true } } } });
+        const expenses = await this.p.expense.findMany({ include: { category: true } });
+        const products = await this.p.product.findMany();
+        const sales = invoices.filter(i => i.documentType === 'SALE').reduce((s, i) => s + Number(i.total), 0), purchaseTotal = purchases.filter(x => x.kind === 'PURCHASE').reduce((s, x) => s + Number(x.total), 0), expenseTotal = expenses.reduce((s, x) => s + Number(x.total), 0), profit = sales - purchaseTotal - expenseTotal;
+        if (type === 'profit-loss')
+            return { title: 'Rapport Profit / Perte', summary: [{ label: 'Total des ventes', value: money(sales) }, { label: 'Total des achats', value: money(purchaseTotal) }, { label: 'Total des dépenses', value: money(expenseTotal) }, { label: 'Bénéfice net', value: money(profit) }], columns: [{ key: 'element', label: 'Élément' }, { key: 'amount', label: 'Montant' }], rows: [{ element: 'Chiffre d’affaires', amount: money(sales) }, { element: 'Coût des marchandises vendues', amount: money(purchaseTotal) }, { element: 'Dépenses', amount: money(expenseTotal) }, { element: 'Bénéfice net', amount: money(profit) }] };
+        if (type === 'purchase-sale')
+            return { title: "Rapport d'achat et de vente", summary: [{ label: 'Total achats', value: money(purchaseTotal) }, { label: 'Total ventes', value: money(sales) }, { label: 'Vente - Achat', value: money(sales - purchaseTotal) }], columns: [{ key: 'section', label: 'Section' }, { key: 'ht', label: 'Hors taxe' }, { key: 'ttc', label: 'TTC' }, { key: 'due', label: 'Montant dû' }], rows: [{ section: 'Achats', ht: money(purchaseTotal), ttc: money(purchaseTotal), due: money(purchases.reduce((s, x) => s + Math.max(0, Number(x.total) - Number(x.paidAmount)), 0)) }, { section: 'Ventes', ht: money(sales), ttc: money(sales), due: money(invoices.reduce((s, x) => s + Math.max(0, Number(x.total) - Number(x.paidAmount)), 0)) }] };
+        if (type === 'tax') {
+            const collected = invoices.reduce((s, i) => s + Number(i.tax), 0);
+            const taxableExpenses = expenses.filter(e => e.applicableTax && e.applicableTax !== 'Aucun').reduce((s, e) => s + Number(e.total), 0);
+            return { title: "Rapport d'impôt", summary: [{ label: 'Taxe collectée', value: money(collected) }, { label: 'Dépenses taxables', value: money(taxableExpenses) }, { label: 'Taxe nette', value: money(collected) }], columns: [{ key: 'source', label: 'Source' }, { key: 'base', label: 'Base imposable' }, { key: 'tax', label: 'Taxe' }], rows: [{ source: 'Ventes', base: money(sales), tax: money(collected) }, { source: 'Dépenses', base: money(taxableExpenses), tax: 'Selon taxe applicable' }] };
+        }
+        if (type === 'customers-suppliers') {
+            const customers = await this.p.contact.findMany({ include: { invoices: true } });
+            const customerRows = customers.map(c => ({ contact: c.fullName, totalPurchase: money(0), purchaseReturn: money(0), totalSale: money(c.invoices.reduce((s, i) => s + Number(i.total), 0)), saleReturn: money(c.invoices.filter(i => i.documentType === 'RETURN').reduce((s, i) => s + Number(i.total), 0)), balance: money(c.invoices.reduce((s, i) => s + Number(i.total) - Number(i.paidAmount), 0)) }));
+            const suppliers = [...new Set(purchases.map(x => x.supplierName))].map(name => ({ contact: name, totalPurchase: money(purchases.filter(x => x.supplierName === name).reduce((s, x) => s + Number(x.total), 0)), purchaseReturn: money(0), totalSale: money(0), saleReturn: money(0), balance: money(purchases.filter(x => x.supplierName === name).reduce((s, x) => s + Number(x.total) - Number(x.paidAmount), 0)) }));
+            return { title: 'Rapport clients & fournisseurs', columns: [{ key: 'contact', label: 'Contact' }, { key: 'totalPurchase', label: 'Total achat' }, { key: 'purchaseReturn', label: "Retour total d'achat" }, { key: 'totalSale', label: 'Total des ventes' }, { key: 'saleReturn', label: 'Retour total de vente' }, { key: 'balance', label: 'Solde de fermeture' }], rows: [...customerRows, ...suppliers] };
+        }
+        if (type === 'customer-groups')
+            return { title: 'Rapport des groupes de clients', columns: [{ key: 'group', label: 'Groupe de clients' }, { key: 'sales', label: 'Total des ventes' }], rows: [{ group: 'Tous les clients', sales: money(sales) }] };
+        if (type === 'stock')
+            return { title: 'Rapport de stock', summary: [{ label: "Valeur du stock (prix d'achat)", value: money(products.reduce((s, x) => s + x.stockQty * Number(x.unitPrice), 0)) }, { label: 'Stock potentiel', value: money(products.reduce((s, x) => s + x.stockQty * Number(x.unitPrice), 0)) }, { label: 'Marge bénéficiaire (%)', value: 0 }], columns: [{ key: 'sku', label: 'SKU' }, { key: 'product', label: 'Produit' }, { key: 'location', label: 'Emplacement' }, { key: 'price', label: 'Prix de vente' }, { key: 'stock', label: 'Stock actuel' }, { key: 'value', label: 'Valeur actuelle du stock' }], rows: products.map(x => ({ sku: x.sku, product: x.name, location: 'GSM Guide', price: money(Number(x.unitPrice)), stock: x.stockQty, value: money(x.stockQty * Number(x.unitPrice)) })) };
+        if (type === 'lots')
+            return { title: 'Rapport de lot', columns: [{ key: 'sku', label: 'SKU' }, { key: 'product', label: 'Produit' }, { key: 'lot', label: 'Numéro de lot' }, { key: 'stock', label: 'Stock actuel' }, { key: 'sold', label: 'Unité totale vendue' }], rows: products.map(x => ({ sku: x.sku, product: x.name, lot: '—', stock: x.stockQty, sold: invoices.flatMap(i => i.items).filter(i => i.productId === x.id).reduce((s, i) => s + i.quantity, 0) })) };
+        if (type === 'adjustments') {
+            const rows = await this.p.stockAdjustment.findMany();
+            return { title: "Rapport d'ajustement", summary: [{ label: 'Total montant', value: money(rows.reduce((s, x) => s + Number(x.total), 0)) }, { label: 'Montant total récupéré', value: money(rows.reduce((s, x) => s + Number(x.recoveredAmount), 0)) }], columns: [{ key: 'date', label: 'Date' }, { key: 'reference', label: 'Numéro de référence' }, { key: 'location', label: 'Emplacement' }, { key: 'type', label: "Type d'ajustement" }, { key: 'total', label: 'Montant total' }, { key: 'recovered', label: 'Montant récupéré' }], rows: rows.map(x => ({ date: x.adjustmentDate.toISOString(), reference: x.reference, location: x.location, type: x.type, total: money(Number(x.total)), recovered: money(Number(x.recoveredAmount)) })) };
+        }
+        const sold = new Map();
+        for (const item of invoices.flatMap(i => i.items)) {
+            const k = item.productId ?? item.description;
+            const v = sold.get(k) ?? { name: item.description, sku: item.product?.sku ?? '—', qty: 0, total: 0 };
+            v.qty += item.quantity;
+            v.total += Number(item.total);
+            sold.set(k, v);
+        }
+        const soldRows = [...sold.values()].sort((a, b) => b.qty - a.qty);
+        if (type === 'trending')
+            return { title: 'Tendance des produits', chart: soldRows.slice(0, 10).map(x => ({ name: x.name, value: x.qty })), columns: [{ key: 'name', label: 'Produit' }, { key: 'qty', label: 'Unités vendues' }], rows: soldRows };
+        if (type === 'items' || type === 'product-sales')
+            return { title: type === 'items' ? 'Rapport des articles' : 'Rapport des ventes de produits', columns: [{ key: 'product', label: 'Produit' }, { key: 'sku', label: 'SKU' }, { key: 'client', label: 'Client' }, { key: 'invoice', label: 'Facture N°' }, { key: 'date', label: 'Date' }, { key: 'qty', label: 'Quantité' }, { key: 'price', label: 'Prix unitaire' }, { key: 'total', label: 'Total' }], rows: invoices.flatMap(i => i.items.map(x => ({ product: x.description, sku: x.product?.sku ?? '—', client: i.contact.fullName, invoice: i.number, date: i.createdAt.toISOString(), qty: x.quantity, price: money(Number(x.unitPrice)), total: money(Number(x.total)) }))) };
+        if (type === 'product-purchases')
+            return { title: 'Rapport des achats de produits', columns: [{ key: 'product', label: 'Produit' }, { key: 'sku', label: 'SKU' }, { key: 'supplier', label: 'Fournisseur' }, { key: 'reference', label: 'Numéro de référence' }, { key: 'date', label: 'Date' }, { key: 'qty', label: 'Quantité' }, { key: 'price', label: "Prix d'achat unitaire" }, { key: 'total', label: 'Total' }], rows: purchases.flatMap(p => p.items.map(x => ({ product: x.productName, sku: x.product?.sku ?? '—', supplier: p.supplierName, reference: p.reference, date: p.purchaseDate.toISOString(), qty: x.quantity, price: money(Number(x.unitCost)), total: money(Number(x.lineTotal)) }))) };
+        if (type === 'purchase-payments')
+            return { title: "Rapport de paiement d'achat", columns: [{ key: 'reference', label: 'Numéro de référence' }, { key: 'date', label: 'Payé le' }, { key: 'amount', label: 'Montant' }, { key: 'supplier', label: 'Fournisseur' }, { key: 'method', label: 'Mode de paiement' }], rows: purchases.filter(x => Number(x.paidAmount) > 0).map(x => ({ reference: x.reference, date: x.purchaseDate.toISOString(), amount: money(Number(x.paidAmount)), supplier: x.supplierName, method: 'Compte de paiement' })) };
+        if (type === 'sales-payments') {
+            const payments = await this.p.payment.findMany({ include: { invoice: { include: { contact: true } } } });
+            return { title: 'Rapport de paiement de vente', columns: [{ key: 'reference', label: 'Numéro de référence' }, { key: 'date', label: 'Payé le' }, { key: 'amount', label: 'Montant' }, { key: 'client', label: 'Client' }, { key: 'method', label: 'Mode de paiement' }, { key: 'sale', label: 'Vente' }], rows: payments.map(x => ({ reference: x.reference ?? x.id, date: x.createdAt.toISOString(), amount: money(Number(x.amount)), client: x.invoice.contact.fullName, method: x.method, sale: x.invoice.number })) };
+        }
+        if (type === 'expenses')
+            return { title: 'Rapport de dépenses', columns: [{ key: 'reference', label: 'Référence' }, { key: 'date', label: 'Date' }, { key: 'category', label: 'Catégorie' }, { key: 'for', label: 'Bénéficiaire' }, { key: 'total', label: 'Total' }], rows: expenses.map(x => ({ reference: x.reference, date: x.expenseDate.toISOString(), category: x.category.name, for: x.expenseFor, total: money(Number(x.total)) })) };
+        if (type === 'register') {
+            const tx = await this.p.accountTransaction.findMany({ include: { account: true } });
+            return { title: 'Rapport de caisse', columns: [{ key: 'date', label: 'Date' }, { key: 'account', label: 'Emplacement / Compte' }, { key: 'user', label: 'Utilisateur' }, { key: 'debit', label: 'Total en espèces' }, { key: 'credit', label: 'Total paiement' }], rows: tx.map(x => ({ date: x.transactionDate.toISOString(), account: x.account.name, user: x.createdBy, debit: x.direction === 'DEBIT' ? money(Number(x.amount)) : money(0), credit: x.direction === 'CREDIT' ? money(Number(x.amount)) : money(0) })) };
+        }
+        if (type === 'representatives' || type === 'service-staff') {
+            const tech = await this.p.technician.findMany({ include: { user: true, repairs: true } });
+            return { title: type === 'representatives' ? 'Rapport du représentant' : 'Rapport sur le personnel de service', summary: [{ label: 'Total des ventes', value: money(sales) }, { label: 'Total des dépenses', value: money(expenseTotal) }], columns: [{ key: 'name', label: 'Personnel' }, { key: 'count', label: 'Nombre de services' }, { key: 'amount', label: 'Montant total' }], rows: tech.map(t => ({ name: t.user.fullName, count: t.repairs.length, amount: money(t.repairs.reduce((s, r) => s + Number(r.estimatedCost ?? 0), 0)) })) };
+        }
+        if (type === 'activity') {
+            const rows = [...invoices.map(x => ({ date: x.createdAt.toISOString(), type: 'Vente', action: 'Ajout', by: x.contact.fullName, details: `${x.number} — ${money(Number(x.total))}` })), ...purchases.map(x => ({ date: x.createdAt.toISOString(), type: 'Achat', action: 'Ajout', by: x.addedBy, details: `${x.reference} — ${money(Number(x.total))}` })), ...expenses.map(x => ({ date: x.createdAt.toISOString(), type: 'Dépense', action: 'Ajout', by: x.addedBy, details: `${x.reference} — ${money(Number(x.total))}` }))].sort((a, b) => b.date.localeCompare(a.date));
+            return { title: 'Journal des activités', columns: [{ key: 'date', label: 'Date' }, { key: 'type', label: 'Type de sujet' }, { key: 'action', label: 'Action' }, { key: 'by', label: 'Par' }, { key: 'details', label: 'Données' }], rows };
+        }
+        return { title: 'Rapport', columns: [], rows: [] };
+    }
+};
+exports.ReportsService = ReportsService;
+exports.ReportsService = ReportsService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], ReportsService);
+//# sourceMappingURL=reports.service.js.map

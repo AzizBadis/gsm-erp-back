@@ -44,6 +44,69 @@ enum StockMovementType {
   ADJUSTMENT
 }
 
+enum EssentialTaskStatus {
+  NEW
+  DONE
+}
+
+enum EssentialTaskPriority {
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum PurchaseKind {
+  REQUEST
+  ORDER
+  PURCHASE
+  RETURN
+}
+
+enum PurchaseStatus {
+  DRAFT
+  ORDERED
+  RECEIVED
+  RETURNED
+  CANCELLED
+}
+
+enum PurchasePaymentStatus {
+  UNPAID
+  PARTIAL
+  PAID
+}
+
+enum InvoiceDocumentType {
+  SALE
+  DRAFT
+  QUOTE
+  RETURN
+}
+
+enum StockTransferStatus {
+  PENDING
+  IN_TRANSIT
+  COMPLETED
+  CANCELLED
+}
+
+enum StockAdjustmentType {
+  ADD
+  SUBTRACT
+}
+
+enum AccountTransactionDirection {
+  DEBIT
+  CREDIT
+}
+
+enum ReservationStatus {
+  WAITING
+  BOOKED
+  ARRIVED
+  CANCELLED
+}
+
 model User {
   id           String      @id @default(cuid())
   email        String      @unique
@@ -65,19 +128,43 @@ model Contact {
   address   String?
   repairs   Repair[]
   invoices  Invoice[]
+  reservations Reservation[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
+model Reservation {
+  id            String            @id @default(cuid())
+  contactId     String?
+  contact       Contact?          @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  clientName    String
+  startsAt      DateTime
+  endsAt        DateTime
+  tableName     String?
+  location      String            @default("GSM Guide")
+  servicePerson String?
+  status        ReservationStatus @default(BOOKED)
+  notes         String?
+  recurrenceId  String?
+  createdBy     String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([startsAt])
+  @@index([location])
+  @@index([contactId])
+}
+
 model Technician {
-  id           String        @id @default(cuid())
-  userId       String        @unique
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String                 @id @default(cuid())
+  userId       String                 @unique
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   specialty    String?
   repairs      Repair[]
   partRequests PartRequest[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  commissions  TechnicianCommission[]
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
 }
 
 model Brand {
@@ -122,8 +209,109 @@ model Product {
   movements    StockMovement[]
   requestItems PartRequestItem[]
   invoiceItems InvoiceItem[]
+  purchaseItems PurchaseItem[]
+  stockTransferItems StockTransferItem[]
+  stockAdjustmentItems StockAdjustmentItem[]
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
+}
+
+model StockAdjustment {
+  id              String              @id @default(cuid())
+  reference       String              @unique
+  adjustmentDate  DateTime            @default(now())
+  location        String
+  type            StockAdjustmentType
+  total           Decimal             @default(0) @db.Decimal(12, 2)
+  recoveredAmount Decimal             @default(0) @db.Decimal(12, 2)
+  reason          String?
+  addedBy         String
+  items           StockAdjustmentItem[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([adjustmentDate])
+  @@index([location])
+}
+
+model StockAdjustmentItem {
+  id           String          @id @default(cuid())
+  adjustmentId String
+  adjustment   StockAdjustment @relation(fields: [adjustmentId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product         @relation(fields: [productId], references: [id])
+  quantity     Int
+  unitPrice    Decimal         @db.Decimal(12, 2)
+  lineTotal    Decimal         @db.Decimal(12, 2)
+}
+
+model StockTransfer {
+  id              String              @id @default(cuid())
+  reference       String              @unique
+  transferDate    DateTime            @default(now())
+  fromLocation    String
+  toLocation      String
+  status          StockTransferStatus @default(PENDING)
+  shippingCharges Decimal             @default(0) @db.Decimal(12, 2)
+  notes           String?
+  total           Decimal             @default(0) @db.Decimal(12, 2)
+  addedBy         String
+  items           StockTransferItem[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([transferDate])
+  @@index([fromLocation, toLocation])
+}
+
+model StockTransferItem {
+  id         String        @id @default(cuid())
+  transferId String
+  transfer   StockTransfer @relation(fields: [transferId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product       @relation(fields: [productId], references: [id])
+  quantity   Int
+  unitPrice  Decimal       @db.Decimal(12, 2)
+  lineTotal  Decimal       @db.Decimal(12, 2)
+}
+
+model Purchase {
+  id            String                @id @default(cuid())
+  reference     String                @unique
+  kind          PurchaseKind          @default(PURCHASE)
+  supplierName  String
+  location      String                @default("GSM Guide")
+  status        PurchaseStatus        @default(DRAFT)
+  paymentStatus PurchasePaymentStatus @default(UNPAID)
+  purchaseDate  DateTime              @default(now())
+  subtotal      Decimal               @default(0) @db.Decimal(12, 2)
+  discount      Decimal               @default(0) @db.Decimal(12, 2)
+  tax           Decimal               @default(0) @db.Decimal(12, 2)
+  shipping      Decimal               @default(0) @db.Decimal(12, 2)
+  total         Decimal               @default(0) @db.Decimal(12, 2)
+  paidAmount    Decimal               @default(0) @db.Decimal(12, 2)
+  notes         String?
+  addedBy       String
+  items         PurchaseItem[]
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  @@index([kind, purchaseDate])
+  @@index([supplierName])
+}
+
+model PurchaseItem {
+  id          String   @id @default(cuid())
+  purchaseId  String
+  purchase    Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName String
+  quantity    Int
+  unitCost    Decimal  @db.Decimal(12, 2)
+  margin      Decimal  @default(0) @db.Decimal(5, 2)
+  salePrice   Decimal  @default(0) @db.Decimal(12, 2)
+  lineTotal   Decimal  @db.Decimal(12, 2)
 }
 
 model StockMovement {
@@ -149,7 +337,7 @@ model Repair {
   deviceModel    DeviceModel?     @relation(fields: [deviceModelId], references: [id])
   technicianId   String?
   technician     Technician?      @relation(fields: [technicianId], references: [id])
-  status         RepairStatus     @default(RECEIVED)
+  status         String           @default("RECEIVED")
   imei           String?
   problem        String
   diagnosis      String?
@@ -160,6 +348,9 @@ model Repair {
   partRequests   PartRequest[]
   invoices       Invoice[]
   stockMovements StockMovement[]
+  repairTypeId   String?
+  repairType     RepairType?      @relation(fields: [repairTypeId], references: [id], onDelete: SetNull)
+  commissions    TechnicianCommission[]
   receivedAt     DateTime         @default(now())
   deliveredAt    DateTime?
   createdAt      DateTime         @default(now())
@@ -207,7 +398,11 @@ model Invoice {
   contactId     String
   contact       Contact       @relation(fields: [contactId], references: [id])
   paymentStatus PaymentStatus @default(UNPAID)
+  documentType InvoiceDocumentType @default(SALE)
+  status       String        @default("FINAL")
+  shippingStatus String      @default("NOT_SHIPPED")
   subtotal      Decimal       @db.Decimal(12, 2)
+  discount      Decimal       @default(0) @db.Decimal(12, 2)
   tax           Decimal       @default(0) @db.Decimal(12, 2)
   total         Decimal       @db.Decimal(12, 2)
   paidAmount    Decimal       @default(0) @db.Decimal(12, 2)
@@ -215,6 +410,79 @@ model Invoice {
   payments      Payment[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+}
+
+model SalesDiscount {
+  id          String   @id @default(cuid())
+  name        String
+  priority    Int      @default(1)
+  brand       String?
+  category    String?
+  location    String?
+  productType String?
+  amount      Decimal  @db.Decimal(12, 2)
+  amountType  String   @default("FIXED")
+  startsAt    DateTime?
+  endsAt      DateTime?
+  customerGroup String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SalesImport {
+  id          String   @id @default(cuid())
+  fileName    String
+  invoiceCount Int     @default(0)
+  createdBy   String
+  createdAt   DateTime @default(now())
+}
+
+model ExpenseCategory {
+  id              String            @id @default(cuid())
+  name            String
+  code            String?
+  parentId        String?
+  parent          ExpenseCategory?  @relation("ExpenseCategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children        ExpenseCategory[] @relation("ExpenseCategoryTree")
+  expenses        Expense[]         @relation("ExpenseCategoryMain")
+  subExpenses     Expense[]         @relation("ExpenseCategorySub")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@unique([name, parentId])
+}
+
+model Expense {
+  id              String           @id @default(cuid())
+  reference       String           @unique
+  location        String
+  categoryId      String
+  category        ExpenseCategory  @relation("ExpenseCategoryMain", fields: [categoryId], references: [id])
+  subCategoryId   String?
+  subCategory     ExpenseCategory? @relation("ExpenseCategorySub", fields: [subCategoryId], references: [id])
+  expenseDate     DateTime          @default(now())
+  expenseFor      String
+  contact         String?
+  applicableTax   String?
+  total           Decimal          @db.Decimal(12, 2)
+  note            String?
+  attachmentName  String?
+  isRecurring     Boolean          @default(false)
+  recurrenceEvery Int?
+  recurrenceUnit  String?
+  occurrences     Int?
+  paymentAmount   Decimal          @default(0) @db.Decimal(12, 2)
+  paymentDate     DateTime?
+  paymentMethod   String?
+  paymentAccount  String?
+  paymentNote     String?
+  addedBy         String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([expenseDate])
+  @@index([categoryId])
 }
 
 model InvoiceItem {
@@ -238,5 +506,202 @@ model Payment {
   amount    Decimal  @db.Decimal(12, 2)
   method    String
   reference String?
+  paymentAccountId String?
+  paymentAccount PaymentAccount? @relation(fields: [paymentAccountId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
+}
+
+model PaymentAccount {
+  id             String               @id @default(cuid())
+  name           String
+  accountType    String
+  accountNumber  String?              @unique
+  description    String?
+  initialBalance Decimal              @default(0) @db.Decimal(12, 2)
+  isActive       Boolean              @default(true)
+  createdBy      String
+  transactions   AccountTransaction[]
+  payments       Payment[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+}
+
+model AccountTransaction {
+  id            String                      @id @default(cuid())
+  accountId     String
+  account       PaymentAccount              @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  transactionDate DateTime                   @default(now())
+  reference     String?
+  invoiceReference String?
+  amount        Decimal                     @db.Decimal(12, 2)
+  paymentType   String?
+  direction     AccountTransactionDirection
+  description   String?
+  createdBy     String
+  createdAt     DateTime                    @default(now())
+
+  @@index([transactionDate])
+  @@index([accountId])
+}
+
+model EssentialTask {
+  id             String                @id @default(cuid())
+  reference      String                @unique
+  title          String
+  status         EssentialTaskStatus   @default(NEW)
+  priority       EssentialTaskPriority @default(MEDIUM)
+  startAt        DateTime?
+  endAt          DateTime?
+  estimatedHours String?
+  assignedTo     String
+  documents      String[]              @default([])
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+}
+
+model RepairType {
+  id              String                 @id @default(cuid())
+  name            String                 @unique
+  commissionRate  Decimal                @default(0) @db.Decimal(12, 2)
+  managedByAdmin  Boolean                @default(false)
+  repairs         Repair[]
+  commissions     TechnicianCommission[]
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+}
+
+model TechnicianStatusMapping {
+  id        String   @id @default(cuid())
+  event     String   // "REPAIR_STARTED" | "REPAIR_COMPLETED" | "RETURN_SAV" | "BROKEN_LOST"
+  statusId  String
+  status    String   // The repair status value (e.g. "IN_PROGRESS", "FINISHED", custom status names)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([event, status])
+}
+
+model TechnicianCommission {
+  id               String      @id @default(cuid())
+  technicianId     String
+  technician       Technician  @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+  repairId         String
+  repair           Repair      @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  repairTypeId     String?
+  repairType       RepairType? @relation(fields: [repairTypeId], references: [id], onDelete: SetNull)
+  commissionBrute  Decimal     @default(0) @db.Decimal(12, 2)
+  deductionRetour  Decimal     @default(0) @db.Decimal(12, 2)
+  deductionPerte   Decimal     @default(0) @db.Decimal(12, 2)
+  commissionNette  Decimal     @default(0) @db.Decimal(12, 2)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model CustomStatus {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  label     String
+  color     String   @default("#94a3b8")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GrhRecord {
+  id          String   @id @default(cuid())
+  type        String
+  name        String
+  description String?
+  data        Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([type, name])
+}
+
+model CrmRecord {
+  id          String   @id @default(cuid())
+  type        String
+  name        String
+  description String?
+  status      String?
+  data        Json     @default("{}")
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([type, name])
+}
+
+model ProjectCategory {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Project {
+  id           String           @id @default(cuid())
+  name         String
+  description  String?
+  status       String           @default("NOT_STARTED")
+  startDate    DateTime?
+  endDate      DateTime?
+  categoryId   String?
+  category     ProjectCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  customFields Json             @default("{}")
+  createdBy    String
+  tasks        ProjectTask[]
+  timeLogs     ProjectTimeLog[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([status])
+  @@index([categoryId])
+}
+
+model ProjectTask {
+  id           String           @id @default(cuid())
+  projectId    String
+  project      Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  subject      String
+  description  String?
+  status       String           @default("TODO")
+  priority     String           @default("MEDIUM")
+  assignedTo   String?
+  startDate    DateTime?
+  endDate      DateTime?
+  customFields Json             @default("{}")
+  timeLogs     ProjectTimeLog[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([projectId, status])
+}
+
+model ProjectTimeLog {
+  id        String       @id @default(cuid())
+  projectId String
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  taskId    String?
+  task      ProjectTask? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  userName  String
+  minutes   Int
+  note      String?
+  loggedAt  DateTime     @default(now())
+
+  @@index([projectId])
+  @@index([taskId])
+}
+
+model ProjectSettings {
+  id           String   @id @default("default")
+  customField1 String?
+  customField2 String?
+  customField3 String?
+  customField4 String?
+  updatedAt    DateTime @updatedAt
 }

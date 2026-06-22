@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PaymentStatus } from '@prisma/client';
+import { AccountTransactionDirection, PaymentStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreatePaymentDto } from './dto/payment.dto';
 
@@ -19,6 +19,18 @@ export class PaymentsService {
         _sum: { amount: true },
       });
       const invoice = await tx.invoice.findUniqueOrThrow({ where: { id: dto.invoiceId } });
+      if (dto.paymentAccountId) {
+        await tx.accountTransaction.create({ data: {
+          accountId: dto.paymentAccountId,
+          invoiceReference: invoice.number,
+          reference: dto.reference,
+          amount: dto.amount,
+          paymentType: dto.method,
+          direction: AccountTransactionDirection.CREDIT,
+          description: `Paiement facture ${invoice.number}`,
+          createdBy: cashierId,
+        } });
+      }
       const paidAmount = Number(paid._sum.amount ?? 0);
       const total = Number(invoice.total);
       const paymentStatus = paidAmount <= 0 ? PaymentStatus.UNPAID : paidAmount >= total ? PaymentStatus.PAID : PaymentStatus.PARTIAL;

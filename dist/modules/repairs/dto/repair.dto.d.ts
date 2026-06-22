@@ -1,9 +1,9 @@
-import { RepairStatus } from '@prisma/client';
 export declare class CreateRepairDto {
     contactId: string;
     deviceId: string;
     deviceModelId?: string;
     technicianId?: string;
+    repairTypeId?: string;
     imei?: string;
     problem: string;
     diagnosis?: string;
@@ -13,6 +13,7 @@ export declare class CreateRepairDto {
 }
 export declare class AssignRepairDto {
     technicianId: string;
+    repairTypeId?: string;
 }
 export declare class UpdateRepairNotesDto {
     diagnosis?: string;
@@ -20,7 +21,7 @@ export declare class UpdateRepairNotesDto {
     photos?: string[];
 }
 export declare class UpdateRepairStatusDto {
-    status: RepairStatus;
+    status: string;
 }
 export declare class RequestPartItemDto {
     productId: string;

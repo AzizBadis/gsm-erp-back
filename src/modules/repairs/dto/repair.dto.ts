@@ -1,12 +1,12 @@
 import { Type } from 'class-transformer';
-import { ArrayMinSize, IsArray, IsEnum, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
-import { RepairStatus } from '@prisma/client';
+import { ArrayMinSize, IsArray, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 
 export class CreateRepairDto {
   @IsString() contactId: string;
   @IsString() deviceId: string;
   @IsOptional() @IsString() deviceModelId?: string;
   @IsOptional() @IsString() technicianId?: string;
+  @IsOptional() @IsString() repairTypeId?: string;
   @IsOptional() @IsString() imei?: string;
   @IsString() problem: string;
   @IsOptional() @IsString() diagnosis?: string;
@@ -17,6 +17,7 @@ export class CreateRepairDto {
 
 export class AssignRepairDto {
   @IsString() technicianId: string;
+  @IsOptional() @IsString() repairTypeId?: string;
 }
 
 export class UpdateRepairNotesDto {
@@ -26,7 +27,7 @@ export class UpdateRepairNotesDto {
 }
 
 export class UpdateRepairStatusDto {
-  @IsEnum(RepairStatus) status: RepairStatus;
+  @IsString() status: string;
 }
 
 export class RequestPartItemDto {

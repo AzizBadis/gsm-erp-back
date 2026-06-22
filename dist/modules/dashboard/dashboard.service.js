@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DashboardService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
+const repair_status_1 = require("../../common/constants/repair-status");
 const prisma_service_1 = require("../../prisma/prisma.service");
 let DashboardService = class DashboardService {
     constructor(prisma) {
@@ -22,15 +23,26 @@ let DashboardService = class DashboardService {
             this.prisma.user.count(),
             this.prisma.contact.count(),
             this.prisma.repair.count(),
-            this.prisma.repair.count({ where: { status: { notIn: [client_1.RepairStatus.DELIVERED, client_1.RepairStatus.CANCELLED] } } }),
+            this.prisma.repair.count({ where: { status: { notIn: [repair_status_1.RepairStatus.DELIVERED, repair_status_1.RepairStatus.CANCELLED] } } }),
             this.prisma.invoice.count({ where: { paymentStatus: { not: 'PAID' } } }),
             this.prisma.product.count({ where: { stockQty: { lte: this.prisma.product.fields.minStockQty } } }),
         ]);
         return { users, contacts, repairs, openRepairs, unpaidInvoices, lowStockProducts };
     }
     async repairsByStatus() {
-        const groupedStatuses = await this.prisma.repair.groupBy({ by: ['status'], _count: { status: true } });
-        return groupedStatuses.map((statusGroup) => ({ status: statusGroup.status, count: statusGroup._count.status }));
+        const [groupedStatuses, customStatuses] = await Promise.all([
+            this.prisma.repair.groupBy({ by: ['status'], _count: { status: true } }),
+            this.prisma.customStatus.findMany(),
+        ]);
+        return groupedStatuses.map((statusGroup) => {
+            const custom = customStatuses.find((cs) => cs.name === statusGroup.status);
+            return {
+                status: statusGroup.status,
+                name: custom?.label ?? statusGroup.status,
+                color: custom?.color ?? '#94a3b8',
+                count: statusGroup._count.status,
+            };
+        });
     }
     async repairsByTechnician() {
         const groupedTechnicians = await this.prisma.repair.groupBy({
@@ -51,14 +63,53 @@ let DashboardService = class DashboardService {
     async technicianStats(technicianId) {
         const [assigned, finished, waitingParts, timer] = await Promise.all([
             this.prisma.repair.count({ where: { technicianId } }),
-            this.prisma.repair.count({ where: { technicianId, status: client_1.RepairStatus.FINISHED } }),
-            this.prisma.repair.count({ where: { technicianId, status: client_1.RepairStatus.WAITING_PARTS } }),
+            this.prisma.repair.count({ where: { technicianId, status: repair_status_1.RepairStatus.FINISHED } }),
+            this.prisma.repair.count({ where: { technicianId, status: repair_status_1.RepairStatus.WAITING_PARTS } }),
             this.prisma.repairTimerLog.aggregate({ where: { repair: { technicianId } }, _sum: { durationSec: true } }),
         ]);
         return { assigned, finished, waitingParts, totalDurationSec: timer._sum.durationSec ?? 0 };
     }
     partRequestStatusLabels() {
         return Object.values(client_1.PartRequestStatus);
+    }
+    async accounting() {
+        const [invoices, purchases, expenses, products, accounts] = await Promise.all([
+            this.prisma.invoice.findMany({ select: { total: true, paidAmount: true, documentType: true } }),
+            this.prisma.purchase.findMany({ select: { total: true, paidAmount: true, kind: true } }),
+            this.prisma.expense.findMany({ select: { total: true } }),
+            this.prisma.product.findMany({ select: { stockQty: true, unitPrice: true } }),
+            this.prisma.paymentAccount.findMany({ include: { transactions: true } }),
+        ]);
+        const sales = invoices.filter(i => i.documentType === 'SALE').reduce((sum, i) => sum + Number(i.total), 0);
+        const receivables = invoices.reduce((sum, i) => sum + Math.max(0, Number(i.total) - Number(i.paidAmount)), 0);
+        const purchaseCost = purchases.filter(p => p.kind === 'PURCHASE').reduce((sum, p) => sum + Number(p.total), 0);
+        const payables = purchases.reduce((sum, p) => sum + Math.max(0, Number(p.total) - Number(p.paidAmount)), 0);
+        const expenseTotal = expenses.reduce((sum, e) => sum + Number(e.total), 0);
+        const inventory = products.reduce((sum, p) => sum + p.stockQty * Number(p.unitPrice), 0);
+        const cash = accounts.reduce((sum, account) => sum + Number(account.initialBalance) + account.transactions.reduce((s, t) => s + (t.direction === client_1.AccountTransactionDirection.CREDIT ? Number(t.amount) : -Number(t.amount)), 0), 0);
+        const revenue = sales;
+        const assets = Math.max(0, cash) + receivables + inventory;
+        const liabilities = payables;
+        const equity = assets - liabilities;
+        return {
+            plan: [
+                { name: 'Actif', balance: assets },
+                { name: 'Dépenses', balance: expenseTotal + purchaseCost },
+                { name: 'Revenus', balance: revenue },
+                { name: 'Capitaux propres', balance: equity },
+                { name: 'Passif', balance: liabilities },
+            ],
+            assets: [
+                { name: 'Comptes clients', value: receivables },
+                { name: 'Actifs courants', value: Math.max(0, cash) },
+                { name: 'Comptes et règlements de trésorerie', value: Math.max(0, cash) },
+                { name: 'Immobilisations corporelles', value: inventory },
+            ],
+            expenses: [{ name: 'Coût des ventes', value: purchaseCost }, { name: 'Dépenses', value: expenseTotal }],
+            revenue: [{ name: 'Revenus', value: revenue }],
+            equity: [{ name: "Capitaux propres de l'entreprise", value: equity }],
+            liabilities: [{ name: 'Comptes fournisseurs', value: payables }],
+        };
     }
 };
 exports.DashboardService = DashboardService;

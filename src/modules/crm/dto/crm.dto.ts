@@ -1,0 +1,1 @@
+import{IsObject,IsOptional,IsString}from'class-validator';export class CreateCrmRecordDto{@IsString()name:string;@IsOptional()@IsString()description?:string;@IsOptional()@IsString()status?:string;@IsOptional()@IsObject()data?:Record<string,unknown>}

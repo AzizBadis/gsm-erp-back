@@ -1,17 +1,22 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { PartRequestStatus, RepairStatus, UserRole } from '@prisma/client';
+import { PartRequestStatus, UserRole } from '@prisma/client';
+import { RepairStatus } from '../../common/constants/repair-status';
 import { RepairFilterDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AssignRepairDto, CreateRepairDto, RequestPartsDto, UpdateRepairNotesDto, UpdateRepairStatusDto } from './dto/repair.dto';
+import { TechnicianManagementService } from '../technician-management/technician-management.service';
 
 @Injectable()
 export class RepairsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly technicianManagement: TechnicianManagementService,
+  ) {}
 
   async create(dto: CreateRepairDto) {
     return this.prisma.$transaction(async (tx) => {
       const count = await tx.repair.count();
-      return tx.repair.create({
+      const repair = await tx.repair.create({
         data: {
           ...dto,
           reference: `REP-${new Date().getFullYear()}-${String(count + 1).padStart(5, '0')}`,
@@ -19,19 +24,34 @@ export class RepairsService {
         },
         include: this.repairInclude(),
       });
+      await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+      return repair;
     });
   }
 
-  assign(id: string, dto: AssignRepairDto) {
-    return this.prisma.repair.update({
+  async assign(id: string, dto: AssignRepairDto) {
+    const repair = await this.prisma.repair.update({
       where: { id },
-      data: { technicianId: dto.technicianId, status: RepairStatus.ASSIGNED },
+      data: {
+        technicianId: dto.technicianId,
+        repairTypeId: dto.repairTypeId,
+        status: RepairStatus.ASSIGNED,
+      },
       include: this.repairInclude(),
     });
+    await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+    return repair;
   }
 
-  updateStatus(id: string, dto: UpdateRepairStatusDto) {
-    return this.prisma.repair.update({
+  async updateStatus(id: string, dto: UpdateRepairStatusDto) {
+    const statusExists = await this.prisma.customStatus.findUnique({
+      where: { name: dto.status },
+    });
+    if (!statusExists) {
+      throw new NotFoundException(`Status ${dto.status} not found`);
+    }
+
+    const repair = await this.prisma.repair.update({
       where: { id },
       data: {
         status: dto.status,
@@ -39,6 +59,8 @@ export class RepairsService {
       },
       include: this.repairInclude(),
     });
+    await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+    return repair;
   }
 
   async findAll(query: RepairFilterDto) {
@@ -89,13 +111,17 @@ export class RepairsService {
     await this.ensureAssigned(id, technicianId);
     await this.ensureNoActiveTimer(id);
     await this.prisma.repairTimerLog.create({ data: { repairId: id, startedAt: new Date() } });
-    return this.prisma.repair.update({ where: { id }, data: { status: RepairStatus.IN_PROGRESS }, include: this.repairInclude() });
+    const repair = await this.prisma.repair.update({ where: { id }, data: { status: RepairStatus.IN_PROGRESS }, include: this.repairInclude() });
+    await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+    return repair;
   }
 
   async pause(id: string, technicianId: string) {
     await this.ensureAssigned(id, technicianId);
     await this.closeActiveTimer(id);
-    return this.prisma.repair.update({ where: { id }, data: { status: RepairStatus.PAUSED }, include: this.repairInclude() });
+    const repair = await this.prisma.repair.update({ where: { id }, data: { status: RepairStatus.PAUSED }, include: this.repairInclude() });
+    await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+    return repair;
   }
 
   async resume(id: string, technicianId: string) {
@@ -105,7 +131,9 @@ export class RepairsService {
   async finish(id: string, technicianId: string) {
     await this.ensureAssigned(id, technicianId);
     await this.closeActiveTimer(id, false);
-    return this.prisma.repair.update({ where: { id }, data: { status: RepairStatus.FINISHED }, include: this.repairInclude() });
+    const repair = await this.prisma.repair.update({ where: { id }, data: { status: RepairStatus.FINISHED }, include: this.repairInclude() });
+    await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+    return repair;
   }
 
   async updateNotes(id: string, technicianId: string, dto: UpdateRepairNotesDto) {
@@ -126,7 +154,8 @@ export class RepairsService {
         },
         include: { items: { include: { product: true } }, repair: true, technician: { include: { user: true } } },
       });
-      await tx.repair.update({ where: { id }, data: { status: RepairStatus.WAITING_PARTS } });
+      const repair = await tx.repair.update({ where: { id }, data: { status: RepairStatus.WAITING_PARTS } });
+      await this.technicianManagement.handleStatusChange(repair.id, repair.status);
       return request;
     });
   }
@@ -141,11 +170,13 @@ export class RepairsService {
   }
 
   async deliverToClient(id: string) {
-    return this.prisma.repair.update({
+    const repair = await this.prisma.repair.update({
       where: { id },
       data: { status: RepairStatus.DELIVERED, deliveredAt: new Date() },
       include: this.repairInclude(),
     });
+    await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+    return repair;
   }
 
   async totalDurationSec(id: string) {
@@ -184,6 +215,42 @@ export class RepairsService {
       timerLogs: true,
       partRequests: { include: { items: { include: { product: true } } } },
       invoices: true,
+      repairType: true,
     };
+  }
+
+  // ----------------------------------------------------
+  // CustomStatus (CRUD)
+  // ----------------------------------------------------
+  async getStatuses() {
+    return this.prisma.customStatus.findMany({
+      orderBy: { name: 'asc' },
+    });
+  }
+
+  async createStatus(dto: { name: string; label: string; color?: string }) {
+    return this.prisma.customStatus.create({
+      data: dto,
+    });
+  }
+
+  async updateStatusDetail(id: string, dto: { name?: string; label?: string; color?: string }) {
+    return this.prisma.customStatus.update({
+      where: { id },
+      data: dto,
+    });
+  }
+
+  async deleteStatus(id: string) {
+    const status = await this.prisma.customStatus.findUniqueOrThrow({ where: { id } });
+    
+    // Delete status mapping referencing this status name
+    await this.prisma.technicianStatusMapping.deleteMany({
+      where: { status: status.name },
+    });
+
+    return this.prisma.customStatus.delete({
+      where: { id },
+    });
   }
 }

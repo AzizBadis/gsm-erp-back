@@ -29,6 +29,7 @@ let DashboardController = class DashboardController {
     repairsByTechnician() { return this.dashboard.repairsByTechnician(); }
     cashierPartRequests() { return this.dashboard.cashierPartRequests(); }
     myStats(user) { return this.dashboard.technicianStats(user.technicianId ?? ''); }
+    accounting() { return this.dashboard.accounting(); }
 };
 exports.DashboardController = DashboardController;
 __decorate([
@@ -67,6 +68,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], DashboardController.prototype, "myStats", null);
+__decorate([
+    (0, common_1.Get)('accounting'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], DashboardController.prototype, "accounting", null);
 exports.DashboardController = DashboardController = __decorate([
     (0, common_1.Controller)('dashboard'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

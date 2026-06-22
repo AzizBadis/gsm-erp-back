@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDateString, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
-import { RepairStatus } from '@prisma/client';
+import { IsDateString, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class PaginationDto {
   @IsOptional()
@@ -23,8 +22,8 @@ export class PaginationDto {
 
 export class RepairFilterDto extends PaginationDto {
   @IsOptional()
-  @IsEnum(RepairStatus)
-  status?: RepairStatus;
+  @IsString()
+  status?: string;
 
   @IsOptional()
   @IsString()

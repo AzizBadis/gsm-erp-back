@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InvoicesController = void 0;
 const common_1 = require("@nestjs/common");
@@ -25,8 +26,8 @@ let InvoicesController = class InvoicesController {
     constructor(service) {
         this.service = service;
     }
-    findAll(query) {
-        return this.service.findAll(query);
+    findAll(query, documentType) {
+        return this.service.findAll(query, documentType);
     }
     create(dto) {
         return this.service.create(dto);
@@ -37,8 +38,9 @@ __decorate([
     (0, common_1.Get)('invoices'),
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.CASHIER),
     __param(0, (0, common_1.Query)()),
+    __param(1, (0, common_1.Query)('documentType')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
+    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto, typeof (_a = typeof client_1.InvoiceDocumentType !== "undefined" && client_1.InvoiceDocumentType) === "function" ? _a : Object]),
     __metadata("design:returntype", void 0)
 ], InvoicesController.prototype, "findAll", null);
 __decorate([

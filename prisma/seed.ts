@@ -1,4 +1,5 @@
-import { PrismaClient, RepairStatus, UserRole, PaymentStatus, PartRequestStatus, StockMovementType } from '@prisma/client';
+import { PrismaClient, UserRole, PaymentStatus, PartRequestStatus, StockMovementType } from '@prisma/client';
+import { RepairStatus } from '../src/common/constants/repair-status';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -6,6 +7,26 @@ const TEST_PASSWORD = 'password123';
 
 async function main() {
   const passwordHash = await bcrypt.hash(TEST_PASSWORD, 12);
+
+  const defaultStatuses = [
+    { name: 'RECEIVED', label: 'Appareil pris en charge', color: '#3b82f6' },
+    { name: 'ASSIGNED', label: 'Appareil affecté', color: '#6366f1' },
+    { name: 'IN_PROGRESS', label: 'Réparation en cours', color: '#f59e0b' },
+    { name: 'PAUSED', label: 'En pause', color: '#64748b' },
+    { name: 'WAITING_PARTS', label: 'Commande des pièces en cours', color: '#ec4899' },
+    { name: 'PARTS_READY', label: 'Pièces disponibles', color: '#10b981' },
+    { name: 'FINISHED', label: 'Appareil prêt', color: '#10b981' },
+    { name: 'DELIVERED', label: 'Livré', color: '#059669' },
+    { name: 'CANCELLED', label: 'Annulé', color: '#ef4444' },
+  ];
+
+  for (const status of defaultStatuses) {
+    await prisma.customStatus.upsert({
+      where: { name: status.name },
+      update: { label: status.label, color: status.color },
+      create: status,
+    });
+  }
 
   const admin = await prisma.user.upsert({
     where: { email: 'admin@gsm.local' },

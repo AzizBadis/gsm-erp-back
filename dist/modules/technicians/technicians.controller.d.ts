@@ -4,7 +4,7 @@ import { TechniciansService } from './technicians.service';
 export declare class TechniciansController {
     private readonly service;
     constructor(service: TechniciansService);
-    create(dto: CreateTechnicianDto): import(".prisma/client").Prisma.Prisma__TechnicianClient<{
+    create(dto: CreateTechnicianDto): Promise<{
         user: {
             id: string;
             email: string;
@@ -21,7 +21,7 @@ export declare class TechniciansController {
         updatedAt: Date;
         userId: string;
         specialty: string | null;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs>;
+    }>;
     findAll(query: PaginationDto): Promise<{
         data: ({
             user: {
@@ -65,13 +65,14 @@ export declare class TechniciansController {
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: import(".prisma/client").$Enums.RepairStatus;
+            status: string;
             imei: string | null;
             problem: string;
             diagnosis: string | null;
             notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+            repairTypeId: string | null;
             receivedAt: Date;
             deliveredAt: Date | null;
         }[];

@@ -11,10 +11,16 @@ const common_1 = require("@nestjs/common");
 const admin_repairs_controller_1 = require("./admin-repairs.controller");
 const technician_tasks_controller_1 = require("./technician-tasks.controller");
 const repairs_service_1 = require("./repairs.service");
+const technician_management_module_1 = require("../technician-management/technician-management.module");
 let RepairsModule = class RepairsModule {
 };
 exports.RepairsModule = RepairsModule;
 exports.RepairsModule = RepairsModule = __decorate([
-    (0, common_1.Module)({ controllers: [admin_repairs_controller_1.AdminRepairsController, technician_tasks_controller_1.TechnicianTasksController], providers: [repairs_service_1.RepairsService], exports: [repairs_service_1.RepairsService] })
+    (0, common_1.Module)({
+        imports: [technician_management_module_1.TechnicianManagementModule],
+        controllers: [admin_repairs_controller_1.AdminRepairsController, technician_tasks_controller_1.TechnicianTasksController],
+        providers: [repairs_service_1.RepairsService],
+        exports: [repairs_service_1.RepairsService],
+    })
 ], RepairsModule);
 //# sourceMappingURL=repairs.module.js.map

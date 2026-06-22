@@ -28,6 +28,18 @@ let PaymentsService = class PaymentsService {
                 _sum: { amount: true },
             });
             const invoice = await tx.invoice.findUniqueOrThrow({ where: { id: dto.invoiceId } });
+            if (dto.paymentAccountId) {
+                await tx.accountTransaction.create({ data: {
+                        accountId: dto.paymentAccountId,
+                        invoiceReference: invoice.number,
+                        reference: dto.reference,
+                        amount: dto.amount,
+                        paymentType: dto.method,
+                        direction: client_1.AccountTransactionDirection.CREDIT,
+                        description: `Paiement facture ${invoice.number}`,
+                        createdBy: cashierId,
+                    } });
+            }
             const paidAmount = Number(paid._sum.amount ?? 0);
             const total = Number(invoice.total);
             const paymentStatus = paidAmount <= 0 ? client_1.PaymentStatus.UNPAID : paidAmount >= total ? client_1.PaymentStatus.PAID : client_1.PaymentStatus.PARTIAL;

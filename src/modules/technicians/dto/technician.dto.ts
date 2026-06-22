@@ -1,7 +1,10 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateTechnicianDto {
-  @IsString() userId: string;
+  @IsOptional() @IsString() userId?: string;
+  @IsOptional() @IsString() fullName?: string;
+  @IsOptional() @IsEmail() email?: string;
+  @IsOptional() @IsString() @MinLength(6) password?: string;
   @IsOptional() @IsString() specialty?: string;
 }
 

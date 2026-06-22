@@ -21,7 +21,20 @@ const part_requests_module_1 = require("./modules/part-requests/part-requests.mo
 const invoices_module_1 = require("./modules/invoices/invoices.module");
 const payments_module_1 = require("./modules/payments/payments.module");
 const dashboard_module_1 = require("./modules/dashboard/dashboard.module");
+const essential_tasks_module_1 = require("./modules/essential-tasks/essential-tasks.module");
 const prisma_module_1 = require("./prisma/prisma.module");
+const technician_management_module_1 = require("./modules/technician-management/technician-management.module");
+const grh_module_1 = require("./modules/grh/grh.module");
+const purchases_module_1 = require("./modules/purchases/purchases.module");
+const sales_module_1 = require("./modules/sales/sales.module");
+const stock_transfers_module_1 = require("./modules/stock-transfers/stock-transfers.module");
+const stock_adjustments_module_1 = require("./modules/stock-adjustments/stock-adjustments.module");
+const expenses_module_1 = require("./modules/expenses/expenses.module");
+const payment_accounts_module_1 = require("./modules/payment-accounts/payment-accounts.module");
+const reports_module_1 = require("./modules/reports/reports.module");
+const reservations_module_1 = require("./modules/reservations/reservations.module");
+const crm_module_1 = require("./modules/crm/crm.module");
+const projects_module_1 = require("./modules/projects/projects.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -42,6 +55,19 @@ exports.AppModule = AppModule = __decorate([
             invoices_module_1.InvoicesModule,
             payments_module_1.PaymentsModule,
             dashboard_module_1.DashboardModule,
+            essential_tasks_module_1.EssentialTasksModule,
+            technician_management_module_1.TechnicianManagementModule,
+            grh_module_1.GrhModule,
+            purchases_module_1.PurchasesModule,
+            sales_module_1.SalesModule,
+            stock_transfers_module_1.StockTransfersModule,
+            stock_adjustments_module_1.StockAdjustmentsModule,
+            expenses_module_1.ExpensesModule,
+            payment_accounts_module_1.PaymentAccountsModule,
+            reports_module_1.ReportsModule,
+            reservations_module_1.ReservationsModule,
+            crm_module_1.CrmModule,
+            projects_module_1.ProjectsModule,
         ],
     })
 ], AppModule);

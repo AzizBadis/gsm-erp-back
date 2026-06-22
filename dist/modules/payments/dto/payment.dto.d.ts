@@ -3,4 +3,5 @@ export declare class CreatePaymentDto {
     amount: number;
     method: string;
     reference?: string;
+    paymentAccountId?: string;
 }

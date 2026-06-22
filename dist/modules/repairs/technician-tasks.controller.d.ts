@@ -9,50 +9,23 @@ export declare class TechnicianTasksController {
         data: ({
             contact: {
                 id: string;
+                email: string | null;
+                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
-                fullName: string;
                 phone: string;
-                email: string | null;
                 address: string | null;
             };
-            device: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-            deviceModel: ({
-                device: {
-                    id: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    name: string;
-                };
-                brand: {
-                    id: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    name: string;
-                };
-            } & {
-                id: string;
-                deviceId: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-                brandId: string;
-            }) | null;
             technician: ({
                 user: {
                     id: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    fullName: string;
                     email: string;
                     passwordHash: string;
+                    fullName: string;
                     role: import(".prisma/client").$Enums.UserRole;
                     isActive: boolean;
+                    createdAt: Date;
+                    updatedAt: Date;
                 };
             } & {
                 id: string;
@@ -61,14 +34,41 @@ export declare class TechnicianTasksController {
                 userId: string;
                 specialty: string | null;
             }) | null;
-            timerLogs: {
+            device: {
                 id: string;
                 createdAt: Date;
-                repairId: string;
-                startedAt: Date;
-                endedAt: Date | null;
-                durationSec: number | null;
-            }[];
+                updatedAt: Date;
+                name: string;
+            };
+            deviceModel: ({
+                brand: {
+                    id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    name: string;
+                };
+                device: {
+                    id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    name: string;
+                };
+            } & {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                deviceId: string;
+                brandId: string;
+            }) | null;
+            repairType: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+                commissionRate: import("@prisma/client/runtime/library").Decimal;
+                managedByAdmin: boolean;
+            } | null;
             partRequests: ({
                 items: ({
                     product: {
@@ -84,51 +84,64 @@ export declare class TechnicianTasksController {
                     };
                 } & {
                     id: string;
-                    partRequestId: string;
                     productId: string;
                     quantity: number;
+                    partRequestId: string;
                 })[];
             } & {
                 id: string;
-                technicianId: string;
-                status: import(".prisma/client").$Enums.PartRequestStatus;
                 createdAt: Date;
                 updatedAt: Date;
-                repairId: string;
+                technicianId: string;
+                status: import(".prisma/client").$Enums.PartRequestStatus;
                 reason: string | null;
+                repairId: string;
                 rejectionReason: string | null;
             })[];
             invoices: {
                 number: string;
                 id: string;
-                contactId: string;
                 createdAt: Date;
                 updatedAt: Date;
+                total: import("@prisma/client/runtime/library").Decimal;
+                contactId: string;
+                status: string;
                 repairId: string | null;
                 paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+                documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+                shippingStatus: string;
                 subtotal: import("@prisma/client/runtime/library").Decimal;
+                discount: import("@prisma/client/runtime/library").Decimal;
                 tax: import("@prisma/client/runtime/library").Decimal;
-                total: import("@prisma/client/runtime/library").Decimal;
                 paidAmount: import("@prisma/client/runtime/library").Decimal;
+            }[];
+            timerLogs: {
+                id: string;
+                createdAt: Date;
+                repairId: string;
+                startedAt: Date;
+                endedAt: Date | null;
+                durationSec: number | null;
             }[];
         } & {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             reference: string;
             contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: import(".prisma/client").$Enums.RepairStatus;
+            status: string;
             imei: string | null;
             problem: string;
             diagnosis: string | null;
             notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+            repairTypeId: string | null;
             receivedAt: Date;
             deliveredAt: Date | null;
-            createdAt: Date;
-            updatedAt: Date;
         })[];
         total: number;
         page: number;
@@ -137,50 +150,23 @@ export declare class TechnicianTasksController {
     task(id: string, user: AuthUser): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
-        device: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-        };
-        deviceModel: ({
-            device: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-            brand: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-        } & {
-            id: string;
-            deviceId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            brandId: string;
-        }) | null;
         technician: ({
             user: {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                fullName: string;
                 email: string;
                 passwordHash: string;
+                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
             };
         } & {
             id: string;
@@ -189,14 +175,41 @@ export declare class TechnicianTasksController {
             userId: string;
             specialty: string | null;
         }) | null;
-        timerLogs: {
+        device: {
             id: string;
             createdAt: Date;
-            repairId: string;
-            startedAt: Date;
-            endedAt: Date | null;
-            durationSec: number | null;
-        }[];
+            updatedAt: Date;
+            name: string;
+        };
+        deviceModel: ({
+            brand: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+            device: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            deviceId: string;
+            brandId: string;
+        }) | null;
+        repairType: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            commissionRate: import("@prisma/client/runtime/library").Decimal;
+            managedByAdmin: boolean;
+        } | null;
         partRequests: ({
             items: ({
                 product: {
@@ -212,99 +225,85 @@ export declare class TechnicianTasksController {
                 };
             } & {
                 id: string;
-                partRequestId: string;
                 productId: string;
                 quantity: number;
+                partRequestId: string;
             })[];
         } & {
             id: string;
-            technicianId: string;
-            status: import(".prisma/client").$Enums.PartRequestStatus;
             createdAt: Date;
             updatedAt: Date;
-            repairId: string;
+            technicianId: string;
+            status: import(".prisma/client").$Enums.PartRequestStatus;
             reason: string | null;
+            repairId: string;
             rejectionReason: string | null;
         })[];
         invoices: {
             number: string;
             id: string;
-            contactId: string;
             createdAt: Date;
             updatedAt: Date;
+            total: import("@prisma/client/runtime/library").Decimal;
+            contactId: string;
+            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+            documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
-            total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
+        }[];
+        timerLogs: {
+            id: string;
+            createdAt: Date;
+            repairId: string;
+            startedAt: Date;
+            endedAt: Date | null;
+            durationSec: number | null;
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         reference: string;
         contactId: string;
         deviceId: string;
         deviceModelId: string | null;
         technicianId: string | null;
-        status: import(".prisma/client").$Enums.RepairStatus;
+        status: string;
         imei: string | null;
         problem: string;
         diagnosis: string | null;
         notes: string | null;
         photos: string[];
         estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+        repairTypeId: string | null;
         receivedAt: Date;
         deliveredAt: Date | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     start(id: string, user: AuthUser): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
-        device: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-        };
-        deviceModel: ({
-            device: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-            brand: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-        } & {
-            id: string;
-            deviceId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            brandId: string;
-        }) | null;
         technician: ({
             user: {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                fullName: string;
                 email: string;
                 passwordHash: string;
+                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
             };
         } & {
             id: string;
@@ -313,14 +312,41 @@ export declare class TechnicianTasksController {
             userId: string;
             specialty: string | null;
         }) | null;
-        timerLogs: {
+        device: {
             id: string;
             createdAt: Date;
-            repairId: string;
-            startedAt: Date;
-            endedAt: Date | null;
-            durationSec: number | null;
-        }[];
+            updatedAt: Date;
+            name: string;
+        };
+        deviceModel: ({
+            brand: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+            device: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            deviceId: string;
+            brandId: string;
+        }) | null;
+        repairType: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            commissionRate: import("@prisma/client/runtime/library").Decimal;
+            managedByAdmin: boolean;
+        } | null;
         partRequests: ({
             items: ({
                 product: {
@@ -336,99 +362,85 @@ export declare class TechnicianTasksController {
                 };
             } & {
                 id: string;
-                partRequestId: string;
                 productId: string;
                 quantity: number;
+                partRequestId: string;
             })[];
         } & {
             id: string;
-            technicianId: string;
-            status: import(".prisma/client").$Enums.PartRequestStatus;
             createdAt: Date;
             updatedAt: Date;
-            repairId: string;
+            technicianId: string;
+            status: import(".prisma/client").$Enums.PartRequestStatus;
             reason: string | null;
+            repairId: string;
             rejectionReason: string | null;
         })[];
         invoices: {
             number: string;
             id: string;
-            contactId: string;
             createdAt: Date;
             updatedAt: Date;
+            total: import("@prisma/client/runtime/library").Decimal;
+            contactId: string;
+            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+            documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
-            total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
+        }[];
+        timerLogs: {
+            id: string;
+            createdAt: Date;
+            repairId: string;
+            startedAt: Date;
+            endedAt: Date | null;
+            durationSec: number | null;
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         reference: string;
         contactId: string;
         deviceId: string;
         deviceModelId: string | null;
         technicianId: string | null;
-        status: import(".prisma/client").$Enums.RepairStatus;
+        status: string;
         imei: string | null;
         problem: string;
         diagnosis: string | null;
         notes: string | null;
         photos: string[];
         estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+        repairTypeId: string | null;
         receivedAt: Date;
         deliveredAt: Date | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     pause(id: string, user: AuthUser): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
-        device: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-        };
-        deviceModel: ({
-            device: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-            brand: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-        } & {
-            id: string;
-            deviceId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            brandId: string;
-        }) | null;
         technician: ({
             user: {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                fullName: string;
                 email: string;
                 passwordHash: string;
+                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
             };
         } & {
             id: string;
@@ -437,14 +449,41 @@ export declare class TechnicianTasksController {
             userId: string;
             specialty: string | null;
         }) | null;
-        timerLogs: {
+        device: {
             id: string;
             createdAt: Date;
-            repairId: string;
-            startedAt: Date;
-            endedAt: Date | null;
-            durationSec: number | null;
-        }[];
+            updatedAt: Date;
+            name: string;
+        };
+        deviceModel: ({
+            brand: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+            device: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            deviceId: string;
+            brandId: string;
+        }) | null;
+        repairType: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            commissionRate: import("@prisma/client/runtime/library").Decimal;
+            managedByAdmin: boolean;
+        } | null;
         partRequests: ({
             items: ({
                 product: {
@@ -460,99 +499,85 @@ export declare class TechnicianTasksController {
                 };
             } & {
                 id: string;
-                partRequestId: string;
                 productId: string;
                 quantity: number;
+                partRequestId: string;
             })[];
         } & {
             id: string;
-            technicianId: string;
-            status: import(".prisma/client").$Enums.PartRequestStatus;
             createdAt: Date;
             updatedAt: Date;
-            repairId: string;
+            technicianId: string;
+            status: import(".prisma/client").$Enums.PartRequestStatus;
             reason: string | null;
+            repairId: string;
             rejectionReason: string | null;
         })[];
         invoices: {
             number: string;
             id: string;
-            contactId: string;
             createdAt: Date;
             updatedAt: Date;
+            total: import("@prisma/client/runtime/library").Decimal;
+            contactId: string;
+            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+            documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
-            total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
+        }[];
+        timerLogs: {
+            id: string;
+            createdAt: Date;
+            repairId: string;
+            startedAt: Date;
+            endedAt: Date | null;
+            durationSec: number | null;
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         reference: string;
         contactId: string;
         deviceId: string;
         deviceModelId: string | null;
         technicianId: string | null;
-        status: import(".prisma/client").$Enums.RepairStatus;
+        status: string;
         imei: string | null;
         problem: string;
         diagnosis: string | null;
         notes: string | null;
         photos: string[];
         estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+        repairTypeId: string | null;
         receivedAt: Date;
         deliveredAt: Date | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     resume(id: string, user: AuthUser): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
-        device: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-        };
-        deviceModel: ({
-            device: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-            brand: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-        } & {
-            id: string;
-            deviceId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            brandId: string;
-        }) | null;
         technician: ({
             user: {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                fullName: string;
                 email: string;
                 passwordHash: string;
+                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
             };
         } & {
             id: string;
@@ -561,14 +586,41 @@ export declare class TechnicianTasksController {
             userId: string;
             specialty: string | null;
         }) | null;
-        timerLogs: {
+        device: {
             id: string;
             createdAt: Date;
-            repairId: string;
-            startedAt: Date;
-            endedAt: Date | null;
-            durationSec: number | null;
-        }[];
+            updatedAt: Date;
+            name: string;
+        };
+        deviceModel: ({
+            brand: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+            device: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            deviceId: string;
+            brandId: string;
+        }) | null;
+        repairType: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            commissionRate: import("@prisma/client/runtime/library").Decimal;
+            managedByAdmin: boolean;
+        } | null;
         partRequests: ({
             items: ({
                 product: {
@@ -584,99 +636,85 @@ export declare class TechnicianTasksController {
                 };
             } & {
                 id: string;
-                partRequestId: string;
                 productId: string;
                 quantity: number;
+                partRequestId: string;
             })[];
         } & {
             id: string;
-            technicianId: string;
-            status: import(".prisma/client").$Enums.PartRequestStatus;
             createdAt: Date;
             updatedAt: Date;
-            repairId: string;
+            technicianId: string;
+            status: import(".prisma/client").$Enums.PartRequestStatus;
             reason: string | null;
+            repairId: string;
             rejectionReason: string | null;
         })[];
         invoices: {
             number: string;
             id: string;
-            contactId: string;
             createdAt: Date;
             updatedAt: Date;
+            total: import("@prisma/client/runtime/library").Decimal;
+            contactId: string;
+            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+            documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
-            total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
+        }[];
+        timerLogs: {
+            id: string;
+            createdAt: Date;
+            repairId: string;
+            startedAt: Date;
+            endedAt: Date | null;
+            durationSec: number | null;
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         reference: string;
         contactId: string;
         deviceId: string;
         deviceModelId: string | null;
         technicianId: string | null;
-        status: import(".prisma/client").$Enums.RepairStatus;
+        status: string;
         imei: string | null;
         problem: string;
         diagnosis: string | null;
         notes: string | null;
         photos: string[];
         estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+        repairTypeId: string | null;
         receivedAt: Date;
         deliveredAt: Date | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     finish(id: string, user: AuthUser): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
-        device: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-        };
-        deviceModel: ({
-            device: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-            brand: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-        } & {
-            id: string;
-            deviceId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            brandId: string;
-        }) | null;
         technician: ({
             user: {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                fullName: string;
                 email: string;
                 passwordHash: string;
+                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
             };
         } & {
             id: string;
@@ -685,14 +723,41 @@ export declare class TechnicianTasksController {
             userId: string;
             specialty: string | null;
         }) | null;
-        timerLogs: {
+        device: {
             id: string;
             createdAt: Date;
-            repairId: string;
-            startedAt: Date;
-            endedAt: Date | null;
-            durationSec: number | null;
-        }[];
+            updatedAt: Date;
+            name: string;
+        };
+        deviceModel: ({
+            brand: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+            device: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            deviceId: string;
+            brandId: string;
+        }) | null;
+        repairType: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            commissionRate: import("@prisma/client/runtime/library").Decimal;
+            managedByAdmin: boolean;
+        } | null;
         partRequests: ({
             items: ({
                 product: {
@@ -708,89 +773,103 @@ export declare class TechnicianTasksController {
                 };
             } & {
                 id: string;
-                partRequestId: string;
                 productId: string;
                 quantity: number;
+                partRequestId: string;
             })[];
         } & {
             id: string;
-            technicianId: string;
-            status: import(".prisma/client").$Enums.PartRequestStatus;
             createdAt: Date;
             updatedAt: Date;
-            repairId: string;
+            technicianId: string;
+            status: import(".prisma/client").$Enums.PartRequestStatus;
             reason: string | null;
+            repairId: string;
             rejectionReason: string | null;
         })[];
         invoices: {
             number: string;
             id: string;
-            contactId: string;
             createdAt: Date;
             updatedAt: Date;
+            total: import("@prisma/client/runtime/library").Decimal;
+            contactId: string;
+            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+            documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
-            total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
+        }[];
+        timerLogs: {
+            id: string;
+            createdAt: Date;
+            repairId: string;
+            startedAt: Date;
+            endedAt: Date | null;
+            durationSec: number | null;
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         reference: string;
         contactId: string;
         deviceId: string;
         deviceModelId: string | null;
         technicianId: string | null;
-        status: import(".prisma/client").$Enums.RepairStatus;
+        status: string;
         imei: string | null;
         problem: string;
         diagnosis: string | null;
         notes: string | null;
         photos: string[];
         estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+        repairTypeId: string | null;
         receivedAt: Date;
         deliveredAt: Date | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     requestParts(id: string, user: AuthUser, dto: RequestPartsDto): Promise<{
+        technician: {
+            user: {
+                id: string;
+                email: string;
+                passwordHash: string;
+                fullName: string;
+                role: import(".prisma/client").$Enums.UserRole;
+                isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            specialty: string | null;
+        };
         repair: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             reference: string;
             contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: import(".prisma/client").$Enums.RepairStatus;
+            status: string;
             imei: string | null;
             problem: string;
             diagnosis: string | null;
             notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+            repairTypeId: string | null;
             receivedAt: Date;
             deliveredAt: Date | null;
-            createdAt: Date;
-            updatedAt: Date;
-        };
-        technician: {
-            user: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                fullName: string;
-                email: string;
-                passwordHash: string;
-                role: import(".prisma/client").$Enums.UserRole;
-                isActive: boolean;
-            };
-        } & {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            userId: string;
-            specialty: string | null;
         };
         items: ({
             product: {
@@ -806,39 +885,40 @@ export declare class TechnicianTasksController {
             };
         } & {
             id: string;
-            partRequestId: string;
             productId: string;
             quantity: number;
+            partRequestId: string;
         })[];
     } & {
         id: string;
-        technicianId: string;
-        status: import(".prisma/client").$Enums.PartRequestStatus;
         createdAt: Date;
         updatedAt: Date;
-        repairId: string;
+        technicianId: string;
+        status: import(".prisma/client").$Enums.PartRequestStatus;
         reason: string | null;
+        repairId: string;
         rejectionReason: string | null;
     }>;
     partRequests(user: AuthUser): import(".prisma/client").Prisma.PrismaPromise<({
         repair: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             reference: string;
             contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: import(".prisma/client").$Enums.RepairStatus;
+            status: string;
             imei: string | null;
             problem: string;
             diagnosis: string | null;
             notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+            repairTypeId: string | null;
             receivedAt: Date;
             deliveredAt: Date | null;
-            createdAt: Date;
-            updatedAt: Date;
         };
         items: ({
             product: {
@@ -854,67 +934,40 @@ export declare class TechnicianTasksController {
             };
         } & {
             id: string;
-            partRequestId: string;
             productId: string;
             quantity: number;
+            partRequestId: string;
         })[];
     } & {
         id: string;
-        technicianId: string;
-        status: import(".prisma/client").$Enums.PartRequestStatus;
         createdAt: Date;
         updatedAt: Date;
-        repairId: string;
+        technicianId: string;
+        status: import(".prisma/client").$Enums.PartRequestStatus;
         reason: string | null;
+        repairId: string;
         rejectionReason: string | null;
     })[]>;
     notes(id: string, user: AuthUser, dto: UpdateRepairNotesDto): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
-        device: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-        };
-        deviceModel: ({
-            device: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-            brand: {
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                name: string;
-            };
-        } & {
-            id: string;
-            deviceId: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            brandId: string;
-        }) | null;
         technician: ({
             user: {
                 id: string;
-                createdAt: Date;
-                updatedAt: Date;
-                fullName: string;
                 email: string;
                 passwordHash: string;
+                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
             };
         } & {
             id: string;
@@ -923,14 +976,41 @@ export declare class TechnicianTasksController {
             userId: string;
             specialty: string | null;
         }) | null;
-        timerLogs: {
+        device: {
             id: string;
             createdAt: Date;
-            repairId: string;
-            startedAt: Date;
-            endedAt: Date | null;
-            durationSec: number | null;
-        }[];
+            updatedAt: Date;
+            name: string;
+        };
+        deviceModel: ({
+            brand: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+            device: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                name: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            deviceId: string;
+            brandId: string;
+        }) | null;
+        repairType: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            name: string;
+            commissionRate: import("@prisma/client/runtime/library").Decimal;
+            managedByAdmin: boolean;
+        } | null;
         partRequests: ({
             items: ({
                 product: {
@@ -946,50 +1026,63 @@ export declare class TechnicianTasksController {
                 };
             } & {
                 id: string;
-                partRequestId: string;
                 productId: string;
                 quantity: number;
+                partRequestId: string;
             })[];
         } & {
             id: string;
-            technicianId: string;
-            status: import(".prisma/client").$Enums.PartRequestStatus;
             createdAt: Date;
             updatedAt: Date;
-            repairId: string;
+            technicianId: string;
+            status: import(".prisma/client").$Enums.PartRequestStatus;
             reason: string | null;
+            repairId: string;
             rejectionReason: string | null;
         })[];
         invoices: {
             number: string;
             id: string;
-            contactId: string;
             createdAt: Date;
             updatedAt: Date;
+            total: import("@prisma/client/runtime/library").Decimal;
+            contactId: string;
+            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+            documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
-            total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
+        }[];
+        timerLogs: {
+            id: string;
+            createdAt: Date;
+            repairId: string;
+            startedAt: Date;
+            endedAt: Date | null;
+            durationSec: number | null;
         }[];
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         reference: string;
         contactId: string;
         deviceId: string;
         deviceModelId: string | null;
         technicianId: string | null;
-        status: import(".prisma/client").$Enums.RepairStatus;
+        status: string;
         imei: string | null;
         problem: string;
         diagnosis: string | null;
         notes: string | null;
         photos: string[];
         estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
+        repairTypeId: string | null;
         receivedAt: Date;
         deliveredAt: Date | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
 }

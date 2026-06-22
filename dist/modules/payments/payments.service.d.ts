@@ -11,9 +11,13 @@ export declare class PaymentsService {
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
             contactId: string;
+            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
+            documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
         };
@@ -35,5 +39,6 @@ export declare class PaymentsService {
         cashierId: string;
         amount: import("@prisma/client/runtime/library").Decimal;
         method: string;
+        paymentAccountId: string | null;
     }>;
 }

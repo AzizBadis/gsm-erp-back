@@ -16,8 +16,8 @@ let InvoicesService = class InvoicesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async findAll(query) {
-        const where = query.search
+    async findAll(query, documentType) {
+        const searchWhere = query.search
             ? {
                 OR: [
                     { number: { contains: query.search, mode: 'insensitive' } },
@@ -26,6 +26,7 @@ let InvoicesService = class InvoicesService {
                 ],
             }
             : {};
+        const where = { ...searchWhere, ...(documentType ? { documentType } : {}) };
         const [data, total] = await Promise.all([
             this.prisma.invoice.findMany({
                 where,
@@ -43,7 +44,8 @@ let InvoicesService = class InvoicesService {
             throw new common_1.BadRequestException('Invoice must include at least one item');
         const subtotal = dto.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
         const tax = dto.tax ?? 0;
-        const total = subtotal + tax;
+        const discount = dto.discount ?? 0;
+        const total = Math.max(0, subtotal - discount + tax);
         return this.prisma.$transaction(async (tx) => {
             const count = await tx.invoice.count();
             return tx.invoice.create({
@@ -54,6 +56,10 @@ let InvoicesService = class InvoicesService {
                     subtotal,
                     tax,
                     total,
+                    discount,
+                    documentType: dto.documentType,
+                    status: dto.status,
+                    shippingStatus: dto.shippingStatus,
                     items: {
                         create: dto.items.map((item) => ({
                             productId: item.productId,

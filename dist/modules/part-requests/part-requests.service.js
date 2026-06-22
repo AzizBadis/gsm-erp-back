@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PartRequestsService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
+const repair_status_1 = require("../../common/constants/repair-status");
 const prisma_service_1 = require("../../prisma/prisma.service");
 let PartRequestsService = class PartRequestsService {
     constructor(prisma) {
@@ -87,7 +88,7 @@ let PartRequestsService = class PartRequestsService {
                     },
                 });
             }
-            await tx.repair.update({ where: { id: request.repairId }, data: { status: client_1.RepairStatus.PARTS_READY } });
+            await tx.repair.update({ where: { id: request.repairId }, data: { status: repair_status_1.RepairStatus.PARTS_READY } });
             return tx.partRequest.update({
                 where: { id },
                 data: { status: client_1.PartRequestStatus.DELIVERED },

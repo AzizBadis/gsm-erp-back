@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { InvoiceDocumentType } from '@prisma/client';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateInvoiceDto } from './dto/invoice.dto';
@@ -7,8 +8,8 @@ import { CreateInvoiceDto } from './dto/invoice.dto';
 export class InvoicesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query: PaginationDto) {
-    const where = query.search
+  async findAll(query: PaginationDto, documentType?: InvoiceDocumentType) {
+    const searchWhere = query.search
       ? {
           OR: [
             { number: { contains: query.search, mode: 'insensitive' as const } },
@@ -17,6 +18,7 @@ export class InvoicesService {
           ],
         }
       : {};
+    const where = { ...searchWhere, ...(documentType ? { documentType } : {}) };
     const [data, total] = await Promise.all([
       this.prisma.invoice.findMany({
         where,
@@ -34,7 +36,8 @@ export class InvoicesService {
     if (!dto.items.length) throw new BadRequestException('Invoice must include at least one item');
     const subtotal = dto.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
     const tax = dto.tax ?? 0;
-    const total = subtotal + tax;
+    const discount = dto.discount ?? 0;
+    const total = Math.max(0, subtotal - discount + tax);
     return this.prisma.$transaction(async (tx) => {
       const count = await tx.invoice.count();
       return tx.invoice.create({
@@ -45,6 +48,10 @@ export class InvoicesService {
           subtotal,
           tax,
           total,
+          discount,
+          documentType: dto.documentType,
+          status: dto.status,
+          shippingStatus: dto.shippingStatus,
           items: {
             create: dto.items.map((item) => ({
               productId: item.productId,

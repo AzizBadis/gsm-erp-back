@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RequestPartsDto = exports.RequestPartItemDto = exports.UpdateRepairStatusDto = exports.UpdateRepairNotesDto = exports.AssignRepairDto = exports.CreateRepairDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
 class CreateRepairDto {
 }
 exports.CreateRepairDto = CreateRepairDto;
@@ -34,6 +33,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateRepairDto.prototype, "technicianId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateRepairDto.prototype, "repairTypeId", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
@@ -73,6 +77,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], AssignRepairDto.prototype, "technicianId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], AssignRepairDto.prototype, "repairTypeId", void 0);
 class UpdateRepairNotesDto {
 }
 exports.UpdateRepairNotesDto = UpdateRepairNotesDto;
@@ -96,7 +105,7 @@ class UpdateRepairStatusDto {
 }
 exports.UpdateRepairStatusDto = UpdateRepairStatusDto;
 __decorate([
-    (0, class_validator_1.IsEnum)(client_1.RepairStatus),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpdateRepairStatusDto.prototype, "status", void 0);
 class RequestPartItemDto {

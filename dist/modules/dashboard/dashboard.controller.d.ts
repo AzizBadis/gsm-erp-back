@@ -12,7 +12,9 @@ export declare class DashboardController {
         lowStockProducts: number;
     }>;
     repairsByStatus(): Promise<{
-        status: import(".prisma/client").$Enums.RepairStatus;
+        status: string;
+        name: string;
+        color: string;
         count: number;
     }[]>;
     repairsByTechnician(): Promise<{
@@ -31,5 +33,31 @@ export declare class DashboardController {
         finished: number;
         waitingParts: number;
         totalDurationSec: number;
+    }>;
+    accounting(): Promise<{
+        plan: {
+            name: string;
+            balance: number;
+        }[];
+        assets: {
+            name: string;
+            value: number;
+        }[];
+        expenses: {
+            name: string;
+            value: number;
+        }[];
+        revenue: {
+            name: string;
+            value: number;
+        }[];
+        equity: {
+            name: string;
+            value: number;
+        }[];
+        liabilities: {
+            name: string;
+            value: number;
+        }[];
     }>;
 }

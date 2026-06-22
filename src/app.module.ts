@@ -12,7 +12,20 @@ import { PartRequestsModule } from './modules/part-requests/part-requests.module
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { EssentialTasksModule } from './modules/essential-tasks/essential-tasks.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { TechnicianManagementModule } from './modules/technician-management/technician-management.module';
+import { GrhModule } from './modules/grh/grh.module';
+import { PurchasesModule } from './modules/purchases/purchases.module';
+import { SalesModule } from './modules/sales/sales.module';
+import { StockTransfersModule } from './modules/stock-transfers/stock-transfers.module';
+import { StockAdjustmentsModule } from './modules/stock-adjustments/stock-adjustments.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
+import { PaymentAccountsModule } from './modules/payment-accounts/payment-accounts.module';
+import { ReportsModule } from './modules/reports/reports.module';
+import { ReservationsModule } from './modules/reservations/reservations.module';
+import { CrmModule } from './modules/crm/crm.module';
+import { ProjectsModule } from './modules/projects/projects.module';
 
 @Module({
   imports: [
@@ -30,6 +43,19 @@ import { PrismaModule } from './prisma/prisma.module';
     InvoicesModule,
     PaymentsModule,
     DashboardModule,
+    EssentialTasksModule,
+    TechnicianManagementModule,
+    GrhModule,
+    PurchasesModule,
+    SalesModule,
+    StockTransfersModule,
+    StockAdjustmentsModule,
+    ExpensesModule,
+    PaymentAccountsModule,
+    ReportsModule,
+    ReservationsModule,
+    CrmModule,
+    ProjectsModule,
   ],
 })
 export class AppModule {}

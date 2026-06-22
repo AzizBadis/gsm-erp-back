@@ -11,13 +11,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TechniciansService = void 0;
 const common_1 = require("@nestjs/common");
+const client_1 = require("@prisma/client");
+const bcrypt = require("bcrypt");
 const prisma_service_1 = require("../../prisma/prisma.service");
 let TechniciansService = class TechniciansService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    create(dto) {
-        return this.prisma.technician.create({ data: dto, include: { user: true } });
+    async create(dto) {
+        const { userId, specialty } = dto;
+        if (userId) {
+            return this.prisma.$transaction(async (tx) => {
+                await tx.user.update({ where: { id: userId }, data: { role: client_1.UserRole.TECHNICIAN } });
+                return tx.technician.create({
+                    data: { userId, specialty },
+                    include: { user: true },
+                });
+            });
+        }
+        const { fullName, email, password } = dto;
+        if (!fullName || !email || !password) {
+            throw new common_1.BadRequestException('fullName, email and password are required when userId is not provided');
+        }
+        return this.prisma.$transaction(async (tx) => {
+            const user = await tx.user.create({
+                data: {
+                    email,
+                    fullName,
+                    role: client_1.UserRole.TECHNICIAN,
+                    passwordHash: await bcrypt.hash(password, 12),
+                },
+            });
+            return tx.technician.create({
+                data: { userId: user.id, specialty },
+                include: { user: true },
+            });
+        });
     }
     async findAll(query) {
         const where = query.search

@@ -30,4 +30,8 @@ export class DashboardController {
   @Get('technician/my-stats')
   @Roles(UserRole.ADMIN, UserRole.TECHNICIAN)
   myStats(@CurrentUser() user: AuthUser) { return this.dashboard.technicianStats(user.technicianId ?? ''); }
+
+  @Get('accounting')
+  @Roles(UserRole.ADMIN)
+  accounting() { return this.dashboard.accounting(); }
 }

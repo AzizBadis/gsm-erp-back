@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PartRequestStatus, RepairStatus, StockMovementType } from '@prisma/client';
+import { PartRequestStatus, StockMovementType } from '@prisma/client';
+import { RepairStatus } from '../../common/constants/repair-status';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 

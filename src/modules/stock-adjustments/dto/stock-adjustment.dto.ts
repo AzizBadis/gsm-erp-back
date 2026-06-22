@@ -1,0 +1,3 @@
+import{Type}from'class-transformer';import{ArrayMinSize,IsArray,IsDateString,IsEnum,IsInt,IsNumber,IsOptional,IsString,Min,ValidateNested}from'class-validator';import{StockAdjustmentType}from'@prisma/client';
+export class StockAdjustmentItemDto{@IsString()productId:string;@Type(()=>Number)@IsInt()@Min(1)quantity:number}
+export class CreateStockAdjustmentDto{@IsOptional()@IsString()reference?:string;@IsOptional()@IsDateString()adjustmentDate?:string;@IsString()location:string;@IsEnum(StockAdjustmentType)type:StockAdjustmentType;@IsOptional()@Type(()=>Number)@IsNumber()@Min(0)recoveredAmount?:number;@IsOptional()@IsString()reason?:string;@IsArray()@ArrayMinSize(1)@ValidateNested({each:true})@Type(()=>StockAdjustmentItemDto)items:StockAdjustmentItemDto[]}

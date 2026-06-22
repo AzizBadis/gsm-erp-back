@@ -1,5 +1,8 @@
 export declare class CreateTechnicianDto {
-    userId: string;
+    userId?: string;
+    fullName?: string;
+    email?: string;
+    password?: string;
     specialty?: string;
 }
 export declare class UpdateTechnicianDto {

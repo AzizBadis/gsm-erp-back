@@ -22,7 +22,7 @@ let AuthService = class AuthService {
     async login(dto) {
         const user = await this.prisma.user.findUnique({
             where: { email: dto.email },
-            include: { technician: true },
+            include: { technician: true, roleDefinition: true },
         });
         if (!user || !user.isActive || !(await bcrypt.compare(dto.password, user.passwordHash))) {
             throw new common_1.UnauthorizedException('Invalid credentials');
@@ -31,6 +31,7 @@ let AuthService = class AuthService {
             sub: user.id,
             email: user.email,
             role: user.role,
+            roleId: user.roleId,
             technicianId: user.technician?.id,
         };
         return {
@@ -41,7 +42,7 @@ let AuthService = class AuthService {
     async me(userId) {
         const user = await this.prisma.user.findUniqueOrThrow({
             where: { id: userId },
-            include: { technician: true },
+            include: { technician: true, roleDefinition: true },
         });
         return this.toPublicUser(user);
     }

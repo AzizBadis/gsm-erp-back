@@ -3,6 +3,14 @@ import { DashboardService } from './dashboard.service';
 export declare class DashboardController {
     private readonly dashboard;
     constructor(dashboard: DashboardService);
+    topbar(user: AuthUser): Promise<{
+        myTasks: number;
+        activeRepairs: number;
+        todayReservations: number;
+        pendingPartRequests: number;
+        unpaidInvoices: number;
+        serverTime: string;
+    }>;
     admin(): Promise<{
         users: number;
         contacts: number;

@@ -7,6 +7,7 @@ export declare class CreateEssentialTaskDto {
     endAt?: string;
     estimatedHours?: string;
     assignedTo: string;
+    assignedUserId?: string;
     documents?: string[];
 }
 export declare class UpdateEssentialTaskDto {
@@ -17,5 +18,6 @@ export declare class UpdateEssentialTaskDto {
     endAt?: string;
     estimatedHours?: string;
     assignedTo?: string;
+    assignedUserId?: string;
     documents?: string[];
 }

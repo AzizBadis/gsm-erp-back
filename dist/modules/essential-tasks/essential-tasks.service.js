@@ -26,6 +26,7 @@ let EssentialTasksService = class EssentialTasksService {
                 endAt: dto.endAt ? new Date(dto.endAt) : undefined,
                 estimatedHours: dto.estimatedHours,
                 assignedTo: dto.assignedTo,
+                assignedUserId: dto.assignedUserId,
                 documents: dto.documents,
                 reference: await this.nextReference(),
             },
@@ -44,6 +45,7 @@ let EssentialTasksService = class EssentialTasksService {
         const [data, total] = await Promise.all([
             this.prisma.essentialTask.findMany({
                 where,
+                include: { assignedUser: { select: { id: true, fullName: true, email: true } } },
                 skip: (query.page - 1) * query.limit,
                 take: query.limit,
                 orderBy: { createdAt: 'desc' },
@@ -53,7 +55,50 @@ let EssentialTasksService = class EssentialTasksService {
         return { data, total, page: query.page, limit: query.limit };
     }
     findOne(id) {
-        return this.prisma.essentialTask.findUniqueOrThrow({ where: { id } });
+        return this.prisma.essentialTask.findUniqueOrThrow({ where: { id }, include: { assignedUser: { select: { id: true, fullName: true, email: true } } } });
+    }
+    async findMine(query, user) {
+        const where = {
+            AND: [
+                {
+                    OR: [
+                        { assignedUserId: user.sub },
+                        { assignedTo: { equals: user.email, mode: 'insensitive' } },
+                    ],
+                },
+                query.search
+                    ? {
+                        OR: [
+                            { reference: { contains: query.search, mode: 'insensitive' } },
+                            { title: { contains: query.search, mode: 'insensitive' } },
+                        ],
+                    }
+                    : {},
+            ],
+        };
+        const [data, total] = await Promise.all([
+            this.prisma.essentialTask.findMany({
+                where,
+                include: { assignedUser: { select: { id: true, fullName: true, email: true } } },
+                skip: (query.page - 1) * query.limit,
+                take: query.limit,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.prisma.essentialTask.count({ where }),
+        ]);
+        return { data, total, page: query.page, limit: query.limit };
+    }
+    async updateMineStatus(id, status, user) {
+        const task = await this.prisma.essentialTask.findFirstOrThrow({
+            where: {
+                id,
+                OR: [
+                    { assignedUserId: user.sub },
+                    { assignedTo: { equals: user.email, mode: 'insensitive' } },
+                ],
+            },
+        });
+        return this.prisma.essentialTask.update({ where: { id: task.id }, data: { status } });
     }
     update(id, dto) {
         return this.prisma.essentialTask.update({ where: { id }, data: this.toTaskData(dto) });

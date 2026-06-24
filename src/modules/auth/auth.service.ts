@@ -14,7 +14,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
-      include: { technician: true },
+      include: { technician: true, roleDefinition: true },
     });
 
     if (!user || !user.isActive || !(await bcrypt.compare(dto.password, user.passwordHash))) {
@@ -25,6 +25,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       role: user.role,
+      roleId: user.roleId,
       technicianId: user.technician?.id,
     };
 
@@ -37,7 +38,7 @@ export class AuthService {
   async me(userId: string) {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { id: userId },
-      include: { technician: true },
+      include: { technician: true, roleDefinition: true },
     });
     return this.toPublicUser(user);
   }

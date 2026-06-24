@@ -11,6 +11,7 @@ export declare class TechniciansService {
             passwordHash: string;
             fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
+            roleId: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -30,6 +31,7 @@ export declare class TechniciansService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -52,6 +54,7 @@ export declare class TechniciansService {
             passwordHash: string;
             fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
+            roleId: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
@@ -90,6 +93,7 @@ export declare class TechniciansService {
             passwordHash: string;
             fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
+            roleId: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;

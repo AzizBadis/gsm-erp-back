@@ -9,8 +9,8 @@ export declare class ProjectsService {
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            status: string;
             description: string | null;
+            status: string;
             priority: string;
             assignedTo: string | null;
             startDate: Date | null;
@@ -40,8 +40,8 @@ export declare class ProjectsService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        status: string;
         description: string | null;
+        status: string;
         createdBy: string;
         categoryId: string | null;
         startDate: Date | null;
@@ -61,8 +61,8 @@ export declare class ProjectsService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        status: string;
         description: string | null;
+        status: string;
         createdBy: string;
         categoryId: string | null;
         startDate: Date | null;
@@ -75,8 +75,8 @@ export declare class ProjectsService {
             createdAt: Date;
             updatedAt: Date;
             name: string;
-            status: string;
             description: string | null;
+            status: string;
             createdBy: string;
             categoryId: string | null;
             startDate: Date | null;
@@ -96,8 +96,8 @@ export declare class ProjectsService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        status: string;
         description: string | null;
+        status: string;
         priority: string;
         assignedTo: string | null;
         startDate: Date | null;
@@ -112,8 +112,8 @@ export declare class ProjectsService {
             createdAt: Date;
             updatedAt: Date;
             name: string;
-            status: string;
             description: string | null;
+            status: string;
             createdBy: string;
             categoryId: string | null;
             startDate: Date | null;
@@ -124,8 +124,8 @@ export declare class ProjectsService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        status: string;
         description: string | null;
+        status: string;
         priority: string;
         assignedTo: string | null;
         startDate: Date | null;

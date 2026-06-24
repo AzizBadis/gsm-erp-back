@@ -1,7 +1,16 @@
+import type { AuthUser } from '../../common/decorators/current-user.decorator';
 import { PrismaService } from '../../prisma/prisma.service';
 export declare class DashboardService {
     private readonly prisma;
     constructor(prisma: PrismaService);
+    topbar(user: AuthUser): Promise<{
+        myTasks: number;
+        activeRepairs: number;
+        todayReservations: number;
+        pendingPartRequests: number;
+        unpaidInvoices: number;
+        serverTime: string;
+    }>;
     admin(): Promise<{
         users: number;
         contacts: number;

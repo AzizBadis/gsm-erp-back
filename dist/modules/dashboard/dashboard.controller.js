@@ -24,6 +24,7 @@ let DashboardController = class DashboardController {
     constructor(dashboard) {
         this.dashboard = dashboard;
     }
+    topbar(user) { return this.dashboard.topbar(user); }
     admin() { return this.dashboard.admin(); }
     repairsByStatus() { return this.dashboard.repairsByStatus(); }
     repairsByTechnician() { return this.dashboard.repairsByTechnician(); }
@@ -32,6 +33,13 @@ let DashboardController = class DashboardController {
     accounting() { return this.dashboard.accounting(); }
 };
 exports.DashboardController = DashboardController;
+__decorate([
+    (0, common_1.Get)('topbar'),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], DashboardController.prototype, "topbar", null);
 __decorate([
     (0, common_1.Get)('admin'),
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN),

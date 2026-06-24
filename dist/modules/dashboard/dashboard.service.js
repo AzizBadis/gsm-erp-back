@@ -18,6 +18,46 @@ let DashboardService = class DashboardService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async topbar(user) {
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const endOfToday = new Date(startOfToday);
+        endOfToday.setDate(endOfToday.getDate() + 1);
+        const isAdmin = user.role === client_1.UserRole.ADMIN;
+        const isCashier = user.role === client_1.UserRole.CASHIER;
+        const isTechnician = user.role === client_1.UserRole.TECHNICIAN;
+        const [myTasks, technicianRepairs, openRepairs, todayReservations, pendingPartRequests, unpaidInvoices,] = await Promise.all([
+            this.prisma.essentialTask.count({ where: { assignedUserId: user.sub, status: 'NEW' } }),
+            isTechnician && user.technicianId
+                ? this.prisma.repair.count({
+                    where: {
+                        technicianId: user.technicianId,
+                        status: { notIn: [repair_status_1.RepairStatus.DELIVERED, repair_status_1.RepairStatus.CANCELLED, repair_status_1.RepairStatus.FINISHED] },
+                    },
+                })
+                : Promise.resolve(0),
+            isAdmin
+                ? this.prisma.repair.count({ where: { status: { notIn: [repair_status_1.RepairStatus.DELIVERED, repair_status_1.RepairStatus.CANCELLED] } } })
+                : Promise.resolve(0),
+            (isAdmin || isCashier)
+                ? this.prisma.reservation.count({ where: { startsAt: { gte: startOfToday, lt: endOfToday } } })
+                : Promise.resolve(0),
+            (isAdmin || isCashier)
+                ? this.prisma.partRequest.count({ where: { status: client_1.PartRequestStatus.PENDING } })
+                : Promise.resolve(0),
+            (isAdmin || isCashier)
+                ? this.prisma.invoice.count({ where: { paymentStatus: { not: 'PAID' } } })
+                : Promise.resolve(0),
+        ]);
+        return {
+            myTasks,
+            activeRepairs: isTechnician ? technicianRepairs : openRepairs,
+            todayReservations,
+            pendingPartRequests,
+            unpaidInvoices,
+            serverTime: new Date().toISOString(),
+        };
+    }
     async admin() {
         const [users, contacts, repairs, openRepairs, unpaidInvoices, lowStockProducts] = await Promise.all([
             this.prisma.user.count(),

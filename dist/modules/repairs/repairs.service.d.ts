@@ -23,6 +23,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -76,8 +77,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -160,6 +161,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -213,8 +215,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -297,6 +299,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -350,8 +353,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -435,6 +438,7 @@ export declare class RepairsService {
                     passwordHash: string;
                     fullName: string;
                     role: import(".prisma/client").$Enums.UserRole;
+                    roleId: string | null;
                     isActive: boolean;
                     createdAt: Date;
                     updatedAt: Date;
@@ -488,8 +492,8 @@ export declare class RepairsService {
                         createdAt: Date;
                         updatedAt: Date;
                         name: string;
-                        sku: string;
                         description: string | null;
+                        sku: string;
                         unitPrice: import("@prisma/client/runtime/library").Decimal;
                         stockQty: number;
                         minStockQty: number;
@@ -576,6 +580,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -629,8 +634,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -714,6 +719,7 @@ export declare class RepairsService {
                     passwordHash: string;
                     fullName: string;
                     role: import(".prisma/client").$Enums.UserRole;
+                    roleId: string | null;
                     isActive: boolean;
                     createdAt: Date;
                     updatedAt: Date;
@@ -767,8 +773,8 @@ export declare class RepairsService {
                         createdAt: Date;
                         updatedAt: Date;
                         name: string;
-                        sku: string;
                         description: string | null;
+                        sku: string;
                         unitPrice: import("@prisma/client/runtime/library").Decimal;
                         stockQty: number;
                         minStockQty: number;
@@ -855,6 +861,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -908,8 +915,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -992,6 +999,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -1045,8 +1053,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -1129,6 +1137,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -1182,8 +1191,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -1266,6 +1275,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -1319,8 +1329,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -1403,6 +1413,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -1456,8 +1467,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -1540,6 +1551,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -1593,8 +1605,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -1668,6 +1680,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -1705,8 +1718,8 @@ export declare class RepairsService {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                sku: string;
                 description: string | null;
+                sku: string;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;
@@ -1754,8 +1767,8 @@ export declare class RepairsService {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                sku: string;
                 description: string | null;
+                sku: string;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;
@@ -1793,6 +1806,7 @@ export declare class RepairsService {
                 passwordHash: string;
                 fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
                 isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
@@ -1846,8 +1860,8 @@ export declare class RepairsService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;

@@ -26,6 +26,8 @@ import { ReportsModule } from './modules/reports/reports.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { CrmModule } from './modules/crm/crm.module';
 import { ProjectsModule } from './modules/projects/projects.module';
+import { RoleDefinitionsModule } from './modules/roles/roles.module';
+import { ProductSettingsModule } from './modules/product-settings/product-settings.module';
 
 @Module({
   imports: [
@@ -56,6 +58,8 @@ import { ProjectsModule } from './modules/projects/projects.module';
     ReservationsModule,
     CrmModule,
     ProjectsModule,
+    RoleDefinitionsModule,
+    ProductSettingsModule,
   ],
 })
 export class AppModule {}

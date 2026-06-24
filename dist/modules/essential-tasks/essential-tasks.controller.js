@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EssentialTasksController = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
+const current_user_decorator_1 = require("../../common/decorators/current-user.decorator");
 const roles_decorator_1 = require("../../common/decorators/roles.decorator");
 const pagination_dto_1 = require("../../common/dto/pagination.dto");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
@@ -30,6 +31,12 @@ let EssentialTasksController = class EssentialTasksController {
     }
     findAll(query) {
         return this.service.findAll(query);
+    }
+    findMine(query, user) {
+        return this.service.findMine(query, user);
+    }
+    updateMineStatus(id, status, user) {
+        return this.service.updateMineStatus(id, status, user);
     }
     findOne(id) {
         return this.service.findOne(id);
@@ -56,6 +63,25 @@ __decorate([
     __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
     __metadata("design:returntype", void 0)
 ], EssentialTasksController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('mine'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.TECHNICIAN, client_1.UserRole.CASHIER, client_1.UserRole.STAFF),
+    __param(0, (0, common_1.Query)()),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto, Object]),
+    __metadata("design:returntype", void 0)
+], EssentialTasksController.prototype, "findMine", null);
+__decorate([
+    (0, common_1.Patch)('mine/:id/status'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.TECHNICIAN, client_1.UserRole.CASHIER, client_1.UserRole.STAFF),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)('status')),
+    __param(2, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:returntype", void 0)
+], EssentialTasksController.prototype, "updateMineStatus", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

@@ -48,8 +48,8 @@ export declare class InvoicesController {
             }[];
             items: {
                 id: string;
-                total: import("@prisma/client/runtime/library").Decimal;
                 description: string;
+                total: import("@prisma/client/runtime/library").Decimal;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
                 productId: string | null;
                 quantity: number;
@@ -118,8 +118,8 @@ export declare class InvoicesController {
         }[];
         items: {
             id: string;
-            total: import("@prisma/client/runtime/library").Decimal;
             description: string;
+            total: import("@prisma/client/runtime/library").Decimal;
             unitPrice: import("@prisma/client/runtime/library").Decimal;
             productId: string | null;
             quantity: number;

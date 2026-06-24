@@ -4,6 +4,7 @@ export declare class CreateUserDto {
     password: string;
     fullName: string;
     role: UserRole;
+    roleId?: string;
     isActive?: boolean;
 }
 export declare class UpdateUserDto {
@@ -11,5 +12,6 @@ export declare class UpdateUserDto {
     password?: string;
     fullName?: string;
     role?: UserRole;
+    roleId?: string;
     isActive?: boolean;
 }

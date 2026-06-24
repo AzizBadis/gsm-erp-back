@@ -29,6 +29,10 @@ export class CreateEssentialTaskDto {
   assignedTo: string;
 
   @IsOptional()
+  @IsString()
+  assignedUserId?: string;
+
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
   documents?: string[];
@@ -62,6 +66,10 @@ export class UpdateEssentialTaskDto {
   @IsOptional()
   @IsString()
   assignedTo?: string;
+
+  @IsOptional()
+  @IsString()
+  assignedUserId?: string;
 
   @IsOptional()
   @IsArray()

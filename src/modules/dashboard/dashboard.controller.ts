@@ -11,6 +11,9 @@ import { DashboardService } from './dashboard.service';
 export class DashboardController {
   constructor(private readonly dashboard: DashboardService) {}
 
+  @Get('topbar')
+  topbar(@CurrentUser() user: AuthUser) { return this.dashboard.topbar(user); }
+
   @Get('admin')
   @Roles(UserRole.ADMIN)
   admin() { return this.dashboard.admin(); }

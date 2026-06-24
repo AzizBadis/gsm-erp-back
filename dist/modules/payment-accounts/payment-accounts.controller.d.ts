@@ -10,8 +10,8 @@ export declare class PaymentAccountsController {
         transactions: {
             id: string;
             createdAt: Date;
-            reference: string | null;
             description: string | null;
+            reference: string | null;
             amount: import("@prisma/client/runtime/library").Decimal;
             transactionDate: Date;
             invoiceReference: string | null;
@@ -60,8 +60,8 @@ export declare class PaymentAccountsController {
         } & {
             id: string;
             createdAt: Date;
-            reference: string | null;
             description: string | null;
+            reference: string | null;
             amount: import("@prisma/client/runtime/library").Decimal;
             transactionDate: Date;
             invoiceReference: string | null;
@@ -90,8 +90,8 @@ export declare class PaymentAccountsController {
     } & {
         id: string;
         createdAt: Date;
-        reference: string | null;
         description: string | null;
+        reference: string | null;
         amount: import("@prisma/client/runtime/library").Decimal;
         transactionDate: Date;
         invoiceReference: string | null;

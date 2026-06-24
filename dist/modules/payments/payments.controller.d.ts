@@ -28,6 +28,7 @@ export declare class PaymentsController {
             passwordHash: string;
             fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
+            roleId: string | null;
             isActive: boolean;
             createdAt: Date;
             updatedAt: Date;

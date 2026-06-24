@@ -18,9 +18,9 @@ export declare class CrmService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
+        description: string | null;
         data: Prisma.JsonValue;
         status: string | null;
-        description: string | null;
         type: string;
         createdBy: string;
     }[]>;
@@ -29,9 +29,9 @@ export declare class CrmService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
+        description: string | null;
         data: Prisma.JsonValue;
         status: string | null;
-        description: string | null;
         type: string;
         createdBy: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
@@ -40,9 +40,9 @@ export declare class CrmService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
+        description: string | null;
         data: Prisma.JsonValue;
         status: string | null;
-        description: string | null;
         type: string;
         createdBy: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;

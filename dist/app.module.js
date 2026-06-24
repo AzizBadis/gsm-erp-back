@@ -35,6 +35,8 @@ const reports_module_1 = require("./modules/reports/reports.module");
 const reservations_module_1 = require("./modules/reservations/reservations.module");
 const crm_module_1 = require("./modules/crm/crm.module");
 const projects_module_1 = require("./modules/projects/projects.module");
+const roles_module_1 = require("./modules/roles/roles.module");
+const product_settings_module_1 = require("./modules/product-settings/product-settings.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -68,6 +70,8 @@ exports.AppModule = AppModule = __decorate([
             reservations_module_1.ReservationsModule,
             crm_module_1.CrmModule,
             projects_module_1.ProjectsModule,
+            roles_module_1.RoleDefinitionsModule,
+            product_settings_module_1.ProductSettingsModule,
         ],
     })
 ], AppModule);

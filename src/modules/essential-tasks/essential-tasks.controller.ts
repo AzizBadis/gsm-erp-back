@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
+import { CurrentUser, type AuthUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -21,6 +22,18 @@ export class EssentialTasksController {
   @Get()
   findAll(@Query() query: PaginationDto) {
     return this.service.findAll(query);
+  }
+
+  @Get('mine')
+  @Roles(UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.CASHIER, UserRole.STAFF)
+  findMine(@Query() query: PaginationDto, @CurrentUser() user: AuthUser) {
+    return this.service.findMine(query, user);
+  }
+
+  @Patch('mine/:id/status')
+  @Roles(UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.CASHIER, UserRole.STAFF)
+  updateMineStatus(@Param('id') id: string, @Body('status') status: UpdateEssentialTaskDto['status'], @CurrentUser() user: AuthUser) {
+    return this.service.updateMineStatus(id, status, user);
   }
 
   @Get(':id')

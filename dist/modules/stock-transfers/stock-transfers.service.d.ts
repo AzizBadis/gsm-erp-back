@@ -12,8 +12,8 @@ export declare class StockTransfersService {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    sku: string;
                     description: string | null;
+                    sku: string;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
@@ -51,8 +51,8 @@ export declare class StockTransfersService {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                sku: string;
                 description: string | null;
+                sku: string;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;

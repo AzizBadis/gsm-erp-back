@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { randomInt } from 'crypto';
 import * as bcrypt from 'bcrypt';
+import * as nodemailer from 'nodemailer';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LoginDto, VerifyOtpDto } from './dto/login.dto';
 
@@ -107,22 +108,31 @@ export class AuthService {
   }
 
   private async sendOtpEmail(to: string, code: string) {
-    const apiKey = this.config.get<string>('RESEND_API_KEY');
-    if (!apiKey) {
-      throw new InternalServerErrorException('RESEND_API_KEY is not configured');
+    const smtpUser = this.config.get<string>('GMAIL_SMTP_USER');
+    const smtpPass = this.config.get<string>('GMAIL_SMTP_APP_PASSWORD');
+
+    if (!smtpUser) {
+      throw new InternalServerErrorException('GMAIL_SMTP_USER is not configured');
+    }
+    if (!smtpPass) {
+      throw new InternalServerErrorException('GMAIL_SMTP_APP_PASSWORD is not configured');
     }
 
-    const from = this.config.get<string>('RESEND_FROM_EMAIL', 'GPS Tunisie <onboarding@resend.dev>');
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
+    const fromName = this.config.get<string>('GMAIL_SMTP_FROM_NAME', 'GPS Tunisie');
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
       },
-      body: JSON.stringify({
-        from,
+    });
+
+    try {
+      await transporter.sendMail({
+        from: `"${fromName}" <${smtpUser}>`,
         to,
         subject: 'Votre code de connexion GPS Tunisie',
+        text: `Votre code de connexion GPS Tunisie est ${code}. Ce code expire dans ${OTP_EXPIRES_IN_MINUTES} minutes.`,
         html: `
           <div style="font-family:Arial,sans-serif;line-height:1.5;color:#0f172a">
             <h2 style="margin:0 0 12px">Code de connexion</h2>
@@ -131,19 +141,15 @@ export class AuthService {
             <p>Ce code expire dans ${OTP_EXPIRES_IN_MINUTES} minutes.</p>
           </div>
         `,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text().catch(() => '');
-      console.error('Resend OTP email failed', {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorBody,
-        from,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown SMTP error';
+      console.error('Gmail SMTP OTP email failed', {
+        message,
+        from: smtpUser,
         to,
       });
-      throw new InternalServerErrorException('Unable to send verification email');
+      throw new InternalServerErrorException(`Unable to send verification email: ${message}`);
     }
   }
 }

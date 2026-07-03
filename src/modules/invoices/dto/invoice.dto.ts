@@ -1,6 +1,13 @@
 import { Type } from 'class-transformer';
 import { ArrayMinSize, IsArray, IsEnum, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 import { InvoiceDocumentType } from '@prisma/client';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
+
+export class InvoiceFilterDto extends PaginationDto {
+  @IsOptional()
+  @IsEnum(InvoiceDocumentType)
+  documentType?: InvoiceDocumentType;
+}
 
 export class CreateInvoiceItemDto {
   @IsOptional() @IsString() productId?: string;

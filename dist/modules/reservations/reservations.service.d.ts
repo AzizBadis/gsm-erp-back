@@ -7,24 +7,24 @@ export declare class ReservationsService {
     findAll(from?: string, to?: string, location?: string): import(".prisma/client").Prisma.PrismaPromise<({
         contact: {
             id: string;
-            email: string | null;
-            fullName: string;
             createdAt: Date;
             updatedAt: Date;
+            fullName: string;
             phone: string;
+            email: string | null;
             address: string | null;
         } | null;
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         contactId: string | null;
-        status: import(".prisma/client").$Enums.ReservationStatus;
-        notes: string | null;
-        createdBy: string;
-        location: string;
         startsAt: Date;
         endsAt: Date;
+        status: import(".prisma/client").$Enums.ReservationStatus;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        createdBy: string;
+        location: string;
         clientName: string;
         tableName: string | null;
         servicePerson: string | null;
@@ -33,24 +33,24 @@ export declare class ReservationsService {
     create(dto: CreateReservationDto, createdBy: string): Promise<({
         contact: {
             id: string;
-            email: string | null;
-            fullName: string;
             createdAt: Date;
             updatedAt: Date;
+            fullName: string;
             phone: string;
+            email: string | null;
             address: string | null;
         } | null;
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         contactId: string | null;
-        status: import(".prisma/client").$Enums.ReservationStatus;
-        notes: string | null;
-        createdBy: string;
-        location: string;
         startsAt: Date;
         endsAt: Date;
+        status: import(".prisma/client").$Enums.ReservationStatus;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        createdBy: string;
+        location: string;
         clientName: string;
         tableName: string | null;
         servicePerson: string | null;
@@ -59,24 +59,24 @@ export declare class ReservationsService {
     updateStatus(id: string, status: ReservationStatus): import(".prisma/client").Prisma.Prisma__ReservationClient<{
         contact: {
             id: string;
-            email: string | null;
-            fullName: string;
             createdAt: Date;
             updatedAt: Date;
+            fullName: string;
             phone: string;
+            email: string | null;
             address: string | null;
         } | null;
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         contactId: string | null;
-        status: import(".prisma/client").$Enums.ReservationStatus;
-        notes: string | null;
-        createdBy: string;
-        location: string;
         startsAt: Date;
         endsAt: Date;
+        status: import(".prisma/client").$Enums.ReservationStatus;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        createdBy: string;
+        location: string;
         clientName: string;
         tableName: string | null;
         servicePerson: string | null;

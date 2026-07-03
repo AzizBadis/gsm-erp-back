@@ -7,14 +7,14 @@ export declare class TechniciansController {
     create(dto: CreateTechnicianDto): Promise<{
         user: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            fullName: string;
             email: string;
             passwordHash: string;
-            fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
             roleId: string | null;
             isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
         id: string;
@@ -27,14 +27,14 @@ export declare class TechniciansController {
         data: ({
             user: {
                 id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                fullName: string;
                 email: string;
                 passwordHash: string;
-                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 roleId: string | null;
                 isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: string;
@@ -48,37 +48,39 @@ export declare class TechniciansController {
         limit: number;
     }>;
     findOne(id: string): import(".prisma/client").Prisma.Prisma__TechnicianClient<{
-        user: {
-            id: string;
-            email: string;
-            passwordHash: string;
-            fullName: string;
-            role: import(".prisma/client").$Enums.UserRole;
-            roleId: string | null;
-            isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
-        };
         repairs: {
             id: string;
+            contactId: string;
+            status: string;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: string;
             imei: string | null;
+            devicePassword: string | null;
+            lockReason: string | null;
             problem: string;
             diagnosis: string | null;
-            notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
             repairTypeId: string | null;
             receivedAt: Date;
             deliveredAt: Date | null;
         }[];
+        user: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            fullName: string;
+            email: string;
+            passwordHash: string;
+            role: import(".prisma/client").$Enums.UserRole;
+            roleId: string | null;
+            isActive: boolean;
+        };
     } & {
         id: string;
         createdAt: Date;
@@ -89,14 +91,14 @@ export declare class TechniciansController {
     update(id: string, dto: UpdateTechnicianDto): import(".prisma/client").Prisma.Prisma__TechnicianClient<{
         user: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            fullName: string;
             email: string;
             passwordHash: string;
-            fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
             roleId: string | null;
             isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
         id: string;

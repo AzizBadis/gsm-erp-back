@@ -23,14 +23,27 @@ const roles_guard_1 = require("../../common/guards/roles.guard");
 const payment_account_dto_1 = require("./dto/payment-account.dto");
 const payment_accounts_service_1 = require("./payment-accounts.service");
 let PaymentAccountsController = class PaymentAccountsController {
-    constructor(s) {
-        this.s = s;
+    constructor(service) {
+        this.service = service;
     }
-    accounts() { return this.s.accounts(); }
-    create(d, u) { return this.s.createAccount(d, u.email); }
-    transactions(q) { return this.s.transactions(q); }
-    createTransaction(d, u) { return this.s.createTransaction(d, u.email); }
-    trial() { return this.s.trialBalance(); }
+    accounts() {
+        return this.service.accounts();
+    }
+    create(dto, user) {
+        return this.service.createAccount(dto, user.email);
+    }
+    update(id, dto) {
+        return this.service.updateAccount(id, dto);
+    }
+    transactions(query) {
+        return this.service.transactions(query);
+    }
+    createTransaction(dto, user) {
+        return this.service.createTransaction(dto, user.email);
+    }
+    trial() {
+        return this.service.trialBalance();
+    }
 };
 exports.PaymentAccountsController = PaymentAccountsController;
 __decorate([
@@ -47,6 +60,14 @@ __decorate([
     __metadata("design:paramtypes", [payment_account_dto_1.CreatePaymentAccountDto, Object]),
     __metadata("design:returntype", void 0)
 ], PaymentAccountsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, payment_account_dto_1.UpdatePaymentAccountDto]),
+    __metadata("design:returntype", void 0)
+], PaymentAccountsController.prototype, "update", null);
 __decorate([
     (0, common_1.Get)('transactions'),
     __param(0, (0, common_1.Query)()),

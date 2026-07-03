@@ -44,6 +44,16 @@ __decorate([
     __metadata("design:type", String)
 ], CreateRepairDto.prototype, "imei", void 0);
 __decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateRepairDto.prototype, "devicePassword", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateRepairDto.prototype, "lockReason", void 0);
+__decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateRepairDto.prototype, "problem", void 0);

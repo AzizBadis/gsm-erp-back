@@ -69,6 +69,119 @@ let DashboardService = class DashboardService {
         ]);
         return { users, contacts, repairs, openRepairs, unpaidInvoices, lowStockProducts };
     }
+    async home() {
+        const now = new Date();
+        const start30 = new Date(now);
+        start30.setDate(start30.getDate() - 29);
+        start30.setHours(0, 0, 0, 0);
+        const startYear = new Date(now.getFullYear(), 0, 1);
+        const [invoices, purchases, expenses, products, purchaseRequests, purchaseOrders, locationsFromPurchases, locationsFromExpenses, locationsFromReservations,] = await Promise.all([
+            this.prisma.invoice.findMany({
+                include: { contact: true, repair: true },
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.prisma.purchase.findMany({
+                include: { items: { include: { product: true } } },
+                orderBy: { purchaseDate: 'desc' },
+            }),
+            this.prisma.expense.findMany({ orderBy: { expenseDate: 'desc' } }),
+            this.prisma.product.findMany({ orderBy: { name: 'asc' } }),
+            this.prisma.purchase.findMany({
+                where: { kind: client_1.PurchaseKind.REQUEST },
+                include: { items: { include: { product: true } } },
+                orderBy: { purchaseDate: 'desc' },
+                take: 25,
+            }),
+            this.prisma.purchase.findMany({
+                where: { kind: client_1.PurchaseKind.ORDER },
+                include: { items: { include: { product: true } } },
+                orderBy: { purchaseDate: 'desc' },
+                take: 25,
+            }),
+            this.prisma.purchase.findMany({ distinct: ['location'], select: { location: true } }),
+            this.prisma.expense.findMany({ distinct: ['location'], select: { location: true } }),
+            this.prisma.reservation.findMany({ distinct: ['location'], select: { location: true } }),
+        ]);
+        const saleInvoices = invoices.filter((invoice) => invoice.documentType === client_1.InvoiceDocumentType.SALE);
+        const returnInvoices = invoices.filter((invoice) => invoice.documentType === client_1.InvoiceDocumentType.RETURN);
+        const purchaseRows = purchases.filter((purchase) => purchase.kind === client_1.PurchaseKind.PURCHASE);
+        const purchaseReturns = purchases.filter((purchase) => purchase.kind === client_1.PurchaseKind.RETURN);
+        const unpaidInvoices = saleInvoices.filter((invoice) => invoice.paymentStatus !== 'PAID');
+        const unpaidPurchases = purchaseRows.filter((purchase) => purchase.paymentStatus !== 'PAID');
+        const stockAlerts = products.filter((product) => product.stockQty <= product.minStockQty);
+        const pendingShipments = saleInvoices.filter((invoice) => invoice.shippingStatus !== 'SHIPPED');
+        const locations = Array.from(new Set([
+            ...locationsFromPurchases.map((row) => row.location),
+            ...locationsFromExpenses.map((row) => row.location),
+            ...locationsFromReservations.map((row) => row.location),
+        ].filter(Boolean))).sort();
+        return {
+            generatedAt: now.toISOString(),
+            locations,
+            kpis: {
+                salesTotal: this.sum(saleInvoices, (invoice) => invoice.total),
+                net: this.sum(saleInvoices, (invoice) => invoice.paidAmount),
+                unpaidInvoices: this.sum(unpaidInvoices, (invoice) => this.due(invoice.total, invoice.paidAmount)),
+                salesReturns: this.sum(returnInvoices, (invoice) => invoice.total),
+                purchasesTotal: this.sum(purchaseRows, (purchase) => purchase.total),
+                unpaidPurchases: this.sum(unpaidPurchases, (purchase) => this.due(purchase.total, purchase.paidAmount)),
+                purchaseReturns: this.sum(purchaseReturns, (purchase) => purchase.total),
+                expenses: this.sum(expenses, (expense) => expense.total),
+            },
+            charts: {
+                sales30Days: this.dailySeries(saleInvoices, start30, now),
+                commercialYear: this.monthlySeries(saleInvoices, now.getFullYear()),
+            },
+            tables: {
+                unpaidInvoices: unpaidInvoices.slice(0, 25).map((invoice) => ({
+                    client: invoice.contact?.fullName ?? '-',
+                    invoiceNumber: invoice.number,
+                    dueAmount: this.due(invoice.total, invoice.paidAmount),
+                })),
+                unpaidPurchases: unpaidPurchases.slice(0, 25).map((purchase) => ({
+                    supplier: purchase.supplierName,
+                    reference: purchase.reference,
+                    dueAmount: this.due(purchase.total, purchase.paidAmount),
+                })),
+                stockAlerts: stockAlerts.slice(0, 25).map((product) => ({
+                    product: `${product.name} (${product.sku})`,
+                    location: locations[0] ?? '-',
+                    stock: product.stockQty,
+                })),
+                saleOrders: [],
+                purchaseRequests: purchaseRequests.map((purchase) => this.purchaseTableRow(purchase)),
+                purchaseOrders: purchaseOrders.map((purchase) => ({
+                    action: 'Actions',
+                    date: purchase.purchaseDate,
+                    reference: purchase.reference,
+                    location: purchase.location,
+                    supplier: purchase.supplierName,
+                    status: purchase.status,
+                    remainingQuantity: purchase.items.reduce((total, item) => total + item.quantity, 0),
+                    addedBy: purchase.addedBy,
+                })),
+                pendingShipments: pendingShipments.slice(0, 25).map((invoice) => ({
+                    action: 'Actions',
+                    date: invoice.createdAt,
+                    invoiceNumber: invoice.number,
+                    client: invoice.contact?.fullName ?? '-',
+                    phone: invoice.contact?.phone ?? '-',
+                    location: locations[0] ?? '-',
+                    shippingStatus: invoice.shippingStatus,
+                    paymentStatus: invoice.paymentStatus,
+                })),
+            },
+            totals: {
+                unpaidInvoices: unpaidInvoices.length,
+                unpaidPurchases: unpaidPurchases.length,
+                stockAlerts: stockAlerts.length,
+                saleOrders: 0,
+                purchaseRequests: purchaseRequests.length,
+                purchaseOrders: purchaseOrders.length,
+                pendingShipments: pendingShipments.length,
+            },
+        };
+    }
     async repairsByStatus() {
         const [groupedStatuses, customStatuses] = await Promise.all([
             this.prisma.repair.groupBy({ by: ['status'], _count: { status: true } }),
@@ -150,6 +263,49 @@ let DashboardService = class DashboardService {
             equity: [{ name: "Capitaux propres de l'entreprise", value: equity }],
             liabilities: [{ name: 'Comptes fournisseurs', value: payables }],
         };
+    }
+    dailySeries(invoices, start, end) {
+        const rows = [];
+        const cursor = new Date(start);
+        while (cursor <= end) {
+            const dayStart = new Date(cursor);
+            dayStart.setHours(0, 0, 0, 0);
+            const dayEnd = new Date(dayStart);
+            dayEnd.setDate(dayEnd.getDate() + 1);
+            rows.push({
+                date: dayStart.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }),
+                'Tous les lieux': this.sum(invoices.filter((invoice) => invoice.createdAt >= dayStart && invoice.createdAt < dayEnd), (invoice) => invoice.total),
+            });
+            cursor.setDate(cursor.getDate() + 1);
+        }
+        return rows;
+    }
+    monthlySeries(invoices, year) {
+        return Array.from({ length: 12 }, (_, month) => {
+            const monthStart = new Date(year, month, 1);
+            const monthEnd = new Date(year, month + 1, 1);
+            return {
+                date: monthStart.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }),
+                'Tous les lieux': this.sum(invoices.filter((invoice) => invoice.createdAt >= monthStart && invoice.createdAt < monthEnd), (invoice) => invoice.total),
+            };
+        });
+    }
+    purchaseTableRow(purchase) {
+        return {
+            action: 'Actions',
+            date: purchase.purchaseDate,
+            reference: purchase.reference,
+            location: purchase.location,
+            status: purchase.status,
+            requiredBefore: null,
+            addedBy: purchase.addedBy,
+        };
+    }
+    sum(rows, getValue) {
+        return rows.reduce((total, row) => total + Number(getValue(row) ?? 0), 0);
+    }
+    due(total, paid) {
+        return Math.max(0, Number(total ?? 0) - Number(paid ?? 0));
     }
 };
 exports.DashboardService = DashboardService;

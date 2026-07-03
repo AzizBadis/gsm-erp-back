@@ -8,12 +8,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePurchaseDto = exports.CreatePurchaseItemDto = void 0;
+exports.CreatePurchaseDto = exports.CreatePurchaseItemDto = exports.PurchaseFilterDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const client_1 = require("@prisma/client");
+const pagination_dto_1 = require("../../../common/dto/pagination.dto");
+class PurchaseFilterDto extends pagination_dto_1.PaginationDto {
+}
+exports.PurchaseFilterDto = PurchaseFilterDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(client_1.PurchaseKind),
+    __metadata("design:type", String)
+], PurchaseFilterDto.prototype, "kind", void 0);
 class CreatePurchaseItemDto {
 }
 exports.CreatePurchaseItemDto = CreatePurchaseItemDto;
@@ -57,7 +65,7 @@ class CreatePurchaseDto {
 exports.CreatePurchaseDto = CreatePurchaseDto;
 __decorate([
     (0, class_validator_1.IsEnum)(client_1.PurchaseKind),
-    __metadata("design:type", typeof (_a = typeof client_1.PurchaseKind !== "undefined" && client_1.PurchaseKind) === "function" ? _a : Object)
+    __metadata("design:type", String)
 ], CreatePurchaseDto.prototype, "kind", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
@@ -76,7 +84,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(client_1.PurchaseStatus),
-    __metadata("design:type", typeof (_b = typeof client_1.PurchaseStatus !== "undefined" && client_1.PurchaseStatus) === "function" ? _b : Object)
+    __metadata("design:type", String)
 ], CreatePurchaseDto.prototype, "status", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),

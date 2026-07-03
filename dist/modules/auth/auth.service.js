@@ -11,13 +11,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
+const crypto_1 = require("crypto");
 const bcrypt = require("bcrypt");
 const prisma_service_1 = require("../../prisma/prisma.service");
+const OTP_EXPIRES_IN_MINUTES = 10;
+const MAX_OTP_ATTEMPTS = 5;
 let AuthService = class AuthService {
-    constructor(prisma, jwt) {
+    constructor(prisma, jwt, config) {
         this.prisma = prisma;
         this.jwt = jwt;
+        this.config = config;
     }
     async login(dto) {
         const user = await this.prisma.user.findUnique({
@@ -27,16 +32,50 @@ let AuthService = class AuthService {
         if (!user || !user.isActive || !(await bcrypt.compare(dto.password, user.passwordHash))) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
-        const payload = {
-            sub: user.id,
+        const code = String((0, crypto_1.randomInt)(0, 1_000_000)).padStart(6, '0');
+        const expiresAt = new Date(Date.now() + OTP_EXPIRES_IN_MINUTES * 60 * 1000);
+        const challenge = await this.prisma.authOtpChallenge.create({
+            data: {
+                userId: user.id,
+                codeHash: await bcrypt.hash(code, 12),
+                expiresAt,
+            },
+        });
+        await this.sendOtpEmail(user.email, code);
+        return {
+            otpRequired: true,
+            challengeId: challenge.id,
+            expiresAt,
             email: user.email,
-            role: user.role,
-            roleId: user.roleId,
-            technicianId: user.technician?.id,
         };
+    }
+    async verifyOtp(dto) {
+        const challenge = await this.prisma.authOtpChallenge.findUnique({
+            where: { id: dto.challengeId },
+            include: { user: { include: { technician: true, roleDefinition: true } } },
+        });
+        if (!challenge || challenge.usedAt || challenge.expiresAt <= new Date() || challenge.attempts >= MAX_OTP_ATTEMPTS) {
+            throw new common_1.UnauthorizedException('Invalid or expired verification code');
+        }
+        const isValid = await bcrypt.compare(dto.code, challenge.codeHash);
+        if (!isValid) {
+            await this.prisma.authOtpChallenge.update({
+                where: { id: challenge.id },
+                data: { attempts: { increment: 1 } },
+            });
+            throw new common_1.UnauthorizedException('Invalid or expired verification code');
+        }
+        if (!challenge.user.isActive) {
+            throw new common_1.UnauthorizedException('Inactive user');
+        }
+        await this.prisma.authOtpChallenge.update({
+            where: { id: challenge.id },
+            data: { usedAt: new Date() },
+        });
+        const payload = this.buildJwtPayload(challenge.user);
         return {
             accessToken: await this.jwt.signAsync(payload),
-            user: this.toPublicUser(user),
+            user: this.toPublicUser(challenge.user),
         };
     }
     async me(userId) {
@@ -50,11 +89,59 @@ let AuthService = class AuthService {
         const { passwordHash: _, ...publicUser } = user;
         return publicUser;
     }
+    buildJwtPayload(user) {
+        return {
+            sub: user.id,
+            email: user.email,
+            role: user.role,
+            roleId: user.roleId,
+            technicianId: user.technician?.id,
+        };
+    }
+    async sendOtpEmail(to, code) {
+        const apiKey = this.config.get('RESEND_API_KEY');
+        if (!apiKey) {
+            throw new common_1.InternalServerErrorException('RESEND_API_KEY is not configured');
+        }
+        const from = this.config.get('RESEND_FROM_EMAIL', 'GPS Tunisie <onboarding@resend.dev>');
+        const response = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                from,
+                to,
+                subject: 'Votre code de connexion GPS Tunisie',
+                html: `
+          <div style="font-family:Arial,sans-serif;line-height:1.5;color:#0f172a">
+            <h2 style="margin:0 0 12px">Code de connexion</h2>
+            <p>Utilisez ce code pour terminer votre connexion a GPS Tunisie.</p>
+            <div style="font-size:28px;font-weight:700;letter-spacing:6px;margin:18px 0">${code}</div>
+            <p>Ce code expire dans ${OTP_EXPIRES_IN_MINUTES} minutes.</p>
+          </div>
+        `,
+            }),
+        });
+        if (!response.ok) {
+            const errorBody = await response.text().catch(() => '');
+            console.error('Resend OTP email failed', {
+                status: response.status,
+                statusText: response.statusText,
+                body: errorBody,
+                from,
+                to,
+            });
+            throw new common_1.InternalServerErrorException('Unable to send verification email');
+        }
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        config_1.ConfigService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

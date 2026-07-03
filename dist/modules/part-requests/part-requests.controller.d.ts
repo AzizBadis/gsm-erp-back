@@ -9,14 +9,14 @@ export declare class PartRequestsController {
             technician: {
                 user: {
                     id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    fullName: string;
                     email: string;
                     passwordHash: string;
-                    fullName: string;
                     role: import(".prisma/client").$Enums.UserRole;
                     roleId: string | null;
                     isActive: boolean;
-                    createdAt: Date;
-                    updatedAt: Date;
                 };
             } & {
                 id: string;
@@ -28,27 +28,29 @@ export declare class PartRequestsController {
             repair: {
                 contact: {
                     id: string;
-                    email: string | null;
-                    fullName: string;
                     createdAt: Date;
                     updatedAt: Date;
+                    fullName: string;
                     phone: string;
+                    email: string | null;
                     address: string | null;
                 };
             } & {
                 id: string;
+                contactId: string;
+                status: string;
+                notes: string | null;
                 createdAt: Date;
                 updatedAt: Date;
                 reference: string;
-                contactId: string;
                 deviceId: string;
                 deviceModelId: string | null;
                 technicianId: string | null;
-                status: string;
                 imei: string | null;
+                devicePassword: string | null;
+                lockReason: string | null;
                 problem: string;
                 diagnosis: string | null;
-                notes: string | null;
                 photos: string[];
                 estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
                 repairTypeId: string | null;
@@ -61,9 +63,16 @@ export declare class PartRequestsController {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
+                    brand: string | null;
                     description: string | null;
                     sku: string;
+                    barcode: string | null;
+                    category: string | null;
+                    unit: string | null;
+                    warranty: string | null;
+                    productType: string | null;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
+                    taxRate: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
                 };
@@ -75,10 +84,10 @@ export declare class PartRequestsController {
             })[];
         } & {
             id: string;
+            status: import(".prisma/client").$Enums.PartRequestStatus;
             createdAt: Date;
             updatedAt: Date;
             technicianId: string;
-            status: import(".prisma/client").$Enums.PartRequestStatus;
             reason: string | null;
             repairId: string;
             rejectionReason: string | null;
@@ -91,14 +100,14 @@ export declare class PartRequestsController {
         technician: {
             user: {
                 id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                fullName: string;
                 email: string;
                 passwordHash: string;
-                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 roleId: string | null;
                 isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: string;
@@ -110,27 +119,29 @@ export declare class PartRequestsController {
         repair: {
             contact: {
                 id: string;
-                email: string | null;
-                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
+                fullName: string;
                 phone: string;
+                email: string | null;
                 address: string | null;
             };
         } & {
             id: string;
+            contactId: string;
+            status: string;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: string;
             imei: string | null;
+            devicePassword: string | null;
+            lockReason: string | null;
             problem: string;
             diagnosis: string | null;
-            notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
             repairTypeId: string | null;
@@ -143,9 +154,16 @@ export declare class PartRequestsController {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                brand: string | null;
                 description: string | null;
                 sku: string;
+                barcode: string | null;
+                category: string | null;
+                unit: string | null;
+                warranty: string | null;
+                productType: string | null;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
+                taxRate: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;
             };
@@ -157,10 +175,10 @@ export declare class PartRequestsController {
         })[];
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.PartRequestStatus;
         createdAt: Date;
         updatedAt: Date;
         technicianId: string;
-        status: import(".prisma/client").$Enums.PartRequestStatus;
         reason: string | null;
         repairId: string;
         rejectionReason: string | null;
@@ -169,14 +187,14 @@ export declare class PartRequestsController {
         technician: {
             user: {
                 id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                fullName: string;
                 email: string;
                 passwordHash: string;
-                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 roleId: string | null;
                 isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: string;
@@ -188,27 +206,29 @@ export declare class PartRequestsController {
         repair: {
             contact: {
                 id: string;
-                email: string | null;
-                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
+                fullName: string;
                 phone: string;
+                email: string | null;
                 address: string | null;
             };
         } & {
             id: string;
+            contactId: string;
+            status: string;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: string;
             imei: string | null;
+            devicePassword: string | null;
+            lockReason: string | null;
             problem: string;
             diagnosis: string | null;
-            notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
             repairTypeId: string | null;
@@ -221,9 +241,16 @@ export declare class PartRequestsController {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                brand: string | null;
                 description: string | null;
                 sku: string;
+                barcode: string | null;
+                category: string | null;
+                unit: string | null;
+                warranty: string | null;
+                productType: string | null;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
+                taxRate: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;
             };
@@ -235,10 +262,10 @@ export declare class PartRequestsController {
         })[];
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.PartRequestStatus;
         createdAt: Date;
         updatedAt: Date;
         technicianId: string;
-        status: import(".prisma/client").$Enums.PartRequestStatus;
         reason: string | null;
         repairId: string;
         rejectionReason: string | null;
@@ -247,14 +274,14 @@ export declare class PartRequestsController {
         technician: {
             user: {
                 id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                fullName: string;
                 email: string;
                 passwordHash: string;
-                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 roleId: string | null;
                 isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: string;
@@ -266,27 +293,29 @@ export declare class PartRequestsController {
         repair: {
             contact: {
                 id: string;
-                email: string | null;
-                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
+                fullName: string;
                 phone: string;
+                email: string | null;
                 address: string | null;
             };
         } & {
             id: string;
+            contactId: string;
+            status: string;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: string;
             imei: string | null;
+            devicePassword: string | null;
+            lockReason: string | null;
             problem: string;
             diagnosis: string | null;
-            notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
             repairTypeId: string | null;
@@ -299,9 +328,16 @@ export declare class PartRequestsController {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                brand: string | null;
                 description: string | null;
                 sku: string;
+                barcode: string | null;
+                category: string | null;
+                unit: string | null;
+                warranty: string | null;
+                productType: string | null;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
+                taxRate: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;
             };
@@ -313,10 +349,10 @@ export declare class PartRequestsController {
         })[];
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.PartRequestStatus;
         createdAt: Date;
         updatedAt: Date;
         technicianId: string;
-        status: import(".prisma/client").$Enums.PartRequestStatus;
         reason: string | null;
         repairId: string;
         rejectionReason: string | null;
@@ -325,14 +361,14 @@ export declare class PartRequestsController {
         technician: {
             user: {
                 id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                fullName: string;
                 email: string;
                 passwordHash: string;
-                fullName: string;
                 role: import(".prisma/client").$Enums.UserRole;
                 roleId: string | null;
                 isActive: boolean;
-                createdAt: Date;
-                updatedAt: Date;
             };
         } & {
             id: string;
@@ -344,27 +380,29 @@ export declare class PartRequestsController {
         repair: {
             contact: {
                 id: string;
-                email: string | null;
-                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
+                fullName: string;
                 phone: string;
+                email: string | null;
                 address: string | null;
             };
         } & {
             id: string;
+            contactId: string;
+            status: string;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: string;
             imei: string | null;
+            devicePassword: string | null;
+            lockReason: string | null;
             problem: string;
             diagnosis: string | null;
-            notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
             repairTypeId: string | null;
@@ -377,9 +415,16 @@ export declare class PartRequestsController {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                brand: string | null;
                 description: string | null;
                 sku: string;
+                barcode: string | null;
+                category: string | null;
+                unit: string | null;
+                warranty: string | null;
+                productType: string | null;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
+                taxRate: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;
             };
@@ -391,10 +436,10 @@ export declare class PartRequestsController {
         })[];
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.PartRequestStatus;
         createdAt: Date;
         updatedAt: Date;
         technicianId: string;
-        status: import(".prisma/client").$Enums.PartRequestStatus;
         reason: string | null;
         repairId: string;
         rejectionReason: string | null;

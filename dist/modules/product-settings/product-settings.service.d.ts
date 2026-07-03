@@ -6,30 +6,30 @@ export declare class ProductSettingsService {
     constructor(prisma: PrismaService);
     findAll(type: string, search?: string): Prisma.PrismaPromise<{
         id: string;
-        type: string;
-        name: string;
-        description: string | null;
-        data: Prisma.JsonValue;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        data: Prisma.JsonValue;
+        description: string | null;
+        type: string;
     }[]>;
     create(type: string, dto: CreateProductSettingDto): Prisma.Prisma__GrhRecordClient<{
         id: string;
-        type: string;
-        name: string;
-        description: string | null;
-        data: Prisma.JsonValue;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        data: Prisma.JsonValue;
+        description: string | null;
+        type: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, dto: UpdateProductSettingDto): Prisma.Prisma__GrhRecordClient<{
         id: string;
-        type: string;
-        name: string;
-        description: string | null;
-        data: Prisma.JsonValue;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
+        data: Prisma.JsonValue;
+        description: string | null;
+        type: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     remove(id: string): Prisma.Prisma__GrhRecordClient<{
         id: string;

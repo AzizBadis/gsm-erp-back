@@ -1,6 +1,13 @@
 import { Type } from 'class-transformer';
 import { ArrayMinSize, IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 import { PurchaseKind, PurchaseStatus } from '@prisma/client';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
+
+export class PurchaseFilterDto extends PaginationDto {
+  @IsOptional()
+  @IsEnum(PurchaseKind)
+  kind?: PurchaseKind;
+}
 
 export class CreatePurchaseItemDto {
   @IsOptional() @IsString() productId?: string;

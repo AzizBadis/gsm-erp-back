@@ -1,14 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InvoiceDocumentType } from '@prisma/client';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateInvoiceDto } from './dto/invoice.dto';
+import { CreateInvoiceDto, InvoiceFilterDto } from './dto/invoice.dto';
 
 @Injectable()
 export class InvoicesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query: PaginationDto, documentType?: InvoiceDocumentType) {
+  async findAll(query: InvoiceFilterDto) {
     const searchWhere = query.search
       ? {
           OR: [
@@ -18,7 +16,7 @@ export class InvoicesService {
           ],
         }
       : {};
-    const where = { ...searchWhere, ...(documentType ? { documentType } : {}) };
+    const where = { ...searchWhere, ...(query.documentType ? { documentType: query.documentType } : {}) };
     const [data, total] = await Promise.all([
       this.prisma.invoice.findMany({
         where,

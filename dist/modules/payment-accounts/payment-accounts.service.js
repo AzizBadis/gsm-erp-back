@@ -17,11 +17,65 @@ let PaymentAccountsService = class PaymentAccountsService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async accounts() { const rows = await this.prisma.paymentAccount.findMany({ include: { transactions: true }, orderBy: { name: 'asc' } }); return rows.map(a => ({ ...a, balance: Number(a.initialBalance) + a.transactions.reduce((s, t) => s + (t.direction === client_1.AccountTransactionDirection.CREDIT ? Number(t.amount) : -Number(t.amount)), 0) })); }
-    createAccount(dto, createdBy) { return this.prisma.paymentAccount.create({ data: { ...dto, createdBy } }); }
-    async transactions(q) { const where = q.search ? { OR: [{ reference: { contains: q.search, mode: 'insensitive' } }, { invoiceReference: { contains: q.search, mode: 'insensitive' } }, { description: { contains: q.search, mode: 'insensitive' } }, { account: { name: { contains: q.search, mode: 'insensitive' } } }] } : {}; const [data, total] = await Promise.all([this.prisma.accountTransaction.findMany({ where, include: { account: true }, skip: (q.page - 1) * q.limit, take: q.limit, orderBy: { transactionDate: 'desc' } }), this.prisma.accountTransaction.count({ where })]); return { data, total, page: q.page, limit: q.limit }; }
-    createTransaction(dto, createdBy) { return this.prisma.accountTransaction.create({ data: { ...dto, transactionDate: dto.transactionDate ? new Date(dto.transactionDate) : new Date(), createdBy }, include: { account: true } }); }
-    async trialBalance() { const accounts = await this.prisma.paymentAccount.findMany({ include: { transactions: true }, orderBy: { name: 'asc' } }); return accounts.map(a => ({ id: a.id, name: a.name, debit: a.transactions.filter(t => t.direction === client_1.AccountTransactionDirection.DEBIT).reduce((s, t) => s + Number(t.amount), 0), credit: Number(a.initialBalance) + a.transactions.filter(t => t.direction === client_1.AccountTransactionDirection.CREDIT).reduce((s, t) => s + Number(t.amount), 0) })); }
+    async accounts() {
+        const rows = await this.prisma.paymentAccount.findMany({
+            include: { transactions: true },
+            orderBy: { name: 'asc' },
+        });
+        return rows.map((account) => ({
+            ...account,
+            balance: Number(account.initialBalance) +
+                account.transactions.reduce((sum, transaction) => sum + (transaction.direction === client_1.AccountTransactionDirection.CREDIT ? Number(transaction.amount) : -Number(transaction.amount)), 0),
+        }));
+    }
+    createAccount(dto, createdBy) {
+        return this.prisma.paymentAccount.create({ data: { ...dto, createdBy } });
+    }
+    updateAccount(id, dto) {
+        return this.prisma.paymentAccount.update({ where: { id }, data: dto });
+    }
+    async transactions(query) {
+        const where = query.search
+            ? {
+                OR: [
+                    { reference: { contains: query.search, mode: 'insensitive' } },
+                    { invoiceReference: { contains: query.search, mode: 'insensitive' } },
+                    { description: { contains: query.search, mode: 'insensitive' } },
+                    { account: { name: { contains: query.search, mode: 'insensitive' } } },
+                ],
+            }
+            : {};
+        const [data, total] = await Promise.all([
+            this.prisma.accountTransaction.findMany({
+                where,
+                include: { account: true },
+                skip: (query.page - 1) * query.limit,
+                take: query.limit,
+                orderBy: { transactionDate: 'desc' },
+            }),
+            this.prisma.accountTransaction.count({ where }),
+        ]);
+        return { data, total, page: query.page, limit: query.limit };
+    }
+    createTransaction(dto, createdBy) {
+        return this.prisma.accountTransaction.create({
+            data: { ...dto, transactionDate: dto.transactionDate ? new Date(dto.transactionDate) : new Date(), createdBy },
+            include: { account: true },
+        });
+    }
+    async trialBalance() {
+        const accounts = await this.prisma.paymentAccount.findMany({
+            include: { transactions: true },
+            orderBy: { name: 'asc' },
+        });
+        return accounts.map((account) => ({
+            id: account.id,
+            name: account.name,
+            debit: account.transactions.filter((transaction) => transaction.direction === client_1.AccountTransactionDirection.DEBIT).reduce((sum, transaction) => sum + Number(transaction.amount), 0),
+            credit: Number(account.initialBalance) +
+                account.transactions.filter((transaction) => transaction.direction === client_1.AccountTransactionDirection.CREDIT).reduce((sum, transaction) => sum + Number(transaction.amount), 0),
+        }));
+    }
 };
 exports.PaymentAccountsService = PaymentAccountsService;
 exports.PaymentAccountsService = PaymentAccountsService = __decorate([

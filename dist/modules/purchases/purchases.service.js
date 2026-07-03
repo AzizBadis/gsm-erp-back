@@ -17,9 +17,9 @@ let PurchasesService = class PurchasesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async findAll(query, kind) {
+    async findAll(query) {
         const where = {
-            ...(kind ? { kind } : {}),
+            ...(query.kind ? { kind: query.kind } : {}),
             ...(query.search ? { OR: [
                     { reference: { contains: query.search, mode: 'insensitive' } },
                     { supplierName: { contains: query.search, mode: 'insensitive' } },
@@ -45,7 +45,7 @@ let PurchasesService = class PurchasesService {
                     reference: dto.reference?.trim() || `${prefix}-${new Date().getFullYear()}-${String(count + 1).padStart(5, '0')}`,
                     kind: dto.kind,
                     supplierName: dto.supplierName,
-                    location: dto.location ?? 'GSM Guide',
+                    location: dto.location ?? 'GPS Tunisie',
                     status: dto.status ?? (dto.kind === client_1.PurchaseKind.PURCHASE ? client_1.PurchaseStatus.RECEIVED : client_1.PurchaseStatus.DRAFT),
                     paymentStatus,
                     purchaseDate: dto.purchaseDate ? new Date(dto.purchaseDate) : new Date(),

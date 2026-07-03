@@ -1,1 +1,88 @@
-import{Type}from'class-transformer';import{IsBoolean,IsDateString,IsEnum,IsNumber,IsOptional,IsString,Min}from'class-validator';import{AccountTransactionDirection}from'@prisma/client';export class CreatePaymentAccountDto{@IsString()name:string;@IsString()accountType:string;@IsOptional()@IsString()accountNumber?:string;@IsOptional()@IsString()description?:string;@IsOptional()@Type(()=>Number)@IsNumber()initialBalance?:number;@IsOptional()@IsBoolean()isActive?:boolean}export class CreateAccountTransactionDto{@IsString()accountId:string;@IsOptional()@IsDateString()transactionDate?:string;@IsOptional()@IsString()reference?:string;@IsOptional()@IsString()invoiceReference?:string;@Type(()=>Number)@IsNumber()@Min(0.01)amount:number;@IsOptional()@IsString()paymentType?:string;@IsEnum(AccountTransactionDirection)direction:AccountTransactionDirection;@IsOptional()@IsString()description?:string}
+import { Type } from 'class-transformer';
+import { IsBoolean, IsDateString, IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { AccountTransactionDirection } from '@prisma/client';
+
+export class CreatePaymentAccountDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  accountType: string;
+
+  @IsOptional()
+  @IsString()
+  accountNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  initialBalance?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}
+
+export class UpdatePaymentAccountDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  accountType?: string;
+
+  @IsOptional()
+  @IsString()
+  accountNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  initialBalance?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}
+
+export class CreateAccountTransactionDto {
+  @IsString()
+  accountId: string;
+
+  @IsOptional()
+  @IsDateString()
+  transactionDate?: string;
+
+  @IsOptional()
+  @IsString()
+  reference?: string;
+
+  @IsOptional()
+  @IsString()
+  invoiceReference?: string;
+
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0.01)
+  amount: number;
+
+  @IsOptional()
+  @IsString()
+  paymentType?: string;
+
+  @IsEnum(AccountTransactionDirection)
+  direction: AccountTransactionDirection;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+}

@@ -1,10 +1,9 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { InvoiceDocumentType, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { CreateInvoiceDto } from './dto/invoice.dto';
+import { CreateInvoiceDto, InvoiceFilterDto } from './dto/invoice.dto';
 import { InvoicesService } from './invoices.service';
 
 @Controller()
@@ -14,8 +13,8 @@ export class InvoicesController {
 
   @Get('invoices')
   @Roles(UserRole.ADMIN, UserRole.CASHIER)
-  findAll(@Query() query: PaginationDto, @Query('documentType') documentType?: InvoiceDocumentType) {
-    return this.service.findAll(query, documentType);
+  findAll(@Query() query: InvoiceFilterDto) {
+    return this.service.findAll(query);
   }
 
   @Post('cashier/invoices')

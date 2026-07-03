@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const path_1 = require("path");
 const auth_module_1 = require("./modules/auth/auth.module");
 const users_module_1 = require("./modules/users/users.module");
 const contacts_module_1 = require("./modules/contacts/contacts.module");
@@ -37,13 +38,22 @@ const crm_module_1 = require("./modules/crm/crm.module");
 const projects_module_1 = require("./modules/projects/projects.module");
 const roles_module_1 = require("./modules/roles/roles.module");
 const product_settings_module_1 = require("./modules/product-settings/product-settings.module");
+const abonnements_module_1 = require("./modules/abonnements/abonnements.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            config_1.ConfigModule.forRoot({ isGlobal: true }),
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+                envFilePath: [
+                    (0, path_1.join)(__dirname, '..', '.env.local'),
+                    (0, path_1.join)(__dirname, '..', '.env'),
+                    '.env.local',
+                    '.env',
+                ],
+            }),
             prisma_module_1.PrismaModule,
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
@@ -72,6 +82,7 @@ exports.AppModule = AppModule = __decorate([
             projects_module_1.ProjectsModule,
             roles_module_1.RoleDefinitionsModule,
             product_settings_module_1.ProductSettingsModule,
+            abonnements_module_1.AbonnementsModule,
         ],
     })
 ], AppModule);

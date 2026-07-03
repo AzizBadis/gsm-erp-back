@@ -18,6 +18,10 @@ export class DashboardController {
   @Roles(UserRole.ADMIN)
   admin() { return this.dashboard.admin(); }
 
+  @Get('home')
+  @Roles(UserRole.ADMIN)
+  home() { return this.dashboard.home(); }
+
   @Get('repairs/by-status')
   @Roles(UserRole.ADMIN)
   repairsByStatus() { return this.dashboard.repairsByStatus(); }

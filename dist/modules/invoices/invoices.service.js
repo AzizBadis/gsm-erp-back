@@ -16,7 +16,7 @@ let InvoicesService = class InvoicesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async findAll(query, documentType) {
+    async findAll(query) {
         const searchWhere = query.search
             ? {
                 OR: [
@@ -26,7 +26,7 @@ let InvoicesService = class InvoicesService {
                 ],
             }
             : {};
-        const where = { ...searchWhere, ...(documentType ? { documentType } : {}) };
+        const where = { ...searchWhere, ...(query.documentType ? { documentType: query.documentType } : {}) };
         const [data, total] = await Promise.all([
             this.prisma.invoice.findMany({
                 where,

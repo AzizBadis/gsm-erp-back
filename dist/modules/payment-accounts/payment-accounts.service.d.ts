@@ -1,6 +1,6 @@
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateAccountTransactionDto, CreatePaymentAccountDto } from './dto/payment-account.dto';
+import { CreateAccountTransactionDto, CreatePaymentAccountDto, UpdatePaymentAccountDto } from './dto/payment-account.dto';
 export declare class PaymentAccountsService {
     private readonly prisma;
     constructor(prisma: PrismaService);
@@ -8,10 +8,10 @@ export declare class PaymentAccountsService {
         balance: number;
         transactions: {
             id: string;
+            amount: import("@prisma/client/runtime/library").Decimal;
             createdAt: Date;
             description: string | null;
             reference: string | null;
-            amount: import("@prisma/client/runtime/library").Decimal;
             transactionDate: Date;
             invoiceReference: string | null;
             paymentType: string | null;
@@ -20,10 +20,10 @@ export declare class PaymentAccountsService {
             accountId: string;
         }[];
         id: string;
-        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
         name: string;
+        isActive: boolean;
         description: string | null;
         createdBy: string;
         accountType: string;
@@ -32,24 +32,36 @@ export declare class PaymentAccountsService {
     }[]>;
     createAccount(dto: CreatePaymentAccountDto, createdBy: string): import(".prisma/client").Prisma.Prisma__PaymentAccountClient<{
         id: string;
-        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
         name: string;
+        isActive: boolean;
         description: string | null;
         createdBy: string;
         accountType: string;
         accountNumber: string | null;
         initialBalance: import("@prisma/client/runtime/library").Decimal;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
-    transactions(q: PaginationDto): Promise<{
+    updateAccount(id: string, dto: UpdatePaymentAccountDto): import(".prisma/client").Prisma.Prisma__PaymentAccountClient<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        name: string;
+        isActive: boolean;
+        description: string | null;
+        createdBy: string;
+        accountType: string;
+        accountNumber: string | null;
+        initialBalance: import("@prisma/client/runtime/library").Decimal;
+    }, never, import("@prisma/client/runtime/library").DefaultArgs>;
+    transactions(query: PaginationDto): Promise<{
         data: ({
             account: {
                 id: string;
-                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                isActive: boolean;
                 description: string | null;
                 createdBy: string;
                 accountType: string;
@@ -58,10 +70,10 @@ export declare class PaymentAccountsService {
             };
         } & {
             id: string;
+            amount: import("@prisma/client/runtime/library").Decimal;
             createdAt: Date;
             description: string | null;
             reference: string | null;
-            amount: import("@prisma/client/runtime/library").Decimal;
             transactionDate: Date;
             invoiceReference: string | null;
             paymentType: string | null;
@@ -76,10 +88,10 @@ export declare class PaymentAccountsService {
     createTransaction(dto: CreateAccountTransactionDto, createdBy: string): import(".prisma/client").Prisma.Prisma__AccountTransactionClient<{
         account: {
             id: string;
-            isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
             name: string;
+            isActive: boolean;
             description: string | null;
             createdBy: string;
             accountType: string;
@@ -88,10 +100,10 @@ export declare class PaymentAccountsService {
         };
     } & {
         id: string;
+        amount: import("@prisma/client/runtime/library").Decimal;
         createdAt: Date;
         description: string | null;
         reference: string | null;
-        amount: import("@prisma/client/runtime/library").Decimal;
         transactionDate: Date;
         invoiceReference: string | null;
         paymentType: string | null;

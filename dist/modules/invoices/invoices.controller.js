@@ -11,13 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InvoicesController = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
 const roles_decorator_1 = require("../../common/decorators/roles.decorator");
-const pagination_dto_1 = require("../../common/dto/pagination.dto");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const roles_guard_1 = require("../../common/guards/roles.guard");
 const invoice_dto_1 = require("./dto/invoice.dto");
@@ -26,8 +24,8 @@ let InvoicesController = class InvoicesController {
     constructor(service) {
         this.service = service;
     }
-    findAll(query, documentType) {
-        return this.service.findAll(query, documentType);
+    findAll(query) {
+        return this.service.findAll(query);
     }
     create(dto) {
         return this.service.create(dto);
@@ -38,9 +36,8 @@ __decorate([
     (0, common_1.Get)('invoices'),
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.CASHIER),
     __param(0, (0, common_1.Query)()),
-    __param(1, (0, common_1.Query)('documentType')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto, typeof (_a = typeof client_1.InvoiceDocumentType !== "undefined" && client_1.InvoiceDocumentType) === "function" ? _a : Object]),
+    __metadata("design:paramtypes", [invoice_dto_1.InvoiceFilterDto]),
     __metadata("design:returntype", void 0)
 ], InvoicesController.prototype, "findAll", null);
 __decorate([

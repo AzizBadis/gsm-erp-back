@@ -1,11 +1,19 @@
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../prisma/prisma.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, VerifyOtpDto } from './dto/login.dto';
 export declare class AuthService {
     private readonly prisma;
     private readonly jwt;
-    constructor(prisma: PrismaService, jwt: JwtService);
+    private readonly config;
+    constructor(prisma: PrismaService, jwt: JwtService, config: ConfigService);
     login(dto: LoginDto): Promise<{
+        otpRequired: boolean;
+        challengeId: string;
+        expiresAt: Date;
+        email: string;
+    }>;
+    verifyOtp(dto: VerifyOtpDto): Promise<{
         accessToken: string;
         user: {
             [key: string]: unknown;
@@ -15,4 +23,6 @@ export declare class AuthService {
         [key: string]: unknown;
     }>;
     private toPublicUser;
+    private buildJwtPayload;
+    private sendOtpEmail;
 }

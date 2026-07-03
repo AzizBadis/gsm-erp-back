@@ -17,7 +17,6 @@ const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
 const current_user_decorator_1 = require("../../common/decorators/current-user.decorator");
 const roles_decorator_1 = require("../../common/decorators/roles.decorator");
-const pagination_dto_1 = require("../../common/dto/pagination.dto");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const roles_guard_1 = require("../../common/guards/roles.guard");
 const purchase_dto_1 = require("./dto/purchase.dto");
@@ -26,16 +25,15 @@ let PurchasesController = class PurchasesController {
     constructor(service) {
         this.service = service;
     }
-    findAll(query, kind) { return this.service.findAll(query, kind); }
+    findAll(query) { return this.service.findAll(query); }
     create(dto, user) { return this.service.create(dto, user.fullName || user.email); }
 };
 exports.PurchasesController = PurchasesController;
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)()),
-    __param(1, (0, common_1.Query)('kind')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto, String]),
+    __metadata("design:paramtypes", [purchase_dto_1.PurchaseFilterDto]),
     __metadata("design:returntype", void 0)
 ], PurchasesController.prototype, "findAll", null);
 __decorate([

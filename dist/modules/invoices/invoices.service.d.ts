@@ -1,35 +1,35 @@
-import { InvoiceDocumentType } from '@prisma/client';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateInvoiceDto } from './dto/invoice.dto';
+import { CreateInvoiceDto, InvoiceFilterDto } from './dto/invoice.dto';
 export declare class InvoicesService {
     private readonly prisma;
     constructor(prisma: PrismaService);
-    findAll(query: PaginationDto, documentType?: InvoiceDocumentType): Promise<{
+    findAll(query: InvoiceFilterDto): Promise<{
         data: ({
             contact: {
                 id: string;
-                email: string | null;
-                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
+                fullName: string;
                 phone: string;
+                email: string | null;
                 address: string | null;
             };
             repair: {
                 id: string;
+                contactId: string;
+                status: string;
+                notes: string | null;
                 createdAt: Date;
                 updatedAt: Date;
                 reference: string;
-                contactId: string;
                 deviceId: string;
                 deviceModelId: string | null;
                 technicianId: string | null;
-                status: string;
                 imei: string | null;
+                devicePassword: string | null;
+                lockReason: string | null;
                 problem: string;
                 diagnosis: string | null;
-                notes: string | null;
                 photos: string[];
                 estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
                 repairTypeId: string | null;
@@ -38,18 +38,18 @@ export declare class InvoicesService {
             } | null;
             payments: {
                 id: string;
+                amount: import("@prisma/client/runtime/library").Decimal;
                 createdAt: Date;
+                method: string;
                 reference: string | null;
                 invoiceId: string;
                 cashierId: string;
-                amount: import("@prisma/client/runtime/library").Decimal;
-                method: string;
                 paymentAccountId: string | null;
             }[];
             items: {
                 id: string;
-                description: string;
                 total: import("@prisma/client/runtime/library").Decimal;
+                description: string;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
                 productId: string | null;
                 quantity: number;
@@ -58,11 +58,11 @@ export declare class InvoicesService {
         } & {
             number: string;
             id: string;
+            contactId: string;
+            status: string;
             createdAt: Date;
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
-            contactId: string;
-            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
             documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
@@ -79,27 +79,29 @@ export declare class InvoicesService {
     create(dto: CreateInvoiceDto): Promise<{
         contact: {
             id: string;
-            email: string | null;
-            fullName: string;
             createdAt: Date;
             updatedAt: Date;
+            fullName: string;
             phone: string;
+            email: string | null;
             address: string | null;
         };
         repair: {
             id: string;
+            contactId: string;
+            status: string;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            contactId: string;
             deviceId: string;
             deviceModelId: string | null;
             technicianId: string | null;
-            status: string;
             imei: string | null;
+            devicePassword: string | null;
+            lockReason: string | null;
             problem: string;
             diagnosis: string | null;
-            notes: string | null;
             photos: string[];
             estimatedCost: import("@prisma/client/runtime/library").Decimal | null;
             repairTypeId: string | null;
@@ -108,18 +110,18 @@ export declare class InvoicesService {
         } | null;
         payments: {
             id: string;
+            amount: import("@prisma/client/runtime/library").Decimal;
             createdAt: Date;
+            method: string;
             reference: string | null;
             invoiceId: string;
             cashierId: string;
-            amount: import("@prisma/client/runtime/library").Decimal;
-            method: string;
             paymentAccountId: string | null;
         }[];
         items: {
             id: string;
-            description: string;
             total: import("@prisma/client/runtime/library").Decimal;
+            description: string;
             unitPrice: import("@prisma/client/runtime/library").Decimal;
             productId: string | null;
             quantity: number;
@@ -128,11 +130,11 @@ export declare class InvoicesService {
     } & {
         number: string;
         id: string;
+        contactId: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
         total: import("@prisma/client/runtime/library").Decimal;
-        contactId: string;
-        status: string;
         repairId: string | null;
         paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
         documentType: import(".prisma/client").$Enums.InvoiceDocumentType;

@@ -18,7 +18,13 @@ let ProductsService = class ProductsService {
     }
     create(dto) { return this.prisma.product.create({ data: dto }); }
     async findAll(query) {
-        const where = query.search ? { OR: [{ name: { contains: query.search, mode: 'insensitive' } }, { sku: { contains: query.search, mode: 'insensitive' } }] } : {};
+        const where = query.search ? { OR: [
+                { name: { contains: query.search, mode: 'insensitive' } },
+                { sku: { contains: query.search, mode: 'insensitive' } },
+                { barcode: { contains: query.search, mode: 'insensitive' } },
+                { brand: { contains: query.search, mode: 'insensitive' } },
+                { category: { contains: query.search, mode: 'insensitive' } },
+            ] } : {};
         const [data, total] = await Promise.all([
             this.prisma.product.findMany({ where, skip: (query.page - 1) * query.limit, take: query.limit, orderBy: { name: 'asc' } }),
             this.prisma.product.count({ where }),

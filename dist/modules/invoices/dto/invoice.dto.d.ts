@@ -1,4 +1,8 @@
 import { InvoiceDocumentType } from '@prisma/client';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
+export declare class InvoiceFilterDto extends PaginationDto {
+    documentType?: InvoiceDocumentType;
+}
 export declare class CreateInvoiceItemDto {
     productId?: string;
     description: string;

@@ -26,6 +26,7 @@ let DashboardController = class DashboardController {
     }
     topbar(user) { return this.dashboard.topbar(user); }
     admin() { return this.dashboard.admin(); }
+    home() { return this.dashboard.home(); }
     repairsByStatus() { return this.dashboard.repairsByStatus(); }
     repairsByTechnician() { return this.dashboard.repairsByTechnician(); }
     cashierPartRequests() { return this.dashboard.cashierPartRequests(); }
@@ -47,6 +48,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], DashboardController.prototype, "admin", null);
+__decorate([
+    (0, common_1.Get)('home'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], DashboardController.prototype, "home", null);
 __decorate([
     (0, common_1.Get)('repairs/by-status'),
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN),

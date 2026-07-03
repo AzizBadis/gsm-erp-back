@@ -7,6 +7,14 @@ export declare class CreatePaymentAccountDto {
     initialBalance?: number;
     isActive?: boolean;
 }
+export declare class UpdatePaymentAccountDto {
+    name?: string;
+    accountType?: string;
+    accountNumber?: string;
+    description?: string;
+    initialBalance?: number;
+    isActive?: boolean;
+}
 export declare class CreateAccountTransactionDto {
     accountId: string;
     transactionDate?: string;

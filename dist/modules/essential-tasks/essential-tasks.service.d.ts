@@ -6,10 +6,11 @@ export declare class EssentialTasksService {
     constructor(prisma: PrismaService);
     create(dto: CreateEssentialTaskDto): Promise<{
         id: string;
+        status: import(".prisma/client").$Enums.EssentialTaskStatus;
         createdAt: Date;
         updatedAt: Date;
         reference: string;
-        status: import(".prisma/client").$Enums.EssentialTaskStatus;
+        assignedUserId: string | null;
         title: string;
         priority: import(".prisma/client").$Enums.EssentialTaskPriority;
         startAt: Date | null;
@@ -17,21 +18,21 @@ export declare class EssentialTasksService {
         estimatedHours: string | null;
         assignedTo: string;
         documents: string[];
-        assignedUserId: string | null;
     }>;
     findAll(query: PaginationDto): Promise<{
         data: ({
             assignedUser: {
                 id: string;
-                email: string;
                 fullName: string;
+                email: string;
             } | null;
         } & {
             id: string;
+            status: import(".prisma/client").$Enums.EssentialTaskStatus;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            status: import(".prisma/client").$Enums.EssentialTaskStatus;
+            assignedUserId: string | null;
             title: string;
             priority: import(".prisma/client").$Enums.EssentialTaskPriority;
             startAt: Date | null;
@@ -39,7 +40,6 @@ export declare class EssentialTasksService {
             estimatedHours: string | null;
             assignedTo: string;
             documents: string[];
-            assignedUserId: string | null;
         })[];
         total: number;
         page: number;
@@ -48,15 +48,16 @@ export declare class EssentialTasksService {
     findOne(id: string): import(".prisma/client").Prisma.Prisma__EssentialTaskClient<{
         assignedUser: {
             id: string;
-            email: string;
             fullName: string;
+            email: string;
         } | null;
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.EssentialTaskStatus;
         createdAt: Date;
         updatedAt: Date;
         reference: string;
-        status: import(".prisma/client").$Enums.EssentialTaskStatus;
+        assignedUserId: string | null;
         title: string;
         priority: import(".prisma/client").$Enums.EssentialTaskPriority;
         startAt: Date | null;
@@ -64,7 +65,6 @@ export declare class EssentialTasksService {
         estimatedHours: string | null;
         assignedTo: string;
         documents: string[];
-        assignedUserId: string | null;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     findMine(query: PaginationDto, user: {
         sub: string;
@@ -73,15 +73,16 @@ export declare class EssentialTasksService {
         data: ({
             assignedUser: {
                 id: string;
-                email: string;
                 fullName: string;
+                email: string;
             } | null;
         } & {
             id: string;
+            status: import(".prisma/client").$Enums.EssentialTaskStatus;
             createdAt: Date;
             updatedAt: Date;
             reference: string;
-            status: import(".prisma/client").$Enums.EssentialTaskStatus;
+            assignedUserId: string | null;
             title: string;
             priority: import(".prisma/client").$Enums.EssentialTaskPriority;
             startAt: Date | null;
@@ -89,7 +90,6 @@ export declare class EssentialTasksService {
             estimatedHours: string | null;
             assignedTo: string;
             documents: string[];
-            assignedUserId: string | null;
         })[];
         total: number;
         page: number;
@@ -100,10 +100,11 @@ export declare class EssentialTasksService {
         email: string;
     }): Promise<{
         id: string;
+        status: import(".prisma/client").$Enums.EssentialTaskStatus;
         createdAt: Date;
         updatedAt: Date;
         reference: string;
-        status: import(".prisma/client").$Enums.EssentialTaskStatus;
+        assignedUserId: string | null;
         title: string;
         priority: import(".prisma/client").$Enums.EssentialTaskPriority;
         startAt: Date | null;
@@ -111,14 +112,14 @@ export declare class EssentialTasksService {
         estimatedHours: string | null;
         assignedTo: string;
         documents: string[];
-        assignedUserId: string | null;
     }>;
     update(id: string, dto: UpdateEssentialTaskDto): import(".prisma/client").Prisma.Prisma__EssentialTaskClient<{
         id: string;
+        status: import(".prisma/client").$Enums.EssentialTaskStatus;
         createdAt: Date;
         updatedAt: Date;
         reference: string;
-        status: import(".prisma/client").$Enums.EssentialTaskStatus;
+        assignedUserId: string | null;
         title: string;
         priority: import(".prisma/client").$Enums.EssentialTaskPriority;
         startAt: Date | null;
@@ -126,7 +127,6 @@ export declare class EssentialTasksService {
         estimatedHours: string | null;
         assignedTo: string;
         documents: string[];
-        assignedUserId: string | null;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     remove(id: string): import(".prisma/client").Prisma.Prisma__EssentialTaskClient<{
         id: string;

@@ -18,8 +18,8 @@ export declare class GrhService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        description: string | null;
         data: Prisma.JsonValue;
+        description: string | null;
         type: string;
     }[]>;
     create(type: string, dto: CreateGrhRecordDto): Prisma.Prisma__GrhRecordClient<{
@@ -27,8 +27,8 @@ export declare class GrhService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        description: string | null;
         data: Prisma.JsonValue;
+        description: string | null;
         type: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, dto: UpdateGrhRecordDto): Prisma.Prisma__GrhRecordClient<{
@@ -36,8 +36,8 @@ export declare class GrhService {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        description: string | null;
         data: Prisma.JsonValue;
+        description: string | null;
         type: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     remove(id: string): Prisma.Prisma__GrhRecordClient<{

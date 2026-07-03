@@ -8,11 +8,11 @@ export declare class PaymentsController {
         invoice: {
             number: string;
             id: string;
+            contactId: string;
+            status: string;
             createdAt: Date;
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
-            contactId: string;
-            status: string;
             repairId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
             documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
@@ -24,23 +24,23 @@ export declare class PaymentsController {
         };
         cashier: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            fullName: string;
             email: string;
             passwordHash: string;
-            fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
             roleId: string | null;
             isActive: boolean;
-            createdAt: Date;
-            updatedAt: Date;
         };
     } & {
         id: string;
+        amount: import("@prisma/client/runtime/library").Decimal;
         createdAt: Date;
+        method: string;
         reference: string | null;
         invoiceId: string;
         cashierId: string;
-        amount: import("@prisma/client/runtime/library").Decimal;
-        method: string;
         paymentAccountId: string | null;
     }>;
 }

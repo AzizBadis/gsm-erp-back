@@ -19,34 +19,34 @@ export declare class CrmController {
     }[]>;
     list(t: string, q?: string): import(".prisma/client").Prisma.PrismaPromise<{
         id: string;
+        status: string | null;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        description: string | null;
         data: import("@prisma/client/runtime/library").JsonValue;
-        status: string | null;
+        description: string | null;
         type: string;
         createdBy: string;
     }[]>;
     create(t: string, d: CreateCrmRecordDto, u: AuthUser): import(".prisma/client").Prisma.Prisma__CrmRecordClient<{
         id: string;
+        status: string | null;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        description: string | null;
         data: import("@prisma/client/runtime/library").JsonValue;
-        status: string | null;
+        description: string | null;
         type: string;
         createdBy: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, d: CreateCrmRecordDto): import(".prisma/client").Prisma.Prisma__CrmRecordClient<{
         id: string;
+        status: string | null;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        description: string | null;
         data: import("@prisma/client/runtime/library").JsonValue;
-        status: string | null;
+        description: string | null;
         type: string;
         createdBy: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;

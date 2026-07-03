@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
@@ -28,10 +29,19 @@ import { CrmModule } from './modules/crm/crm.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { RoleDefinitionsModule } from './modules/roles/roles.module';
 import { ProductSettingsModule } from './modules/product-settings/product-settings.module';
+import { AbonnementsModule } from './modules/abonnements/abonnements.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [
+        join(__dirname, '..', '.env.local'),
+        join(__dirname, '..', '.env'),
+        '.env.local',
+        '.env',
+      ],
+    }),
     PrismaModule,
     AuthModule,
     UsersModule,
@@ -60,6 +70,7 @@ import { ProductSettingsModule } from './modules/product-settings/product-settin
     ProjectsModule,
     RoleDefinitionsModule,
     ProductSettingsModule,
+    AbonnementsModule,
   ],
 })
 export class AppModule {}

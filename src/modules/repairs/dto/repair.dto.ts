@@ -8,6 +8,8 @@ export class CreateRepairDto {
   @IsOptional() @IsString() technicianId?: string;
   @IsOptional() @IsString() repairTypeId?: string;
   @IsOptional() @IsString() imei?: string;
+  @IsOptional() @IsString() devicePassword?: string;
+  @IsOptional() @IsString() lockReason?: string;
   @IsString() problem: string;
   @IsOptional() @IsString() diagnosis?: string;
   @IsOptional() @IsString() notes?: string;

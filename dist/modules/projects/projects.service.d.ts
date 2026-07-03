@@ -5,12 +5,19 @@ export declare class ProjectsService {
     private readonly p;
     constructor(p: PrismaService);
     projects(): Prisma.PrismaPromise<({
-        tasks: {
+        category: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
             description: string | null;
+        } | null;
+        tasks: {
+            id: string;
             status: string;
+            createdAt: Date;
+            updatedAt: Date;
+            description: string | null;
             priority: string;
             assignedTo: string | null;
             startDate: Date | null;
@@ -19,13 +26,6 @@ export declare class ProjectsService {
             projectId: string;
             subject: string;
         }[];
-        category: {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            description: string | null;
-        } | null;
         timeLogs: {
             id: string;
             note: string | null;
@@ -37,11 +37,11 @@ export declare class ProjectsService {
         }[];
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
         name: string;
         description: string | null;
-        status: string;
         createdBy: string;
         categoryId: string | null;
         startDate: Date | null;
@@ -58,11 +58,11 @@ export declare class ProjectsService {
         } | null;
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
         name: string;
         description: string | null;
-        status: string;
         createdBy: string;
         categoryId: string | null;
         startDate: Date | null;
@@ -72,11 +72,11 @@ export declare class ProjectsService {
     tasks(): Prisma.PrismaPromise<({
         project: {
             id: string;
+            status: string;
             createdAt: Date;
             updatedAt: Date;
             name: string;
             description: string | null;
-            status: string;
             createdBy: string;
             categoryId: string | null;
             startDate: Date | null;
@@ -94,10 +94,10 @@ export declare class ProjectsService {
         }[];
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        status: string;
         priority: string;
         assignedTo: string | null;
         startDate: Date | null;
@@ -109,11 +109,11 @@ export declare class ProjectsService {
     createTask(d: CreateTaskDto): Prisma.Prisma__ProjectTaskClient<{
         project: {
             id: string;
+            status: string;
             createdAt: Date;
             updatedAt: Date;
             name: string;
             description: string | null;
-            status: string;
             createdBy: string;
             categoryId: string | null;
             startDate: Date | null;
@@ -122,10 +122,10 @@ export declare class ProjectsService {
         };
     } & {
         id: string;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
-        status: string;
         priority: string;
         assignedTo: string | null;
         startDate: Date | null;

@@ -1,4 +1,8 @@
 import { PurchaseKind, PurchaseStatus } from '@prisma/client';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
+export declare class PurchaseFilterDto extends PaginationDto {
+    kind?: PurchaseKind;
+}
 export declare class CreatePurchaseItemDto {
     productId?: string;
     productName: string;

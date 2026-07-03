@@ -5,6 +5,8 @@ export declare class CreateRepairDto {
     technicianId?: string;
     repairTypeId?: string;
     imei?: string;
+    devicePassword?: string;
+    lockReason?: string;
     problem: string;
     diagnosis?: string;
     notes?: string;

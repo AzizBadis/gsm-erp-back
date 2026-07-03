@@ -67,12 +67,12 @@ export declare class ExpensesService {
                 parentId: string | null;
             } | null;
         } & {
-            contact: string | null;
-            paymentAccount: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
+            contact: string | null;
             total: import("@prisma/client/runtime/library").Decimal;
+            paymentAccount: string | null;
             reference: string;
             location: string;
             addedBy: string;
@@ -114,12 +114,12 @@ export declare class ExpensesService {
             parentId: string | null;
         } | null;
     } & {
-        contact: string | null;
-        paymentAccount: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
+        contact: string | null;
         total: import("@prisma/client/runtime/library").Decimal;
+        paymentAccount: string | null;
         reference: string;
         location: string;
         addedBy: string;

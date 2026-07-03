@@ -13,9 +13,16 @@ export declare class StockTransfersController {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
+                    brand: string | null;
                     description: string | null;
                     sku: string;
+                    barcode: string | null;
+                    category: string | null;
+                    unit: string | null;
+                    warranty: string | null;
+                    productType: string | null;
                     unitPrice: import("@prisma/client/runtime/library").Decimal;
+                    taxRate: import("@prisma/client/runtime/library").Decimal;
                     stockQty: number;
                     minStockQty: number;
                 };
@@ -29,12 +36,12 @@ export declare class StockTransfersController {
             })[];
         } & {
             id: string;
+            status: import(".prisma/client").$Enums.StockTransferStatus;
+            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
             reference: string;
-            status: import(".prisma/client").$Enums.StockTransferStatus;
-            notes: string | null;
             addedBy: string;
             toLocation: string;
             fromLocation: string;
@@ -52,9 +59,16 @@ export declare class StockTransfersController {
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
+                brand: string | null;
                 description: string | null;
                 sku: string;
+                barcode: string | null;
+                category: string | null;
+                unit: string | null;
+                warranty: string | null;
+                productType: string | null;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
+                taxRate: import("@prisma/client/runtime/library").Decimal;
                 stockQty: number;
                 minStockQty: number;
             };
@@ -68,12 +82,12 @@ export declare class StockTransfersController {
         })[];
     } & {
         id: string;
+        status: import(".prisma/client").$Enums.StockTransferStatus;
+        notes: string | null;
         createdAt: Date;
         updatedAt: Date;
         total: import("@prisma/client/runtime/library").Decimal;
         reference: string;
-        status: import(".prisma/client").$Enums.StockTransferStatus;
-        notes: string | null;
         addedBy: string;
         toLocation: string;
         fromLocation: string;

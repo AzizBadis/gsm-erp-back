@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PurchaseKind, PurchasePaymentStatus, PurchaseStatus } from '@prisma/client';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreatePurchaseDto } from './dto/purchase.dto';
+import { CreatePurchaseDto, PurchaseFilterDto } from './dto/purchase.dto';
 
 @Injectable()
 export class PurchasesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query: PaginationDto, kind?: PurchaseKind) {
+  async findAll(query: PurchaseFilterDto) {
     const where = {
-      ...(kind ? { kind } : {}),
+      ...(query.kind ? { kind: query.kind } : {}),
       ...(query.search ? { OR: [
         { reference: { contains: query.search, mode: 'insensitive' as const } },
         { supplierName: { contains: query.search, mode: 'insensitive' as const } },
@@ -37,7 +36,7 @@ export class PurchasesService {
           reference: dto.reference?.trim() || `${prefix}-${new Date().getFullYear()}-${String(count + 1).padStart(5, '0')}`,
           kind: dto.kind,
           supplierName: dto.supplierName,
-          location: dto.location ?? 'GSM Guide',
+          location: dto.location ?? 'GPS Tunisie',
           status: dto.status ?? (dto.kind === PurchaseKind.PURCHASE ? PurchaseStatus.RECEIVED : PurchaseStatus.DRAFT),
           paymentStatus,
           purchaseDate: dto.purchaseDate ? new Date(dto.purchaseDate) : new Date(),

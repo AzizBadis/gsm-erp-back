@@ -17,5 +17,10 @@ export class BrandsService {
   }
   findOne(id: string) { return this.prisma.brand.findUniqueOrThrow({ where: { id } }); }
   update(id: string, dto: UpdateBrandDto) { return this.prisma.brand.update({ where: { id }, data: dto }); }
-  remove(id: string) { return this.prisma.brand.delete({ where: { id }, select: { id: true } }); }
+  async remove(id: string) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.deviceModel.deleteMany({ where: { brandId: id } });
+      return tx.brand.delete({ where: { id }, select: { id: true } });
+    });
+  }
 }

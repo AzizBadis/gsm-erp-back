@@ -27,7 +27,12 @@ let BrandsService = class BrandsService {
     }
     findOne(id) { return this.prisma.brand.findUniqueOrThrow({ where: { id } }); }
     update(id, dto) { return this.prisma.brand.update({ where: { id }, data: dto }); }
-    remove(id) { return this.prisma.brand.delete({ where: { id }, select: { id: true } }); }
+    async remove(id) {
+        return this.prisma.$transaction(async (tx) => {
+            await tx.deviceModel.deleteMany({ where: { brandId: id } });
+            return tx.brand.delete({ where: { id }, select: { id: true } });
+        });
+    }
 };
 exports.BrandsService = BrandsService;
 exports.BrandsService = BrandsService = __decorate([

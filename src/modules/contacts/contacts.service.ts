@@ -11,7 +11,13 @@ export class ContactsService {
   async findAll(query: PaginationDto) {
     const where = query.search ? { OR: [{ fullName: { contains: query.search, mode: 'insensitive' as const } }, { phone: { contains: query.search, mode: 'insensitive' as const } }] } : {};
     const [data, total] = await Promise.all([
-      this.prisma.contact.findMany({ where, skip: (query.page - 1) * query.limit, take: query.limit, orderBy: { createdAt: 'desc' } }),
+      this.prisma.contact.findMany({
+        where,
+        include: { abonnements: { orderBy: { endsAt: 'desc' } } },
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+        orderBy: { createdAt: 'desc' },
+      }),
       this.prisma.contact.count({ where }),
     ]);
     return { data, total, page: query.page, limit: query.limit };

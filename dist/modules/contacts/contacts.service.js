@@ -20,7 +20,13 @@ let ContactsService = class ContactsService {
     async findAll(query) {
         const where = query.search ? { OR: [{ fullName: { contains: query.search, mode: 'insensitive' } }, { phone: { contains: query.search, mode: 'insensitive' } }] } : {};
         const [data, total] = await Promise.all([
-            this.prisma.contact.findMany({ where, skip: (query.page - 1) * query.limit, take: query.limit, orderBy: { createdAt: 'desc' } }),
+            this.prisma.contact.findMany({
+                where,
+                include: { abonnements: { orderBy: { endsAt: 'desc' } } },
+                skip: (query.page - 1) * query.limit,
+                take: query.limit,
+                orderBy: { createdAt: 'desc' },
+            }),
             this.prisma.contact.count({ where }),
         ]);
         return { data, total, page: query.page, limit: query.limit };

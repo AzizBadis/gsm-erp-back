@@ -108,7 +108,7 @@ async function main() {
   const [adminRole, techRole, cashierRole, staffRole] = roleDefinitions;
 
   const defaultStatuses = [
-    { name: 'RECEIVED', label: 'Appareil pris en charge', color: '#2563eb' },
+    { name: 'RECEIVED', label: 'Appareil pris en charge', color: '#16a34a' },
     { name: 'ASSIGNED', label: 'Appareil affecte', color: '#4f46e5' },
     { name: 'IN_PROGRESS', label: 'Installation en cours', color: '#f59e0b' },
     { name: 'PAUSED', label: 'En pause', color: '#64748b' },
@@ -128,11 +128,11 @@ async function main() {
   }
 
   const admin = await prisma.user.upsert({
-    where: { email: 'Progsm06@gmail.com' },
-    update: { fullName: 'Admin GPS Tunisie', role: UserRole.ADMIN, roleId: adminRole.id, isActive: true },
+    where: { email: 'aziz5.badis@gmail.com' },
+    update: { fullName: 'Admin GSM ERP System', role: UserRole.ADMIN, roleId: adminRole.id, isActive: true },
     create: {
-      email: 'Progsm06@gmail.com',
-      fullName: 'Admin GPS Tunisie',
+      email: 'aziz5.badis@gmail.com',
+      fullName: 'Admin GSM ERP System',
       role: UserRole.ADMIN,
       roleId: adminRole.id,
       passwordHash,
@@ -165,7 +165,7 @@ async function main() {
 
   const techUsers = await Promise.all(
     [
-      { email: 'tech1@gsm.local', fullName: 'Yassine Technicien', specialty: 'Smartphones et GPS embarque' },
+      { email: 'tech1@gsm.local', fullName: 'Yassine Technicien', specialty: 'Smartphones et tablettes' },
       { email: 'tech2@gsm.local', fullName: 'Sara Technicienne', specialty: 'Tablettes, PC et diagnostic carte' },
     ].map(async (tech) => {
       const user = await prisma.user.upsert({
@@ -194,7 +194,7 @@ async function main() {
 
   const repairTypes = await Promise.all(
     [
-      { name: 'Installation GPS', commissionRate: 25, managedByAdmin: false },
+      { name: 'Reparation smartphone', commissionRate: 25, managedByAdmin: false },
       { name: 'Reparation mobile', commissionRate: 15, managedByAdmin: false },
       { name: 'Diagnostic avance', commissionRate: 10, managedByAdmin: true },
     ].map((type) => prisma.repairType.upsert({ where: { name: type.name }, update: type, create: type })),
@@ -215,19 +215,19 @@ async function main() {
     ),
   );
 
-  const [samsung, apple, xiaomi, huawei, teltonika] = await Promise.all(
-    ['Samsung', 'Apple', 'Xiaomi', 'Huawei', 'Teltonika'].map((name) =>
+  const [samsung, apple, xiaomi, huawei, asus] = await Promise.all(
+    ['Samsung', 'Apple', 'Xiaomi', 'Huawei', 'Asus'].map((name) =>
       prisma.brand.upsert({ where: { name }, update: {}, create: { name } }),
     ),
   );
 
-  const [smartphone, tablette, pc, tracker, smartWatch] = await Promise.all(
-    ['Smartphone', 'Tablette', 'PC', 'Traceur GPS', 'SmartWatch'].map((name) =>
+  const [smartphone, tablette, pc, laptop, smartWatch] = await Promise.all(
+    ['Smartphone', 'Tablette', 'PC fixe', 'PC portable', 'SmartWatch'].map((name) =>
       prisma.device.upsert({ where: { name }, update: {}, create: { name } }),
     ),
   );
 
-  const [galaxy, iphone, redmi, teltonikaFmb] = await Promise.all([
+  const [galaxy, iphone, redmi, asusVivoBook] = await Promise.all([
     prisma.deviceModel.upsert({
       where: { brandId_deviceId_name: { brandId: samsung.id, deviceId: smartphone.id, name: 'Galaxy S23' } },
       update: {},
@@ -244,9 +244,9 @@ async function main() {
       create: { brandId: xiaomi.id, deviceId: smartphone.id, name: 'Redmi Note 12' },
     }),
     prisma.deviceModel.upsert({
-      where: { brandId_deviceId_name: { brandId: teltonika.id, deviceId: tracker.id, name: 'FMB920' } },
+      where: { brandId_deviceId_name: { brandId: asus.id, deviceId: laptop.id, name: 'VivoBook 15' } },
       update: {},
-      create: { brandId: teltonika.id, deviceId: tracker.id, name: 'FMB920' },
+      create: { brandId: asus.id, deviceId: laptop.id, name: 'VivoBook 15' },
     }),
     prisma.deviceModel.upsert({
       where: { brandId_deviceId_name: { brandId: huawei.id, deviceId: smartWatch.id, name: 'Watch GT' } },
@@ -258,15 +258,15 @@ async function main() {
   const products = await Promise.all(
     [
       {
-        name: 'Traceur GPS Teltonika FMB920',
-        sku: 'GPS-FMB920',
+        name: 'Ecran Samsung Galaxy S23',
+        sku: 'SCR-SAM-S23',
         barcode: '619000000001',
-        brand: 'Teltonika',
-        category: 'Traceurs GPS',
+        brand: 'Samsung',
+        category: 'Pieces mobile',
         unit: 'Piece',
-        warranty: '12 mois',
-        productType: 'Stockable',
-        description: 'Traceur GPS compact pour vehicule.',
+        warranty: '3 mois',
+        productType: 'Piece detachee',
+        description: 'Module ecran complet pour Galaxy S23.',
         unitPrice: 290,
         taxRate: 19,
         stockQty: 18,
@@ -318,15 +318,15 @@ async function main() {
         minStockQty: 5,
       },
       {
-        name: 'Carte SIM M2M',
-        sku: 'SIM-M2M-001',
+        name: 'Colle ecran UV',
+        sku: 'COL-UV-001',
         barcode: '619000000005',
-        brand: 'GPS Tunisie',
-        category: 'Abonnement',
+        brand: 'GSM ERP System',
+        category: 'Consommables atelier',
         unit: 'Piece',
         warranty: '0',
         productType: 'Service',
-        description: 'Carte SIM pour abonnement de suivi.',
+        description: 'Colle UV pour pose ecran et vitre arriere.',
         unitPrice: 35,
         taxRate: 7,
         stockQty: 100,
@@ -351,19 +351,19 @@ async function main() {
       fullName: 'Nadia Ben Ali',
       phone: '+21620000001',
       email: 'nadia@example.com',
-      address: 'Ariana, Tunisie',
+      address: 'Centre-ville, Tunis',
     }),
     upsertContact({
       fullName: 'Karim Trabelsi',
       phone: '+21620000002',
       email: 'karim@example.com',
-      address: 'Lac 2, Tunis',
+      address: 'Menzah, Tunis',
     }),
     upsertContact({
-      fullName: 'Societe Delta Fleet',
+      fullName: 'Societe Phone Care',
       phone: '+21620000003',
-      email: 'fleet@example.com',
-      address: 'Zone industrielle Ben Arous',
+      email: 'phonecare@example.com',
+      address: 'Zone atelier, Tunis',
     }),
   ]);
 
@@ -372,16 +372,16 @@ async function main() {
   await Promise.all(
     [
       {
-        label: 'Suivi GPS flotte Delta - Mensuel',
+        label: 'Contrat maintenance Phone Care - Mensuel',
         contactId: fleet.id,
         startsAt: daysFromNow(-20),
         endsAt: daysFromNow(10),
         amount: 240,
         status: AbonnementStatus.ACTIVE,
-        notes: 'Pack 8 vehicules avec alertes temps reel.',
+        notes: 'Pack maintenance pour tablettes et smartphones professionnels.',
       },
       {
-        label: 'Suivi GPS personnel',
+        label: 'Maintenance smartphone personnel',
         contactId: karim.id,
         startsAt: daysFromNow(-45),
         endsAt: daysFromNow(-5),
@@ -406,7 +406,7 @@ async function main() {
         startsAt: daysFromNow(1),
         endsAt: daysFromNow(1.08),
         tableName: 'Comptoir 1',
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         servicePerson: staff.fullName,
         status: ReservationStatus.BOOKED,
         notes: 'Diagnostic batterie avant midi.',
@@ -417,11 +417,11 @@ async function main() {
         contactId: fleet.id,
         startsAt: daysFromNow(2),
         endsAt: daysFromNow(2.17),
-        tableName: 'Atelier GPS',
-        location: 'GPS Tunisie Ben Arous',
+        tableName: 'Atelier diagnostic',
+        location: 'Atelier GSM ERP Nord',
         servicePerson: tech1.user.fullName,
         status: ReservationStatus.WAITING,
-        notes: 'Installation sur deux voitures.',
+        notes: 'Diagnostic de trois smartphones professionnels.',
         createdBy: admin.fullName,
       },
     ].map((reservation) =>
@@ -491,8 +491,8 @@ async function main() {
       where: { reference: 'REP-SEED-00003' },
       update: {
         contactId: fleet.id,
-        deviceId: tracker.id,
-        deviceModelId: teltonikaFmb.id,
+        deviceId: laptop.id,
+        deviceModelId: asusVivoBook.id,
         technicianId: tech1.technician.id,
         status: 'FINISHED',
         estimatedCost: 390,
@@ -501,12 +501,12 @@ async function main() {
       create: {
         reference: 'REP-SEED-00003',
         contactId: fleet.id,
-        deviceId: tracker.id,
-        deviceModelId: teltonikaFmb.id,
+        deviceId: laptop.id,
+        deviceModelId: asusVivoBook.id,
         technicianId: tech1.technician.id,
         status: 'FINISHED',
-        problem: 'Installer un traceur GPS et tester les alertes.',
-        diagnosis: 'Vehicule pret pour livraison client.',
+        problem: 'PC portable lent avec charniere bloquee.',
+        diagnosis: 'SSD remplace, charniere reglee et tests termines.',
         estimatedCost: 390,
         repairTypeId: repairTypes[0].id,
       },
@@ -593,7 +593,7 @@ async function main() {
     update: {
       name: 'Caisse principale',
       accountType: 'CASH',
-      description: 'Caisse de test GPS Tunisie',
+      description: 'Caisse de test GSM ERP System',
       initialBalance: 500,
       isActive: true,
       createdBy: admin.fullName,
@@ -602,7 +602,7 @@ async function main() {
       name: 'Caisse principale',
       accountType: 'CASH',
       accountNumber: 'CASH-SEED-001',
-      description: 'Caisse de test GPS Tunisie',
+      description: 'Caisse de test GSM ERP System',
       initialBalance: 500,
       isActive: true,
       createdBy: admin.fullName,
@@ -771,8 +771,8 @@ async function main() {
       { invoiceId: saleInvoice.id, productId: products[3].id, description: products[3].name, quantity: 1, unitPrice: 70, total: 70 },
       { invoiceId: saleInvoice.id, description: 'Main d oeuvre', quantity: 1, unitPrice: 70, total: 70 },
       { invoiceId: paidInvoice.id, productId: products[0].id, description: products[0].name, quantity: 1, unitPrice: 290, total: 290 },
-      { invoiceId: paidInvoice.id, productId: products[4].id, description: 'Activation SIM M2M', quantity: 1, unitPrice: 35, total: 35 },
-      { invoiceId: paidInvoice.id, description: 'Installation vehicule', quantity: 1, unitPrice: 65, total: 65 },
+      { invoiceId: paidInvoice.id, productId: products[4].id, description: 'Colle UV et consommables', quantity: 1, unitPrice: 35, total: 35 },
+      { invoiceId: paidInvoice.id, description: 'Main d oeuvre diagnostic PC', quantity: 1, unitPrice: 65, total: 65 },
     ],
   });
 
@@ -816,7 +816,7 @@ async function main() {
         amount: 390,
         direction: AccountTransactionDirection.CREDIT,
         paymentType: 'bank_transfer',
-        description: 'Paiement facture flotte',
+        description: 'Paiement facture atelier professionnel',
         createdBy: cashier.fullName,
       },
     ],
@@ -825,10 +825,10 @@ async function main() {
   await Promise.all(
     [
       {
-        name: 'Promo accessoires GPS',
+        name: 'Promo accessoires GSM',
         priority: 1,
-        category: 'Traceurs GPS',
-        location: 'GPS Tunisie Ariana',
+        category: 'Smartphones',
+        location: 'Atelier GSM ERP Centre',
         amount: 10,
         amountType: 'PERCENT',
         startsAt: daysFromNow(-7),
@@ -865,7 +865,7 @@ async function main() {
       where: { reference: 'PUR-SEED-00001' },
       update: {
         kind: PurchaseKind.PURCHASE,
-        supplierName: 'Teltonika Distributor Tunisia',
+        supplierName: 'Pieces Reparation Tunis',
         status: PurchaseStatus.RECEIVED,
         paymentStatus: PurchasePaymentStatus.PAID,
         subtotal: 1200,
@@ -878,8 +878,8 @@ async function main() {
       create: {
         reference: 'PUR-SEED-00001',
         kind: PurchaseKind.PURCHASE,
-        supplierName: 'Teltonika Distributor Tunisia',
-        location: 'GPS Tunisie Ariana',
+        supplierName: 'Pieces Reparation Tunis',
+        location: 'Atelier GSM ERP Centre',
         status: PurchaseStatus.RECEIVED,
         paymentStatus: PurchasePaymentStatus.PAID,
         subtotal: 1200,
@@ -887,7 +887,7 @@ async function main() {
         shipping: 30,
         total: 1458,
         paidAmount: 1458,
-        notes: 'Stock initial traceurs GPS.',
+        notes: 'Stock initial pieces smartphones.',
         addedBy: admin.fullName,
       },
     }),
@@ -909,7 +909,7 @@ async function main() {
         reference: 'PO-SEED-00001',
         kind: PurchaseKind.ORDER,
         supplierName: 'Pieces Mobile Sfax',
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         status: PurchaseStatus.ORDERED,
         paymentStatus: PurchasePaymentStatus.PARTIAL,
         subtotal: 900,
@@ -985,8 +985,8 @@ async function main() {
     prisma.stockTransfer.upsert({
       where: { reference: 'TRF-SEED-00001' },
       update: {
-        fromLocation: 'Depot central',
-        toLocation: 'GPS Tunisie Ariana',
+        fromLocation: 'Depot pieces detachees',
+        toLocation: 'Atelier GSM ERP Centre',
         status: StockTransferStatus.COMPLETED,
         shippingCharges: 15,
         total: 595,
@@ -994,8 +994,8 @@ async function main() {
       },
       create: {
         reference: 'TRF-SEED-00001',
-        fromLocation: 'Depot central',
-        toLocation: 'GPS Tunisie Ariana',
+        fromLocation: 'Depot pieces detachees',
+        toLocation: 'Atelier GSM ERP Centre',
         status: StockTransferStatus.COMPLETED,
         shippingCharges: 15,
         notes: 'Reassort boutique.',
@@ -1006,8 +1006,8 @@ async function main() {
     prisma.stockTransfer.upsert({
       where: { reference: 'TRF-SEED-00002' },
       update: {
-        fromLocation: 'GPS Tunisie Ariana',
-        toLocation: 'Technicien terrain',
+        fromLocation: 'Atelier GSM ERP Centre',
+        toLocation: 'Banc diagnostic',
         status: StockTransferStatus.IN_TRANSIT,
         shippingCharges: 0,
         total: 360,
@@ -1015,10 +1015,10 @@ async function main() {
       },
       create: {
         reference: 'TRF-SEED-00002',
-        fromLocation: 'GPS Tunisie Ariana',
-        toLocation: 'Technicien terrain',
+        fromLocation: 'Atelier GSM ERP Centre',
+        toLocation: 'Banc diagnostic',
         status: StockTransferStatus.IN_TRANSIT,
-        notes: 'Pieces pour intervention flotte.',
+        notes: 'Pieces reservees pour reparations en cours.',
         total: 360,
         addedBy: staff.fullName,
       },
@@ -1036,7 +1036,7 @@ async function main() {
     prisma.stockAdjustment.upsert({
       where: { reference: 'ADJ-SEED-00001' },
       update: {
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         type: StockAdjustmentType.ADD,
         total: 70,
         recoveredAmount: 0,
@@ -1045,7 +1045,7 @@ async function main() {
       },
       create: {
         reference: 'ADJ-SEED-00001',
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         type: StockAdjustmentType.ADD,
         total: 70,
         recoveredAmount: 0,
@@ -1056,7 +1056,7 @@ async function main() {
     prisma.stockAdjustment.upsert({
       where: { reference: 'ADJ-SEED-00002' },
       update: {
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         type: StockAdjustmentType.SUBTRACT,
         total: 35,
         recoveredAmount: 0,
@@ -1065,7 +1065,7 @@ async function main() {
       },
       create: {
         reference: 'ADJ-SEED-00002',
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         type: StockAdjustmentType.SUBTRACT,
         total: 35,
         recoveredAmount: 0,
@@ -1090,7 +1090,7 @@ async function main() {
     prisma.expense.upsert({
       where: { reference: 'EXP-SEED-00001' },
       update: {
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         categoryId: rentCategory.id,
         expenseFor: 'Loyer atelier juillet',
         total: 1200,
@@ -1101,7 +1101,7 @@ async function main() {
       },
       create: {
         reference: 'EXP-SEED-00001',
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         categoryId: rentCategory.id,
         expenseFor: 'Loyer atelier juillet',
         contact: 'Proprietaire local',
@@ -1122,7 +1122,7 @@ async function main() {
     prisma.expense.upsert({
       where: { reference: 'EXP-SEED-00002' },
       update: {
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         categoryId: utilitiesCategory.id,
         subCategoryId: internetCategory.id,
         expenseFor: 'Internet fibre',
@@ -1134,7 +1134,7 @@ async function main() {
       },
       create: {
         reference: 'EXP-SEED-00002',
-        location: 'GPS Tunisie Ariana',
+        location: 'Atelier GSM ERP Centre',
         categoryId: utilitiesCategory.id,
         subCategoryId: internetCategory.id,
         expenseFor: 'Internet fibre',
@@ -1178,7 +1178,7 @@ async function main() {
       },
       {
         reference: 'TASK-SEED-00002',
-        title: 'Controle inventaire traceurs GPS',
+        title: 'Controle inventaire pieces smartphones',
         status: EssentialTaskStatus.DONE,
         priority: EssentialTaskPriority.MEDIUM,
         startAt: daysFromNow(-2),
@@ -1224,16 +1224,16 @@ async function main() {
     [
       {
         type: 'lead',
-        name: 'Hotel Medina - 12 vehicules',
-        description: 'Prospect pour installation flotte GPS.',
+        name: 'Entreprise Medina - parc smartphones',
+        description: 'Prospect pour contrat de reparation et maintenance mobile.',
         status: 'OPEN',
         data: { value: 4200, source: 'Facebook', nextAction: 'Envoyer proposition' },
         createdBy: staff.fullName,
       },
       {
         type: 'ticket',
-        name: 'Relance abonnement Delta',
-        description: 'Prevenir avant expiration du pack flotte.',
+        name: 'Relance contrat Phone Care',
+        description: 'Prevenir avant expiration du pack maintenance.',
         status: 'FOLLOW_UP',
         data: { contact: fleet.fullName, dueAt: daysFromNow(5), channel: 'phone' },
         createdBy: admin.fullName,
@@ -1254,12 +1254,12 @@ async function main() {
   });
 
   const project = await upsertRecord(
-    () => prisma.project.findFirst({ where: { name: 'Deploiement flotte Delta' } }),
+    () => prisma.project.findFirst({ where: { name: 'Organisation atelier Phone Care' } }),
     (id) =>
       prisma.project.update({
         where: { id },
         data: {
-          description: 'Installation et activation de traceurs GPS pour Delta Fleet.',
+          description: 'Reparation et maintenance smartphones pour Phone Care.',
           status: 'IN_PROGRESS',
           startDate: daysFromNow(-5),
           endDate: daysFromNow(12),
@@ -1271,8 +1271,8 @@ async function main() {
     () =>
       prisma.project.create({
         data: {
-          name: 'Deploiement flotte Delta',
-          description: 'Installation et activation de traceurs GPS pour Delta Fleet.',
+          name: 'Organisation atelier Phone Care',
+          description: 'Reparation et maintenance smartphones pour Phone Care.',
           status: 'IN_PROGRESS',
           startDate: daysFromNow(-5),
           endDate: daysFromNow(12),
@@ -1290,27 +1290,27 @@ async function main() {
     prisma.projectTask.create({
       data: {
         projectId: project.id,
-        subject: 'Preparer les traceurs GPS',
-        description: 'Configurer SIM et plateforme avant pose.',
+        subject: 'Preparer les pieces smartphones',
+        description: 'Preparer ecrans, batteries et consommables avant intervention.',
         status: 'DONE',
         priority: 'HIGH',
         assignedTo: tech1.user.fullName,
         startDate: daysFromNow(-4),
         endDate: daysFromNow(-3),
-        customFields: { vehicleCount: 8 },
+        customFields: { repairCount: 8 },
       },
     }),
     prisma.projectTask.create({
       data: {
         projectId: project.id,
         subject: 'Planifier installation client',
-        description: 'Confirmer les creneaux avec Delta Fleet.',
+        description: 'Confirmer les creneaux avec Phone Care.',
         status: 'TODO',
         priority: 'MEDIUM',
         assignedTo: staff.fullName,
         startDate: daysFromNow(1),
         endDate: daysFromNow(3),
-        customFields: { location: 'Ben Arous' },
+        customFields: { location: 'Atelier GSM ERP Nord' },
       },
     }),
   ]);

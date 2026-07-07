@@ -36,7 +36,7 @@ export class PurchasesService {
           reference: dto.reference?.trim() || `${prefix}-${new Date().getFullYear()}-${String(count + 1).padStart(5, '0')}`,
           kind: dto.kind,
           supplierName: dto.supplierName,
-          location: dto.location ?? 'GPS Tunisie',
+          location: dto.location ?? 'GSM ERP System',
           status: dto.status ?? (dto.kind === PurchaseKind.PURCHASE ? PurchaseStatus.RECEIVED : PurchaseStatus.DRAFT),
           paymentStatus,
           purchaseDate: dto.purchaseDate ? new Date(dto.purchaseDate) : new Date(),

@@ -11,10 +11,10 @@ export declare class PurchasesController {
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    brand: string | null;
                     description: string | null;
                     sku: string;
                     barcode: string | null;
+                    brand: string | null;
                     category: string | null;
                     unit: string | null;
                     warranty: string | null;
@@ -26,10 +26,10 @@ export declare class PurchasesController {
                 } | null;
             } & {
                 id: string;
-                productId: string | null;
-                quantity: number;
                 purchaseId: string;
+                productId: string | null;
                 productName: string;
+                quantity: number;
                 unitCost: import("@prisma/client/runtime/library").Decimal;
                 margin: import("@prisma/client/runtime/library").Decimal;
                 salePrice: import("@prisma/client/runtime/library").Decimal;
@@ -37,22 +37,22 @@ export declare class PurchasesController {
             })[];
         } & {
             id: string;
-            status: import(".prisma/client").$Enums.PurchaseStatus;
-            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
-            total: import("@prisma/client/runtime/library").Decimal;
             reference: string;
-            paymentStatus: import(".prisma/client").$Enums.PurchasePaymentStatus;
-            subtotal: import("@prisma/client/runtime/library").Decimal;
-            discount: import("@prisma/client/runtime/library").Decimal;
-            tax: import("@prisma/client/runtime/library").Decimal;
-            paidAmount: import("@prisma/client/runtime/library").Decimal;
             kind: import(".prisma/client").$Enums.PurchaseKind;
             supplierName: string;
             location: string;
+            status: import(".prisma/client").$Enums.PurchaseStatus;
+            paymentStatus: import(".prisma/client").$Enums.PurchasePaymentStatus;
             purchaseDate: Date;
+            subtotal: import("@prisma/client/runtime/library").Decimal;
+            discount: import("@prisma/client/runtime/library").Decimal;
+            tax: import("@prisma/client/runtime/library").Decimal;
             shipping: import("@prisma/client/runtime/library").Decimal;
+            total: import("@prisma/client/runtime/library").Decimal;
+            paidAmount: import("@prisma/client/runtime/library").Decimal;
+            notes: string | null;
             addedBy: string;
         })[];
         total: number;
@@ -65,10 +65,10 @@ export declare class PurchasesController {
     }): Promise<{
         items: {
             id: string;
-            productId: string | null;
-            quantity: number;
             purchaseId: string;
+            productId: string | null;
             productName: string;
+            quantity: number;
             unitCost: import("@prisma/client/runtime/library").Decimal;
             margin: import("@prisma/client/runtime/library").Decimal;
             salePrice: import("@prisma/client/runtime/library").Decimal;
@@ -76,22 +76,22 @@ export declare class PurchasesController {
         }[];
     } & {
         id: string;
-        status: import(".prisma/client").$Enums.PurchaseStatus;
-        notes: string | null;
         createdAt: Date;
         updatedAt: Date;
-        total: import("@prisma/client/runtime/library").Decimal;
         reference: string;
-        paymentStatus: import(".prisma/client").$Enums.PurchasePaymentStatus;
-        subtotal: import("@prisma/client/runtime/library").Decimal;
-        discount: import("@prisma/client/runtime/library").Decimal;
-        tax: import("@prisma/client/runtime/library").Decimal;
-        paidAmount: import("@prisma/client/runtime/library").Decimal;
         kind: import(".prisma/client").$Enums.PurchaseKind;
         supplierName: string;
         location: string;
+        status: import(".prisma/client").$Enums.PurchaseStatus;
+        paymentStatus: import(".prisma/client").$Enums.PurchasePaymentStatus;
         purchaseDate: Date;
+        subtotal: import("@prisma/client/runtime/library").Decimal;
+        discount: import("@prisma/client/runtime/library").Decimal;
+        tax: import("@prisma/client/runtime/library").Decimal;
         shipping: import("@prisma/client/runtime/library").Decimal;
+        total: import("@prisma/client/runtime/library").Decimal;
+        paidAmount: import("@prisma/client/runtime/library").Decimal;
+        notes: string | null;
         addedBy: string;
     }>;
 }

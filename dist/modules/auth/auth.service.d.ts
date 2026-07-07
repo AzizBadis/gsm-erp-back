@@ -8,21 +8,15 @@ export declare class AuthService {
     private readonly config;
     constructor(prisma: PrismaService, jwt: JwtService, config: ConfigService);
     login(dto: LoginDto): Promise<{
-        otpRequired: boolean;
-        challengeId: string;
-        expiresAt: Date;
-        email: string;
-    }>;
-    verifyOtp(dto: VerifyOtpDto): Promise<{
         accessToken: string;
         user: {
             [key: string]: unknown;
         };
     }>;
+    verifyOtp(dto: VerifyOtpDto): Promise<void>;
     me(userId: string): Promise<{
         [key: string]: unknown;
     }>;
     private toPublicUser;
     private buildJwtPayload;
-    private sendOtpEmail;
 }

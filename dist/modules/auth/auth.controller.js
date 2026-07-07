@@ -25,9 +25,6 @@ let AuthController = class AuthController {
     login(dto) {
         return this.auth.login(dto);
     }
-    verifyOtp(dto) {
-        return this.auth.verifyOtp(dto);
-    }
     me(user) {
         return this.auth.me(user.sub);
     }
@@ -40,13 +37,6 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.LoginDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "login", null);
-__decorate([
-    (0, common_1.Post)('verify-otp'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.VerifyOtpDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "verifyOtp", null);
 __decorate([
     (0, common_1.Get)('me'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

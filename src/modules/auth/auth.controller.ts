@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
-import { LoginDto, VerifyOtpDto } from './dto/login.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -13,10 +13,12 @@ export class AuthController {
     return this.auth.login(dto);
   }
 
-  @Post('verify-otp')
-  verifyOtp(@Body() dto: VerifyOtpDto) {
-    return this.auth.verifyOtp(dto);
-  }
+  // OTP endpoint disabled. Keep this commented block as a reference if
+  // email verification is restored later.
+  // @Post('verify-otp')
+  // verifyOtp(@Body() dto: VerifyOtpDto) {
+  //   return this.auth.verifyOtp(dto);
+  // }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)

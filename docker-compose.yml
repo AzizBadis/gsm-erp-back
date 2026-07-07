@@ -1,16 +1,50 @@
+name: gsm-erp-system
+
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: gsm-repair-erp-postgres
+    container_name: gsm-erp-system-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: gsm_user
       POSTGRES_PASSWORD: gsm_password
-      POSTGRES_DB: gsm_repair_erp
+      POSTGRES_DB: gsm_erp_system
     ports:
-      - "5544:5432"
+      - "5545:5432"
     volumes:
-      - gsm_repair_erp_postgres_data:/var/lib/postgresql/data
+      - gsm_erp_system_postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+    container_name: gsm-erp-system-backend
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://gsm_user:gsm_password@postgres:5432/gsm_erp_system?schema=public
+      JWT_SECRET: change-me-in-production
+      JWT_EXPIRES_IN: 1d
+      PORT: 3002
+      GMAIL_SMTP_FROM_NAME: GSM ERP System
+    ports:
+      - "3002:3002"
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm run start:dev"
+
+  frontend:
+    build:
+      context: ../gsm-fix-desk-main
+    container_name: gsm-erp-system-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:3002
+      NEXT_PUBLIC_API_URL: http://localhost:3002
+    ports:
+      - "5174:5174"
+    command: npm run dev -- --host 0.0.0.0 --port 5174
 
 volumes:
-  gsm_repair_erp_postgres_data:
+  gsm_erp_system_postgres_data:
+    name: gsm_erp_system_postgres_data

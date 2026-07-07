@@ -33,7 +33,7 @@ export declare class BrandsService {
         updatedAt: Date;
         name: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
-    remove(id: string): import(".prisma/client").Prisma.Prisma__BrandClient<{
+    remove(id: string): Promise<{
         id: string;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs>;
+    }>;
 }

@@ -181,6 +181,25 @@ async function main() {
     },
   });
 
+  const additionalAdmins = await Promise.all(
+    [
+      { email: 'Aminebenjemaamohamed@gmail.com', fullName: 'Amine Ben Jemaa Mohamed' },
+      { email: 'Contact@gps-tunisie.tn', fullName: 'GPS Tunisie Contact' },
+      { email: 'Progsm06@gmail.com', fullName: 'Pro GSM 06' },
+    ].map((user) =>
+      prisma.user.upsert({
+        where: { email: user.email },
+        update: { fullName: user.fullName, role: UserRole.ADMIN, roleId: adminRole.id, isActive: true },
+        create: {
+          ...user,
+          role: UserRole.ADMIN,
+          roleId: adminRole.id,
+          passwordHash,
+        },
+      }),
+    ),
+  );
+
   const cashier = await prisma.user.upsert({
     where: { email: 'cashier@gps.local' },
     update: { fullName: 'Mouna Caissiere', role: UserRole.CASHIER, roleId: cashierRole.id, isActive: true },
@@ -1849,6 +1868,7 @@ async function main() {
     message: 'Seed data ready for all modules.',
     users: {
       admin: admin.email,
+      admins: additionalAdmins.map((user) => user.email),
       cashier: cashier.email,
       staff: staff.email,
       technicians: techUsers.map(({ user }) => user.email),

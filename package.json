@@ -1,5 +1,5 @@
 {
-  "name": "gsm-erp-system-backend",
+  "name": "erp-system-backend",
   "version": "1.0.0",
   "private": true,
   "scripts": {

@@ -7,7 +7,7 @@ CREATE TABLE "Purchase" (
   "reference" TEXT NOT NULL,
   "kind" "PurchaseKind" NOT NULL DEFAULT 'PURCHASE',
   "supplierName" TEXT NOT NULL,
-  "location" TEXT NOT NULL DEFAULT 'GSM Guide',
+  "location" TEXT NOT NULL DEFAULT 'Magasin principal',
   "status" "PurchaseStatus" NOT NULL DEFAULT 'DRAFT',
   "paymentStatus" "PurchasePaymentStatus" NOT NULL DEFAULT 'UNPAID',
   "purchaseDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

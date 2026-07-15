@@ -4,43 +4,76 @@ import { ProductsService } from './products.service';
 export declare class ProductsController {
     private readonly service;
     constructor(service: ProductsService);
-    create(dto: CreateProductDto): import(".prisma/client").Prisma.Prisma__ProductClient<{
+    create(dto: CreateProductDto): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         name: string;
-        brand: string | null;
-        description: string | null;
         sku: string;
         barcode: string | null;
+        brand: string | null;
         category: string | null;
         unit: string | null;
         warranty: string | null;
         productType: string | null;
+        description: string | null;
         unitPrice: import("@prisma/client/runtime/library").Decimal;
         taxRate: import("@prisma/client/runtime/library").Decimal;
         stockQty: number;
         minStockQty: number;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs>;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
     findAll(query: PaginationDto): Promise<{
         data: {
             id: string;
-            createdAt: Date;
-            updatedAt: Date;
             name: string;
-            brand: string | null;
-            description: string | null;
             sku: string;
             barcode: string | null;
+            brand: string | null;
             category: string | null;
             unit: string | null;
             warranty: string | null;
             productType: string | null;
+            description: string | null;
             unitPrice: import("@prisma/client/runtime/library").Decimal;
             taxRate: import("@prisma/client/runtime/library").Decimal;
             stockQty: number;
             minStockQty: number;
+            createdAt: Date;
+            updatedAt: Date;
         }[];
+        total: number;
+        page: number;
+        limit: number;
+    }>;
+    movements(query: PaginationDto): Promise<{
+        data: ({
+            product: {
+                id: string;
+                name: string;
+                sku: string;
+                barcode: string | null;
+                brand: string | null;
+                category: string | null;
+                unit: string | null;
+                warranty: string | null;
+                productType: string | null;
+                description: string | null;
+                unitPrice: import("@prisma/client/runtime/library").Decimal;
+                taxRate: import("@prisma/client/runtime/library").Decimal;
+                stockQty: number;
+                minStockQty: number;
+                createdAt: Date;
+                updatedAt: Date;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            productId: string;
+            type: import(".prisma/client").$Enums.StockMovementType;
+            quantity: number;
+            reason: string | null;
+            repairId: string | null;
+        })[];
         total: number;
         page: number;
         limit: number;
@@ -57,39 +90,39 @@ export declare class ProductsController {
         }[];
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         name: string;
-        brand: string | null;
-        description: string | null;
         sku: string;
         barcode: string | null;
+        brand: string | null;
         category: string | null;
         unit: string | null;
         warranty: string | null;
         productType: string | null;
+        description: string | null;
         unitPrice: import("@prisma/client/runtime/library").Decimal;
         taxRate: import("@prisma/client/runtime/library").Decimal;
         stockQty: number;
         minStockQty: number;
+        createdAt: Date;
+        updatedAt: Date;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, dto: UpdateProductDto): import(".prisma/client").Prisma.Prisma__ProductClient<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         name: string;
-        brand: string | null;
-        description: string | null;
         sku: string;
         barcode: string | null;
+        brand: string | null;
         category: string | null;
         unit: string | null;
         warranty: string | null;
         productType: string | null;
+        description: string | null;
         unitPrice: import("@prisma/client/runtime/library").Decimal;
         taxRate: import("@prisma/client/runtime/library").Decimal;
         stockQty: number;
         minStockQty: number;
+        createdAt: Date;
+        updatedAt: Date;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     remove(id: string): import(".prisma/client").Prisma.Prisma__ProductClient<{
         id: string;

@@ -16,7 +16,11 @@ let ProductsService = class ProductsService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    create(dto) { return this.prisma.product.create({ data: dto }); }
+    async create(dto) {
+        const sku = dto.sku?.trim() || await this.nextSku(dto.name);
+        const barcode = dto.barcode?.trim() || this.barcodeFromSku(sku);
+        return this.prisma.product.create({ data: { ...dto, sku, barcode } });
+    }
     async findAll(query) {
         const where = query.search ? { OR: [
                 { name: { contains: query.search, mode: 'insensitive' } },
@@ -34,6 +38,43 @@ let ProductsService = class ProductsService {
     findOne(id) { return this.prisma.product.findUniqueOrThrow({ where: { id }, include: { movements: true } }); }
     update(id, dto) { return this.prisma.product.update({ where: { id }, data: dto }); }
     remove(id) { return this.prisma.product.delete({ where: { id }, select: { id: true } }); }
+    async movements(query) {
+        const where = query.search ? {
+            product: {
+                OR: [
+                    { name: { contains: query.search, mode: 'insensitive' } },
+                    { sku: { contains: query.search, mode: 'insensitive' } },
+                    { barcode: { contains: query.search, mode: 'insensitive' } },
+                ],
+            },
+        } : {};
+        const [data, total] = await Promise.all([
+            this.prisma.stockMovement.findMany({
+                where,
+                include: { product: true },
+                skip: (query.page - 1) * query.limit,
+                take: query.limit,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.prisma.stockMovement.count({ where }),
+        ]);
+        return { data, total, page: query.page, limit: query.limit };
+    }
+    async nextSku(name) {
+        const prefix = this.slugPrefix(name);
+        const count = await this.prisma.product.count({
+            where: { sku: { startsWith: prefix } },
+        });
+        return `${prefix}-${String(count + 1).padStart(5, '0')}`;
+    }
+    slugPrefix(name) {
+        const cleaned = name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '').toUpperCase();
+        return `SKU-${(cleaned || 'PROD').slice(0, 6)}`;
+    }
+    barcodeFromSku(sku) {
+        const digits = sku.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return `20${String(digits).padStart(10, '0').slice(-10)}`;
+    }
 };
 exports.ProductsService = ProductsService;
 exports.ProductsService = ProductsService = __decorate([

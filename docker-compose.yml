@@ -1,50 +1,50 @@
-name: gsm-erp-system
+name: erp-system
 
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: gsm-erp-system-postgres
+    container_name: erp-system-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: gsm_user
-      POSTGRES_PASSWORD: gsm_password
-      POSTGRES_DB: gsm_erp_system
+      POSTGRES_USER: erp_user
+      POSTGRES_PASSWORD: erp_password
+      POSTGRES_DB: erp_system
     ports:
-      - "5550:5432"
+      - "5561:5432"
     volumes:
-      - gsm_erp_system_postgres_data:/var/lib/postgresql/data
+      - erp_system_postgres_data:/var/lib/postgresql/data
 
   backend:
     build:
       context: .
-    container_name: gsm-erp-system-backend
+    container_name: erp-system-backend
     restart: unless-stopped
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgresql://gsm_user:gsm_password@postgres:5432/gsm_erp_system?schema=public
+      DATABASE_URL: postgresql://erp_user:erp_password@postgres:5432/erp_system?schema=public
       JWT_SECRET: change-me-in-production
       JWT_EXPIRES_IN: 1d
-      PORT: 3010
-      GMAIL_SMTP_FROM_NAME: GSM ERP System
+      PORT: 3021
+      GMAIL_SMTP_FROM_NAME: ERP System
     ports:
-      - "3010:3010"
+      - "3021:3021"
     command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm run start:dev"
 
   frontend:
     build:
       context: ../gsm-fix-desk-main
-    container_name: gsm-erp-system-frontend
+    container_name: erp-system-frontend
     restart: unless-stopped
     depends_on:
       - backend
     environment:
-      VITE_API_URL: http://localhost:3010
-      NEXT_PUBLIC_API_URL: http://localhost:3010
+      VITE_API_URL: http://localhost:3021
+      NEXT_PUBLIC_API_URL: http://localhost:3021
     ports:
-      - "5180:5180"
-    command: npm run dev -- --host 0.0.0.0 --port 5180
+      - "5191:5191"
+    command: npm run dev -- --host 0.0.0.0 --port 5191
 
 volumes:
-  gsm_erp_system_postgres_data:
-    name: gsm_erp_system_postgres_data
+  erp_system_postgres_data:
+    name: erp_system_postgres_data

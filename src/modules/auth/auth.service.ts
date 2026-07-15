@@ -129,7 +129,7 @@ export class AuthService {
   //     throw new InternalServerErrorException('GMAIL_SMTP_APP_PASSWORD is not configured');
   //   }
   //
-  //   const fromName = this.config.get<string>('GMAIL_SMTP_FROM_NAME', 'GSM ERP System');
+  //   const fromName = this.config.get<string>('GMAIL_SMTP_FROM_NAME', 'ERP System');
   //   const transporter = nodemailer.createTransport({
   //     service: 'gmail',
   //     auth: {
@@ -142,12 +142,12 @@ export class AuthService {
   //     await transporter.sendMail({
   //       from: `"${fromName}" <${smtpUser}>`,
   //       to,
-  //       subject: 'Votre code de connexion GSM ERP System',
-  //       text: `Votre code de connexion GSM ERP System est ${code}. Ce code expire dans ${OTP_EXPIRES_IN_MINUTES} minutes.`,
+  //       subject: 'Votre code de connexion ERP System',
+  //       text: `Votre code de connexion ERP System est ${code}. Ce code expire dans ${OTP_EXPIRES_IN_MINUTES} minutes.`,
   //       html: `
   //         <div style="font-family:Arial,sans-serif;line-height:1.5;color:#0f172a">
   //           <h2 style="margin:0 0 12px">Code de connexion</h2>
-  //           <p>Utilisez ce code pour terminer votre connexion a GSM ERP System.</p>
+  //           <p>Utilisez ce code pour terminer votre connexion a ERP System.</p>
   //           <div style="font-size:28px;font-weight:700;letter-spacing:6px;margin:18px 0">${code}</div>
   //           <p>Ce code expire dans ${OTP_EXPIRES_IN_MINUTES} minutes.</p>
   //         </div>

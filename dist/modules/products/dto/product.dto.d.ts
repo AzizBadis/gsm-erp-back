@@ -1,6 +1,6 @@
 export declare class CreateProductDto {
     name: string;
-    sku: string;
+    sku?: string;
     barcode?: string;
     brand?: string;
     category?: string;

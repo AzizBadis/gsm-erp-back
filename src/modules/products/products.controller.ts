@@ -15,6 +15,8 @@ export class ProductsController {
   @Post() create(@Body() dto: CreateProductDto) { return this.service.create(dto); }
   @Roles(UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.CASHIER)
   @Get() findAll(@Query() query: PaginationDto) { return this.service.findAll(query); }
+  @Roles(UserRole.ADMIN, UserRole.CASHIER)
+  @Get('stock/movements') movements(@Query() query: PaginationDto) { return this.service.movements(query); }
   @Roles(UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.CASHIER)
   @Get(':id') findOne(@Param('id') id: string) { return this.service.findOne(id); }
   @Patch(':id') update(@Param('id') id: string, @Body() dto: UpdateProductDto) { return this.service.update(id, dto); }

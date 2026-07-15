@@ -27,6 +27,7 @@ let ProductsController = class ProductsController {
     }
     create(dto) { return this.service.create(dto); }
     findAll(query) { return this.service.findAll(query); }
+    movements(query) { return this.service.movements(query); }
     findOne(id) { return this.service.findOne(id); }
     update(id, dto) { return this.service.update(id, dto); }
     remove(id) { return this.service.remove(id); }
@@ -47,6 +48,14 @@ __decorate([
     __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
+__decorate([
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.CASHIER),
+    (0, common_1.Get)('stock/movements'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "movements", null);
 __decorate([
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.TECHNICIAN, client_1.UserRole.CASHIER),
     (0, common_1.Get)(':id'),

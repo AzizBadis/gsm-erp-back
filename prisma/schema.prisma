@@ -199,7 +199,7 @@ model Reservation {
   startsAt      DateTime
   endsAt        DateTime
   tableName     String?
-  location      String            @default("GSM Fix Desk")
+  location      String            @default("Magasin principal")
   servicePerson String?
   status        ReservationStatus @default(BOOKED)
   notes         String?
@@ -345,7 +345,7 @@ model Purchase {
   reference     String                @unique
   kind          PurchaseKind          @default(PURCHASE)
   supplierName  String
-  location      String                @default("GSM Fix Desk")
+  location      String                @default("Magasin principal")
   status        PurchaseStatus        @default(DRAFT)
   paymentStatus PurchasePaymentStatus @default(UNPAID)
   purchaseDate  DateTime              @default(now())

@@ -8,7 +8,7 @@ const toOptionalNumber = ({ value }: { value: unknown }) => {
 
 export class CreateProductDto {
   @IsString() name: string;
-  @IsString() sku: string;
+  @IsOptional() @IsString() sku?: string;
   @IsOptional() @IsString() barcode?: string;
   @IsOptional() @IsString() brand?: string;
   @IsOptional() @IsString() category?: string;

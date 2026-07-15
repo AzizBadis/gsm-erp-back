@@ -1,2 +1,2 @@
-ALTER TABLE "Reservation" ALTER COLUMN "location" SET DEFAULT 'GSM Fix Desk';
-ALTER TABLE "Purchase" ALTER COLUMN "location" SET DEFAULT 'GSM Fix Desk';
+ALTER TABLE "Reservation" ALTER COLUMN "location" SET DEFAULT 'Magasin principal';
+ALTER TABLE "Purchase" ALTER COLUMN "location" SET DEFAULT 'Magasin principal';

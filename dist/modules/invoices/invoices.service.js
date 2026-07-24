@@ -30,7 +30,7 @@ let InvoicesService = class InvoicesService {
         const [data, total] = await Promise.all([
             this.prisma.invoice.findMany({
                 where,
-                include: { items: true, contact: true, repair: true, payments: true },
+                include: { items: true, contact: true, repair: true, employee: true, payments: true },
                 skip: (query.page - 1) * query.limit,
                 take: query.limit,
                 orderBy: { createdAt: 'desc' },
@@ -53,6 +53,7 @@ let InvoicesService = class InvoicesService {
                     number: `INV-${new Date().getFullYear()}-${String(count + 1).padStart(5, '0')}`,
                     contactId: dto.contactId,
                     repairId: dto.repairId,
+                    employeeId: dto.employeeId,
                     subtotal,
                     tax,
                     total,
@@ -70,7 +71,7 @@ let InvoicesService = class InvoicesService {
                         })),
                     },
                 },
-                include: { items: true, contact: true, repair: true, payments: true },
+                include: { items: true, contact: true, repair: true, employee: true, payments: true },
             });
         });
     }

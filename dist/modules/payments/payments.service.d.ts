@@ -7,27 +7,28 @@ export declare class PaymentsService {
         invoice: {
             number: string;
             id: string;
-            contactId: string;
-            status: string;
             createdAt: Date;
-            updatedAt: Date;
-            total: import("@prisma/client/runtime/library").Decimal;
             repairId: string | null;
+            contactId: string;
+            employeeId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
             documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
+            status: string;
             shippingStatus: string;
             subtotal: import("@prisma/client/runtime/library").Decimal;
             discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
+            total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
+            updatedAt: Date;
         };
         cashier: {
             id: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             email: string;
             passwordHash: string;
+            fullName: string;
             role: import(".prisma/client").$Enums.UserRole;
             roleId: string | null;
             isActive: boolean;
@@ -35,9 +36,9 @@ export declare class PaymentsService {
     } & {
         id: string;
         amount: import("@prisma/client/runtime/library").Decimal;
-        createdAt: Date;
         method: string;
         reference: string | null;
+        createdAt: Date;
         invoiceId: string;
         cashierId: string;
         paymentAccountId: string | null;

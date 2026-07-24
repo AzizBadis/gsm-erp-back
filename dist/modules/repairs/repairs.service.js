@@ -36,16 +36,23 @@ let RepairsService = class RepairsService {
         });
     }
     async assign(id, dto) {
+        const current = await this.prisma.repair.findUniqueOrThrow({
+            where: { id },
+            select: { technicianId: true, status: true },
+        });
+        const status = current.technicianId ? current.status : repair_status_1.RepairStatus.ASSIGNED;
         const repair = await this.prisma.repair.update({
             where: { id },
             data: {
                 technicianId: dto.technicianId,
                 repairTypeId: dto.repairTypeId,
-                status: repair_status_1.RepairStatus.ASSIGNED,
+                status,
             },
             include: this.repairInclude(),
         });
-        await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+        if (status !== current.status) {
+            await this.technicianManagement.handleStatusChange(repair.id, repair.status);
+        }
         return repair;
     }
     async updateStatus(id, dto) {
@@ -206,6 +213,8 @@ let RepairsService = class RepairsService {
             contact: true,
             device: true,
             deviceModel: { include: { brand: true, device: true } },
+            gpsModel: true,
+            operator: true,
             technician: { include: { user: true } },
             timerLogs: true,
             partRequests: { include: { items: { include: { product: true } } } },

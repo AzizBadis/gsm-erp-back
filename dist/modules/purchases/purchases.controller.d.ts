@@ -7,11 +7,11 @@ export declare class PurchasesController {
         data: ({
             items: ({
                 product: {
+                    brand: string | null;
                     id: string;
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    brand: string | null;
                     description: string | null;
                     sku: string;
                     barcode: string | null;
@@ -26,8 +26,8 @@ export declare class PurchasesController {
                 } | null;
             } & {
                 id: string;
-                productId: string | null;
                 quantity: number;
+                productId: string | null;
                 purchaseId: string;
                 productName: string;
                 unitCost: import("@prisma/client/runtime/library").Decimal;
@@ -37,11 +37,11 @@ export declare class PurchasesController {
             })[];
         } & {
             id: string;
-            status: import(".prisma/client").$Enums.PurchaseStatus;
-            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
+            status: import(".prisma/client").$Enums.PurchaseStatus;
+            notes: string | null;
             reference: string;
             paymentStatus: import(".prisma/client").$Enums.PurchasePaymentStatus;
             subtotal: import("@prisma/client/runtime/library").Decimal;
@@ -65,8 +65,8 @@ export declare class PurchasesController {
     }): Promise<{
         items: {
             id: string;
-            productId: string | null;
             quantity: number;
+            productId: string | null;
             purchaseId: string;
             productName: string;
             unitCost: import("@prisma/client/runtime/library").Decimal;
@@ -76,11 +76,11 @@ export declare class PurchasesController {
         }[];
     } & {
         id: string;
-        status: import(".prisma/client").$Enums.PurchaseStatus;
-        notes: string | null;
         createdAt: Date;
         updatedAt: Date;
         total: import("@prisma/client/runtime/library").Decimal;
+        status: import(".prisma/client").$Enums.PurchaseStatus;
+        notes: string | null;
         reference: string;
         paymentStatus: import(".prisma/client").$Enums.PurchasePaymentStatus;
         subtotal: import("@prisma/client/runtime/library").Decimal;

@@ -6,12 +6,12 @@ export declare class ContactsService {
     constructor(prisma: PrismaService);
     create(dto: CreateContactDto): import(".prisma/client").Prisma.Prisma__ContactClient<{
         id: string;
-        fullName: string;
-        phone: string;
         email: string | null;
-        address: string | null;
+        fullName: string;
         createdAt: Date;
         updatedAt: Date;
+        phone: string;
+        address: string | null;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     findAll(query: PaginationDto): Promise<{
         data: ({
@@ -29,12 +29,12 @@ export declare class ContactsService {
             }[];
         } & {
             id: string;
-            fullName: string;
-            phone: string;
             email: string | null;
-            address: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
+            phone: string;
+            address: string | null;
         })[];
         total: number;
         page: number;
@@ -42,21 +42,21 @@ export declare class ContactsService {
     }>;
     findOne(id: string): import(".prisma/client").Prisma.Prisma__ContactClient<{
         id: string;
-        fullName: string;
-        phone: string;
         email: string | null;
-        address: string | null;
+        fullName: string;
         createdAt: Date;
         updatedAt: Date;
+        phone: string;
+        address: string | null;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, dto: UpdateContactDto): import(".prisma/client").Prisma.Prisma__ContactClient<{
         id: string;
-        fullName: string;
-        phone: string;
         email: string | null;
-        address: string | null;
+        fullName: string;
         createdAt: Date;
         updatedAt: Date;
+        phone: string;
+        address: string | null;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     remove(id: string): import(".prisma/client").Prisma.Prisma__ContactClient<{
         id: string;

@@ -30,6 +30,7 @@ import { ProjectsModule } from './modules/projects/projects.module';
 import { RoleDefinitionsModule } from './modules/roles/roles.module';
 import { ProductSettingsModule } from './modules/product-settings/product-settings.module';
 import { AbonnementsModule } from './modules/abonnements/abonnements.module';
+import { GpsCatalogModule } from './modules/gps-catalog/gps-catalog.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { AbonnementsModule } from './modules/abonnements/abonnements.module';
     RoleDefinitionsModule,
     ProductSettingsModule,
     AbonnementsModule,
+    GpsCatalogModule,
   ],
 })
 export class AppModule {}

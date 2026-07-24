@@ -9,11 +9,11 @@ export declare class StockTransfersController {
         data: ({
             items: ({
                 product: {
+                    brand: string | null;
                     id: string;
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    brand: string | null;
                     description: string | null;
                     sku: string;
                     barcode: string | null;
@@ -29,23 +29,23 @@ export declare class StockTransfersController {
             } & {
                 id: string;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
-                productId: string;
                 quantity: number;
+                productId: string;
                 lineTotal: import("@prisma/client/runtime/library").Decimal;
                 transferId: string;
             })[];
         } & {
             id: string;
-            status: import(".prisma/client").$Enums.StockTransferStatus;
-            notes: string | null;
             createdAt: Date;
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
+            status: import(".prisma/client").$Enums.StockTransferStatus;
+            notes: string | null;
             reference: string;
             addedBy: string;
-            toLocation: string;
-            fromLocation: string;
             transferDate: Date;
+            fromLocation: string;
+            toLocation: string;
             shippingCharges: import("@prisma/client/runtime/library").Decimal;
         })[];
         total: number;
@@ -55,11 +55,11 @@ export declare class StockTransfersController {
     create(dto: CreateStockTransferDto, user: AuthUser): Promise<{
         items: ({
             product: {
+                brand: string | null;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                brand: string | null;
                 description: string | null;
                 sku: string;
                 barcode: string | null;
@@ -75,23 +75,23 @@ export declare class StockTransfersController {
         } & {
             id: string;
             unitPrice: import("@prisma/client/runtime/library").Decimal;
-            productId: string;
             quantity: number;
+            productId: string;
             lineTotal: import("@prisma/client/runtime/library").Decimal;
             transferId: string;
         })[];
     } & {
         id: string;
-        status: import(".prisma/client").$Enums.StockTransferStatus;
-        notes: string | null;
         createdAt: Date;
         updatedAt: Date;
         total: import("@prisma/client/runtime/library").Decimal;
+        status: import(".prisma/client").$Enums.StockTransferStatus;
+        notes: string | null;
         reference: string;
         addedBy: string;
-        toLocation: string;
-        fromLocation: string;
         transferDate: Date;
+        fromLocation: string;
+        toLocation: string;
         shippingCharges: import("@prisma/client/runtime/library").Decimal;
     }>;
 }

@@ -5,6 +5,12 @@ export declare class CreateRepairDto {
     technicianId?: string;
     repairTypeId?: string;
     imei?: string;
+    simNumber?: string;
+    gpsIdentifier?: string;
+    clientCode?: string;
+    gpsModelId?: string;
+    operatorId?: string;
+    checklist?: string[];
     devicePassword?: string;
     lockReason?: string;
     problem: string;

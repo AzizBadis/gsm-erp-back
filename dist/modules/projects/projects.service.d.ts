@@ -14,17 +14,17 @@ export declare class ProjectsService {
         } | null;
         tasks: {
             id: string;
-            status: string;
             createdAt: Date;
             updatedAt: Date;
             description: string | null;
+            subject: string;
             priority: string;
+            status: string;
             assignedTo: string | null;
             startDate: Date | null;
             endDate: Date | null;
             customFields: Prisma.JsonValue;
             projectId: string;
-            subject: string;
         }[];
         timeLogs: {
             id: string;
@@ -37,11 +37,11 @@ export declare class ProjectsService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
         name: string;
         description: string | null;
+        status: string;
         createdBy: string;
         categoryId: string | null;
         startDate: Date | null;
@@ -58,11 +58,11 @@ export declare class ProjectsService {
         } | null;
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
         name: string;
         description: string | null;
+        status: string;
         createdBy: string;
         categoryId: string | null;
         startDate: Date | null;
@@ -72,11 +72,11 @@ export declare class ProjectsService {
     tasks(): Prisma.PrismaPromise<({
         project: {
             id: string;
-            status: string;
             createdAt: Date;
             updatedAt: Date;
             name: string;
             description: string | null;
+            status: string;
             createdBy: string;
             categoryId: string | null;
             startDate: Date | null;
@@ -94,26 +94,26 @@ export declare class ProjectsService {
         }[];
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
+        subject: string;
         priority: string;
+        status: string;
         assignedTo: string | null;
         startDate: Date | null;
         endDate: Date | null;
         customFields: Prisma.JsonValue;
         projectId: string;
-        subject: string;
     })[]>;
     createTask(d: CreateTaskDto): Prisma.Prisma__ProjectTaskClient<{
         project: {
             id: string;
-            status: string;
             createdAt: Date;
             updatedAt: Date;
             name: string;
             description: string | null;
+            status: string;
             createdBy: string;
             categoryId: string | null;
             startDate: Date | null;
@@ -122,17 +122,17 @@ export declare class ProjectsService {
         };
     } & {
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
+        subject: string;
         priority: string;
+        status: string;
         assignedTo: string | null;
         startDate: Date | null;
         endDate: Date | null;
         customFields: Prisma.JsonValue;
         projectId: string;
-        subject: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     categories(): Prisma.PrismaPromise<{
         id: string;

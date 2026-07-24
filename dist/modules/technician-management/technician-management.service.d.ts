@@ -42,14 +42,14 @@ export declare class TechnicianManagementService {
             technician: {
                 user: {
                     id: string;
-                    createdAt: Date;
-                    updatedAt: Date;
-                    fullName: string;
                     email: string;
                     passwordHash: string;
+                    fullName: string;
                     role: import(".prisma/client").$Enums.UserRole;
                     roleId: string | null;
                     isActive: boolean;
+                    createdAt: Date;
+                    updatedAt: Date;
                 };
             } & {
                 id: string;
@@ -69,16 +69,22 @@ export declare class TechnicianManagementService {
                 } | null;
             } & {
                 id: string;
+                createdAt: Date;
+                updatedAt: Date;
                 contactId: string;
                 status: string;
                 notes: string | null;
-                createdAt: Date;
-                updatedAt: Date;
-                reference: string;
                 deviceId: string;
+                reference: string;
                 deviceModelId: string | null;
                 technicianId: string | null;
                 imei: string | null;
+                simNumber: string | null;
+                gpsIdentifier: string | null;
+                clientCode: string | null;
+                checklist: string[];
+                gpsModelId: string | null;
+                operatorId: string | null;
                 devicePassword: string | null;
                 lockReason: string | null;
                 problem: string;
@@ -155,9 +161,9 @@ export declare class TechnicianManagementService {
     }[]>;
     getStatusMappings(): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         event: string;
         statusId: string;
     }[]>;
@@ -166,9 +172,9 @@ export declare class TechnicianManagementService {
         status: string;
     }): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         event: string;
         statusId: string;
     }>;
@@ -177,25 +183,25 @@ export declare class TechnicianManagementService {
         status?: string;
     }): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         event: string;
         statusId: string;
     }>;
     deleteStatusMapping(id: string): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         event: string;
         statusId: string;
     }>;
     bulkSaveStatusMappings(mappings: BulkStatusMappingItemDto[]): Promise<{
         id: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
+        status: string;
         event: string;
         statusId: string;
     }[]>;

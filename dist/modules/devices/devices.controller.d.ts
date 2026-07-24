@@ -54,8 +54,8 @@ export declare class DevicesController {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        deviceId: string;
         brandId: string;
+        deviceId: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     findModels(query: PaginationDto): Promise<{
         data: ({
@@ -76,8 +76,8 @@ export declare class DevicesController {
             createdAt: Date;
             updatedAt: Date;
             name: string;
-            deviceId: string;
             brandId: string;
+            deviceId: string;
         })[];
         total: number;
         page: number;
@@ -101,8 +101,8 @@ export declare class DevicesController {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        deviceId: string;
         brandId: string;
+        deviceId: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     updateModel(id: string, dto: UpdateDeviceModelDto): import(".prisma/client").Prisma.Prisma__DeviceModelClient<{
         brand: {
@@ -122,8 +122,8 @@ export declare class DevicesController {
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        deviceId: string;
         brandId: string;
+        deviceId: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     removeModel(id: string): import(".prisma/client").Prisma.Prisma__DeviceModelClient<{
         id: string;

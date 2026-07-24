@@ -6,16 +6,16 @@ export declare class BrandsController {
     constructor(service: BrandsService);
     create(dto: CreateBrandDto): import(".prisma/client").Prisma.Prisma__BrandClient<{
         id: string;
-        name: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     findAll(query: PaginationDto): Promise<{
         data: {
             id: string;
-            name: string;
             createdAt: Date;
             updatedAt: Date;
+            name: string;
         }[];
         total: number;
         page: number;
@@ -23,15 +23,15 @@ export declare class BrandsController {
     }>;
     findOne(id: string): import(".prisma/client").Prisma.Prisma__BrandClient<{
         id: string;
-        name: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, dto: UpdateBrandDto): import(".prisma/client").Prisma.Prisma__BrandClient<{
         id: string;
-        name: string;
         createdAt: Date;
         updatedAt: Date;
+        name: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     remove(id: string): Promise<{
         id: string;

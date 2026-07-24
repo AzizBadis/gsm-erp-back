@@ -8,22 +8,22 @@ export declare class ReservationsController {
     list(f?: string, t?: string, l?: string): import(".prisma/client").Prisma.PrismaPromise<({
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         } | null;
     } & {
         id: string;
-        contactId: string | null;
-        startsAt: Date;
-        endsAt: Date;
-        status: import(".prisma/client").$Enums.ReservationStatus;
-        notes: string | null;
         createdAt: Date;
         updatedAt: Date;
+        endsAt: Date;
+        contactId: string | null;
+        startsAt: Date;
+        status: import(".prisma/client").$Enums.ReservationStatus;
+        notes: string | null;
         createdBy: string;
         location: string;
         clientName: string;
@@ -34,22 +34,22 @@ export declare class ReservationsController {
     create(d: CreateReservationDto, u: AuthUser): Promise<({
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         } | null;
     } & {
         id: string;
-        contactId: string | null;
-        startsAt: Date;
-        endsAt: Date;
-        status: import(".prisma/client").$Enums.ReservationStatus;
-        notes: string | null;
         createdAt: Date;
         updatedAt: Date;
+        endsAt: Date;
+        contactId: string | null;
+        startsAt: Date;
+        status: import(".prisma/client").$Enums.ReservationStatus;
+        notes: string | null;
         createdBy: string;
         location: string;
         clientName: string;
@@ -60,22 +60,22 @@ export declare class ReservationsController {
     status(id: string, status: ReservationStatus): import(".prisma/client").Prisma.Prisma__ReservationClient<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         } | null;
     } & {
         id: string;
-        contactId: string | null;
-        startsAt: Date;
-        endsAt: Date;
-        status: import(".prisma/client").$Enums.ReservationStatus;
-        notes: string | null;
         createdAt: Date;
         updatedAt: Date;
+        endsAt: Date;
+        contactId: string | null;
+        startsAt: Date;
+        status: import(".prisma/client").$Enums.ReservationStatus;
+        notes: string | null;
         createdBy: string;
         location: string;
         clientName: string;

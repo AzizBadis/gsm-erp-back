@@ -15,34 +15,34 @@ export declare class CrmService {
     }>;
     findAll(type: string, search?: string): Prisma.PrismaPromise<{
         id: string;
-        status: string | null;
         createdAt: Date;
         updatedAt: Date;
         name: string;
         data: Prisma.JsonValue;
         description: string | null;
+        status: string | null;
         type: string;
         createdBy: string;
     }[]>;
     create(type: string, dto: CreateCrmRecordDto, createdBy: string): Prisma.Prisma__CrmRecordClient<{
         id: string;
-        status: string | null;
         createdAt: Date;
         updatedAt: Date;
         name: string;
         data: Prisma.JsonValue;
         description: string | null;
+        status: string | null;
         type: string;
         createdBy: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, dto: CreateCrmRecordDto): Prisma.Prisma__CrmRecordClient<{
         id: string;
-        status: string | null;
         createdAt: Date;
         updatedAt: Date;
         name: string;
         data: Prisma.JsonValue;
         description: string | null;
+        status: string | null;
         type: string;
         createdBy: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;

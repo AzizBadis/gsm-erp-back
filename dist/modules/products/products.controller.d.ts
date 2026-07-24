@@ -5,11 +5,11 @@ export declare class ProductsController {
     private readonly service;
     constructor(service: ProductsService);
     create(dto: CreateProductDto): import(".prisma/client").Prisma.Prisma__ProductClient<{
+        brand: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        brand: string | null;
         description: string | null;
         sku: string;
         barcode: string | null;
@@ -24,11 +24,11 @@ export declare class ProductsController {
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     findAll(query: PaginationDto): Promise<{
         data: {
+            brand: string | null;
             id: string;
             createdAt: Date;
             updatedAt: Date;
             name: string;
-            brand: string | null;
             description: string | null;
             sku: string;
             barcode: string | null;
@@ -49,18 +49,18 @@ export declare class ProductsController {
         movements: {
             id: string;
             createdAt: Date;
+            repairId: string | null;
+            reason: string | null;
+            quantity: number;
             productId: string;
             type: import(".prisma/client").$Enums.StockMovementType;
-            quantity: number;
-            reason: string | null;
-            repairId: string | null;
         }[];
     } & {
+        brand: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        brand: string | null;
         description: string | null;
         sku: string;
         barcode: string | null;
@@ -74,11 +74,11 @@ export declare class ProductsController {
         minStockQty: number;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: string, dto: UpdateProductDto): import(".prisma/client").Prisma.Prisma__ProductClient<{
+        brand: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        brand: string | null;
         description: string | null;
         sku: string;
         barcode: string | null;

@@ -8,9 +8,9 @@ export declare class PaymentAccountsService {
         balance: number;
         transactions: {
             id: string;
-            amount: import("@prisma/client/runtime/library").Decimal;
             createdAt: Date;
             description: string | null;
+            amount: import("@prisma/client/runtime/library").Decimal;
             reference: string | null;
             transactionDate: Date;
             invoiceReference: string | null;
@@ -20,10 +20,10 @@ export declare class PaymentAccountsService {
             accountId: string;
         }[];
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        isActive: boolean;
         description: string | null;
         createdBy: string;
         accountType: string;
@@ -32,10 +32,10 @@ export declare class PaymentAccountsService {
     }[]>;
     createAccount(dto: CreatePaymentAccountDto, createdBy: string): import(".prisma/client").Prisma.Prisma__PaymentAccountClient<{
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        isActive: boolean;
         description: string | null;
         createdBy: string;
         accountType: string;
@@ -44,10 +44,10 @@ export declare class PaymentAccountsService {
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
     updateAccount(id: string, dto: UpdatePaymentAccountDto): import(".prisma/client").Prisma.Prisma__PaymentAccountClient<{
         id: string;
+        isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
         name: string;
-        isActive: boolean;
         description: string | null;
         createdBy: string;
         accountType: string;
@@ -58,10 +58,10 @@ export declare class PaymentAccountsService {
         data: ({
             account: {
                 id: string;
+                isActive: boolean;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                isActive: boolean;
                 description: string | null;
                 createdBy: string;
                 accountType: string;
@@ -70,9 +70,9 @@ export declare class PaymentAccountsService {
             };
         } & {
             id: string;
-            amount: import("@prisma/client/runtime/library").Decimal;
             createdAt: Date;
             description: string | null;
+            amount: import("@prisma/client/runtime/library").Decimal;
             reference: string | null;
             transactionDate: Date;
             invoiceReference: string | null;
@@ -88,10 +88,10 @@ export declare class PaymentAccountsService {
     createTransaction(dto: CreateAccountTransactionDto, createdBy: string): import(".prisma/client").Prisma.Prisma__AccountTransactionClient<{
         account: {
             id: string;
+            isActive: boolean;
             createdAt: Date;
             updatedAt: Date;
             name: string;
-            isActive: boolean;
             description: string | null;
             createdBy: string;
             accountType: string;
@@ -100,9 +100,9 @@ export declare class PaymentAccountsService {
         };
     } & {
         id: string;
-        amount: import("@prisma/client/runtime/library").Decimal;
         createdAt: Date;
         description: string | null;
+        amount: import("@prisma/client/runtime/library").Decimal;
         reference: string | null;
         transactionDate: Date;
         invoiceReference: string | null;

@@ -19,6 +19,7 @@ export class CreateInvoiceItemDto {
 export class CreateInvoiceDto {
   @IsString() contactId: string;
   @IsOptional() @IsString() repairId?: string;
+  @IsOptional() @IsString() employeeId?: string;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) tax?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) discount?: number;
   @IsOptional() @IsEnum(InvoiceDocumentType) documentType?: InvoiceDocumentType;

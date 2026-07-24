@@ -12,24 +12,24 @@ export declare class AbonnementsService {
         data: ({
             contact: {
                 id: string;
+                email: string | null;
+                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
-                fullName: string;
                 phone: string;
-                email: string | null;
                 address: string | null;
             };
         } & {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            endsAt: Date;
             contactId: string;
             label: string;
             startsAt: Date;
-            endsAt: Date;
             amount: Prisma.Decimal;
             status: import(".prisma/client").$Enums.AbonnementStatus;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         })[];
         total: number;
         page: number;
@@ -38,46 +38,46 @@ export declare class AbonnementsService {
     create(dto: CreateAbonnementDto): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        endsAt: Date;
         contactId: string;
         label: string;
         startsAt: Date;
-        endsAt: Date;
         amount: Prisma.Decimal;
         status: import(".prisma/client").$Enums.AbonnementStatus;
         notes: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     update(id: string, dto: UpdateAbonnementDto): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        endsAt: Date;
         contactId: string;
         label: string;
         startsAt: Date;
-        endsAt: Date;
         amount: Prisma.Decimal;
         status: import(".prisma/client").$Enums.AbonnementStatus;
         notes: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     remove(id: string): Prisma.Prisma__AbonnementClient<{
         id: string;

@@ -9,9 +9,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePaymentDto = void 0;
+exports.CreatePaymentDto = exports.PaymentPartDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+class PaymentPartDto {
+}
+exports.PaymentPartDto = PaymentPartDto;
+__decorate([
+    (0, class_validator_1.IsIn)(['Espèce', 'Chèque', 'Traite']),
+    __metadata("design:type", String)
+], PaymentPartDto.prototype, "method", void 0);
+__decorate([
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0.01),
+    __metadata("design:type", Number)
+], PaymentPartDto.prototype, "amount", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], PaymentPartDto.prototype, "reference", void 0);
 class CreatePaymentDto {
 }
 exports.CreatePaymentDto = CreatePaymentDto;
@@ -26,7 +44,7 @@ __decorate([
     __metadata("design:type", Number)
 ], CreatePaymentDto.prototype, "amount", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsIn)(['Chèque', 'Espèce', 'Traite', 'Paiement partiel']),
     __metadata("design:type", String)
 ], CreatePaymentDto.prototype, "method", void 0);
 __decorate([
@@ -39,4 +57,13 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreatePaymentDto.prototype, "paymentAccountId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMinSize)(2),
+    (0, class_validator_1.ArrayMaxSize)(2),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => PaymentPartDto),
+    __metadata("design:type", Array)
+], CreatePaymentDto.prototype, "parts", void 0);
 //# sourceMappingURL=payment.dto.js.map

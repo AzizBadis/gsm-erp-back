@@ -12,6 +12,7 @@ export declare class CreateInvoiceItemDto {
 export declare class CreateInvoiceDto {
     contactId: string;
     repairId?: string;
+    employeeId?: string;
     tax?: number;
     discount?: number;
     documentType?: InvoiceDocumentType;

@@ -8,6 +8,12 @@ export class CreateRepairDto {
   @IsOptional() @IsString() technicianId?: string;
   @IsOptional() @IsString() repairTypeId?: string;
   @IsOptional() @IsString() imei?: string;
+  @IsOptional() @IsString() simNumber?: string;
+  @IsOptional() @IsString() gpsIdentifier?: string;
+  @IsOptional() @IsString() clientCode?: string;
+  @IsOptional() @IsString() gpsModelId?: string;
+  @IsOptional() @IsString() operatorId?: string;
+  @IsOptional() @IsArray() @IsString({ each: true }) checklist?: string[];
   @IsOptional() @IsString() devicePassword?: string;
   @IsOptional() @IsString() lockReason?: string;
   @IsString() problem: string;

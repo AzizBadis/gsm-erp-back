@@ -9,11 +9,11 @@ export declare class StockAdjustmentsController {
         data: ({
             items: ({
                 product: {
+                    brand: string | null;
                     id: string;
                     createdAt: Date;
                     updatedAt: Date;
                     name: string;
-                    brand: string | null;
                     description: string | null;
                     sku: string;
                     barcode: string | null;
@@ -29,8 +29,8 @@ export declare class StockAdjustmentsController {
             } & {
                 id: string;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
-                productId: string;
                 quantity: number;
+                productId: string;
                 lineTotal: import("@prisma/client/runtime/library").Decimal;
                 adjustmentId: string;
             })[];
@@ -40,8 +40,8 @@ export declare class StockAdjustmentsController {
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
             reference: string;
-            type: import(".prisma/client").$Enums.StockAdjustmentType;
             reason: string | null;
+            type: import(".prisma/client").$Enums.StockAdjustmentType;
             location: string;
             addedBy: string;
             adjustmentDate: Date;
@@ -54,11 +54,11 @@ export declare class StockAdjustmentsController {
     create(dto: CreateStockAdjustmentDto, u: AuthUser): Promise<{
         items: ({
             product: {
+                brand: string | null;
                 id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 name: string;
-                brand: string | null;
                 description: string | null;
                 sku: string;
                 barcode: string | null;
@@ -74,8 +74,8 @@ export declare class StockAdjustmentsController {
         } & {
             id: string;
             unitPrice: import("@prisma/client/runtime/library").Decimal;
-            productId: string;
             quantity: number;
+            productId: string;
             lineTotal: import("@prisma/client/runtime/library").Decimal;
             adjustmentId: string;
         })[];
@@ -85,8 +85,8 @@ export declare class StockAdjustmentsController {
         updatedAt: Date;
         total: import("@prisma/client/runtime/library").Decimal;
         reference: string;
-        type: import(".prisma/client").$Enums.StockAdjustmentType;
         reason: string | null;
+        type: import(".prisma/client").$Enums.StockAdjustmentType;
         location: string;
         addedBy: string;
         adjustmentDate: Date;

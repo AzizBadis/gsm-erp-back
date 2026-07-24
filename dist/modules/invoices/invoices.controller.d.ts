@@ -7,25 +7,31 @@ export declare class InvoicesController {
         data: ({
             contact: {
                 id: string;
+                email: string | null;
+                fullName: string;
                 createdAt: Date;
                 updatedAt: Date;
-                fullName: string;
                 phone: string;
-                email: string | null;
                 address: string | null;
             };
             repair: {
                 id: string;
+                createdAt: Date;
+                updatedAt: Date;
                 contactId: string;
                 status: string;
                 notes: string | null;
-                createdAt: Date;
-                updatedAt: Date;
-                reference: string;
                 deviceId: string;
+                reference: string;
                 deviceModelId: string | null;
                 technicianId: string | null;
                 imei: string | null;
+                simNumber: string | null;
+                gpsIdentifier: string | null;
+                clientCode: string | null;
+                checklist: string[];
+                gpsModelId: string | null;
+                operatorId: string | null;
                 devicePassword: string | null;
                 lockReason: string | null;
                 problem: string;
@@ -38,32 +44,44 @@ export declare class InvoicesController {
             } | null;
             payments: {
                 id: string;
-                amount: import("@prisma/client/runtime/library").Decimal;
                 createdAt: Date;
-                method: string;
+                amount: import("@prisma/client/runtime/library").Decimal;
                 reference: string | null;
                 invoiceId: string;
                 cashierId: string;
+                method: string;
                 paymentAccountId: string | null;
             }[];
             items: {
                 id: string;
-                total: import("@prisma/client/runtime/library").Decimal;
                 description: string;
+                total: import("@prisma/client/runtime/library").Decimal;
                 unitPrice: import("@prisma/client/runtime/library").Decimal;
-                productId: string | null;
                 quantity: number;
+                productId: string | null;
                 invoiceId: string;
             }[];
+            employee: {
+                id: string;
+                email: string;
+                passwordHash: string;
+                fullName: string;
+                role: import(".prisma/client").$Enums.UserRole;
+                roleId: string | null;
+                isActive: boolean;
+                createdAt: Date;
+                updatedAt: Date;
+            } | null;
         } & {
             number: string;
             id: string;
-            contactId: string;
-            status: string;
             createdAt: Date;
             updatedAt: Date;
             total: import("@prisma/client/runtime/library").Decimal;
+            contactId: string;
+            status: string;
             repairId: string | null;
+            employeeId: string | null;
             paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
             documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
             shippingStatus: string;
@@ -79,25 +97,31 @@ export declare class InvoicesController {
     create(dto: CreateInvoiceDto): Promise<{
         contact: {
             id: string;
+            email: string | null;
+            fullName: string;
             createdAt: Date;
             updatedAt: Date;
-            fullName: string;
             phone: string;
-            email: string | null;
             address: string | null;
         };
         repair: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             contactId: string;
             status: string;
             notes: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            reference: string;
             deviceId: string;
+            reference: string;
             deviceModelId: string | null;
             technicianId: string | null;
             imei: string | null;
+            simNumber: string | null;
+            gpsIdentifier: string | null;
+            clientCode: string | null;
+            checklist: string[];
+            gpsModelId: string | null;
+            operatorId: string | null;
             devicePassword: string | null;
             lockReason: string | null;
             problem: string;
@@ -110,32 +134,44 @@ export declare class InvoicesController {
         } | null;
         payments: {
             id: string;
-            amount: import("@prisma/client/runtime/library").Decimal;
             createdAt: Date;
-            method: string;
+            amount: import("@prisma/client/runtime/library").Decimal;
             reference: string | null;
             invoiceId: string;
             cashierId: string;
+            method: string;
             paymentAccountId: string | null;
         }[];
         items: {
             id: string;
-            total: import("@prisma/client/runtime/library").Decimal;
             description: string;
+            total: import("@prisma/client/runtime/library").Decimal;
             unitPrice: import("@prisma/client/runtime/library").Decimal;
-            productId: string | null;
             quantity: number;
+            productId: string | null;
             invoiceId: string;
         }[];
+        employee: {
+            id: string;
+            email: string;
+            passwordHash: string;
+            fullName: string;
+            role: import(".prisma/client").$Enums.UserRole;
+            roleId: string | null;
+            isActive: boolean;
+            createdAt: Date;
+            updatedAt: Date;
+        } | null;
     } & {
         number: string;
         id: string;
-        contactId: string;
-        status: string;
         createdAt: Date;
         updatedAt: Date;
         total: import("@prisma/client/runtime/library").Decimal;
+        contactId: string;
+        status: string;
         repairId: string | null;
+        employeeId: string | null;
         paymentStatus: import(".prisma/client").$Enums.PaymentStatus;
         documentType: import(".prisma/client").$Enums.InvoiceDocumentType;
         shippingStatus: string;

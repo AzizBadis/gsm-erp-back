@@ -30,6 +30,9 @@ export declare class UpdateRepairNotesDto {
 }
 export declare class UpdateRepairStatusDto {
     status: string;
+    comment?: string;
+    sendEmail?: boolean;
+    sendSms?: boolean;
 }
 export declare class RequestPartItemDto {
     productId: string;

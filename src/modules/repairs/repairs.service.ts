@@ -51,9 +51,10 @@ export class RepairsService {
   }
 
   async updateStatus(id: string, dto: UpdateRepairStatusDto) {
-    const statusExists = await this.prisma.customStatus.findUnique({
-      where: { name: dto.status },
-    });
+    const [statusExists, currentRepair] = await Promise.all([
+      this.prisma.customStatus.findUnique({ where: { name: dto.status } }),
+      this.prisma.repair.findUniqueOrThrow({ where: { id }, select: { notes: true } }),
+    ]);
     if (!statusExists) {
       throw new NotFoundException(`Status ${dto.status} not found`);
     }
@@ -63,6 +64,11 @@ export class RepairsService {
       data: {
         status: dto.status,
         deliveredAt: dto.status === RepairStatus.DELIVERED ? new Date() : undefined,
+        notes: dto.comment
+          ? [currentRepair.notes, `[Changement de statut vers ${dto.status}] ${dto.comment}`]
+              .filter(Boolean)
+              .join('\n')
+          : undefined,
       },
       include: this.repairInclude(),
     });

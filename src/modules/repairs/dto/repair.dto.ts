@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { ArrayMinSize, IsArray, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { ArrayMinSize, IsArray, IsBoolean, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 
 export class CreateRepairDto {
   @IsString() contactId: string;
@@ -36,6 +36,9 @@ export class UpdateRepairNotesDto {
 
 export class UpdateRepairStatusDto {
   @IsString() status: string;
+  @IsOptional() @IsString() comment?: string;
+  @IsOptional() @IsBoolean() sendEmail?: boolean;
+  @IsOptional() @IsBoolean() sendSms?: boolean;
 }
 
 export class RequestPartItemDto {

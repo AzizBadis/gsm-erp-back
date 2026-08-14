@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { PurchaseKind, PurchasePaymentStatus, PurchaseStatus } from '@prisma/client';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { AccountTransactionDirection, PurchaseKind, PurchasePaymentStatus, PurchaseStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreatePurchaseDto, PurchaseFilterDto } from './dto/purchase.dto';
+import { CreatePurchaseDto, PurchaseFilterDto, RecordPurchasePaymentDto } from './dto/purchase.dto';
 
 @Injectable()
 export class PurchasesService {
@@ -50,6 +50,46 @@ export class PurchasesService {
         },
         include: { items: true },
       });
+    });
+  }
+
+  async recordPayment(id: string, dto: RecordPurchasePaymentDto, addedBy: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const [purchase, account] = await Promise.all([
+        tx.purchase.findUnique({ where: { id } }),
+        tx.paymentAccount.findUnique({ where: { id: dto.accountId } }),
+      ]);
+      if (!purchase) throw new BadRequestException('Purchase not found');
+      if (purchase.kind !== PurchaseKind.PURCHASE) throw new BadRequestException('Only received purchases can be paid');
+      if (!account || !account.isActive) throw new BadRequestException('Select an active payment account');
+
+      const remaining = Math.max(0, Number(purchase.total) - Number(purchase.paidAmount));
+      if (remaining <= 0) throw new BadRequestException('This purchase is already paid');
+      if (dto.amount > remaining) throw new BadRequestException(`Payment cannot exceed the remaining amount (${remaining.toFixed(2)})`);
+
+      const paidAmount = Number(purchase.paidAmount) + dto.amount;
+      const paymentStatus = paidAmount >= Number(purchase.total) ? PurchasePaymentStatus.PAID : PurchasePaymentStatus.PARTIAL;
+      const paymentDate = dto.paymentDate ? new Date(dto.paymentDate) : new Date();
+
+      const updatedPurchase = await tx.purchase.update({
+        where: { id },
+        data: { paidAmount, paymentStatus },
+        include: { items: true },
+      });
+      await tx.accountTransaction.create({
+        data: {
+          accountId: account.id,
+          transactionDate: paymentDate,
+          reference: purchase.reference,
+          invoiceReference: purchase.reference,
+          amount: dto.amount,
+          paymentType: dto.paymentType ?? 'Supplier payment',
+          direction: AccountTransactionDirection.DEBIT,
+          description: dto.note?.trim() || `Supplier payment for ${purchase.reference} (${purchase.supplierName})`,
+          createdBy: addedBy,
+        },
+      });
+      return updatedPurchase;
     });
   }
 }

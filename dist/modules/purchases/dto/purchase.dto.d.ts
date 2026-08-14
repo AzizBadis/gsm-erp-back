@@ -25,3 +25,10 @@ export declare class CreatePurchaseDto {
     notes?: string;
     items: CreatePurchaseItemDto[];
 }
+export declare class RecordPurchasePaymentDto {
+    accountId: string;
+    amount: number;
+    paymentDate?: string;
+    paymentType?: string;
+    note?: string;
+}

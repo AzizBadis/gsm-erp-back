@@ -374,7 +374,24 @@ export declare class AdminRepairsController {
         label: string;
         color: string;
     }>;
-    findOne(id: string): import(".prisma/client").Prisma.Prisma__RepairClient<{
+    findOne(id: string): Promise<{
+        workSheet: {
+            company: {
+                name: string | null;
+                address: string | null;
+                phone: string | null;
+                email: string | null;
+            };
+            location: string | null;
+            serviceType: string | null;
+            statusLabel: string | null;
+            activities: {
+                date: Date;
+                action: string;
+                actor: string | null;
+                remark: null;
+            }[];
+        };
         contact: {
             id: string;
             createdAt: Date;
@@ -512,7 +529,6 @@ export declare class AdminRepairsController {
             total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
         }[];
-    } & {
         id: string;
         reference: string;
         status: string;
@@ -539,7 +555,7 @@ export declare class AdminRepairsController {
         gpsModelId: string | null;
         operatorId: string | null;
         repairTypeId: string | null;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs>;
+    }>;
     assign(id: string, dto: AssignRepairDto): Promise<{
         contact: {
             id: string;

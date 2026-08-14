@@ -15,10 +15,12 @@ const client_1 = require("@prisma/client");
 const repair_status_1 = require("../../common/constants/repair-status");
 const prisma_service_1 = require("../../prisma/prisma.service");
 const technician_management_service_1 = require("../technician-management/technician-management.service");
+const config_1 = require("@nestjs/config");
 let RepairsService = class RepairsService {
-    constructor(prisma, technicianManagement) {
+    constructor(prisma, technicianManagement, config) {
         this.prisma = prisma;
         this.technicianManagement = technicianManagement;
+        this.config = config;
     }
     async create(dto) {
         return this.prisma.$transaction(async (tx) => {
@@ -110,8 +112,33 @@ let RepairsService = class RepairsService {
         ]);
         return { data, total, page: query.page, limit: query.limit };
     }
-    findOne(id) {
-        return this.prisma.repair.findUniqueOrThrow({ where: { id }, include: this.repairInclude() });
+    async findOne(id) {
+        const repair = await this.prisma.repair.findUniqueOrThrow({ where: { id }, include: this.repairInclude() });
+        const status = await this.prisma.customStatus.findUnique({ where: { name: repair.status } });
+        const actor = repair.technician?.user?.fullName ?? null;
+        const activities = [
+            ...(repair.deliveredAt ? [{ date: repair.deliveredAt, action: 'Installation livrée au client', actor, remark: null }] : []),
+            ...repair.timerLogs.flatMap((timer) => [
+                ...(timer.endedAt ? [{ date: timer.endedAt, action: 'Intervention terminée', actor, remark: null }] : []),
+                { date: timer.startedAt, action: 'Intervention démarrée', actor, remark: null },
+            ]),
+            { date: repair.createdAt, action: "Fiche d'installation créée", actor, remark: null },
+        ].sort((a, b) => b.date.getTime() - a.date.getTime());
+        return {
+            ...repair,
+            workSheet: {
+                company: {
+                    name: this.config.get('COMPANY_NAME') ?? null,
+                    address: this.config.get('COMPANY_ADDRESS') ?? null,
+                    phone: this.config.get('COMPANY_PHONE') ?? null,
+                    email: this.config.get('COMPANY_EMAIL') ?? null,
+                },
+                location: this.config.get('COMPANY_LOCATION') ?? null,
+                serviceType: repair.repairType?.name ?? null,
+                statusLabel: status?.label ?? null,
+                activities,
+            },
+        };
     }
     async technicianTasks(technicianId, query) {
         if (!technicianId)
@@ -258,6 +285,7 @@ exports.RepairsService = RepairsService;
 exports.RepairsService = RepairsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        technician_management_service_1.TechnicianManagementService])
+        technician_management_service_1.TechnicianManagementService,
+        config_1.ConfigService])
 ], RepairsService);
 //# sourceMappingURL=repairs.service.js.map

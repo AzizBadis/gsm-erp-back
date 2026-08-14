@@ -58,7 +58,16 @@ export declare class DashboardController {
                 location: string;
                 stock: number;
             }[];
-            saleOrders: never[];
+            saleOrders: {
+                action: string;
+                date: Date;
+                reference: string;
+                client: string;
+                phone: string;
+                location: string;
+                status: string;
+                shippingStatus: string;
+            }[];
             purchaseRequests: {
                 action: string;
                 date: Date;

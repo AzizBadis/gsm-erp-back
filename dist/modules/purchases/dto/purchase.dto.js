@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePurchaseDto = exports.CreatePurchaseItemDto = exports.PurchaseFilterDto = void 0;
+exports.RecordPurchasePaymentDto = exports.CreatePurchaseDto = exports.CreatePurchaseItemDto = exports.PurchaseFilterDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const client_1 = require("@prisma/client");
@@ -131,4 +131,32 @@ __decorate([
     (0, class_transformer_1.Type)(() => CreatePurchaseItemDto),
     __metadata("design:type", Array)
 ], CreatePurchaseDto.prototype, "items", void 0);
+class RecordPurchasePaymentDto {
+}
+exports.RecordPurchasePaymentDto = RecordPurchasePaymentDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], RecordPurchasePaymentDto.prototype, "accountId", void 0);
+__decorate([
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0.01),
+    __metadata("design:type", Number)
+], RecordPurchasePaymentDto.prototype, "amount", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    __metadata("design:type", String)
+], RecordPurchasePaymentDto.prototype, "paymentDate", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], RecordPurchasePaymentDto.prototype, "paymentType", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], RecordPurchasePaymentDto.prototype, "note", void 0);
 //# sourceMappingURL=purchase.dto.js.map

@@ -5,12 +5,14 @@ import { RepairFilterDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AssignRepairDto, CreateRepairDto, RequestPartsDto, UpdateRepairNotesDto, UpdateRepairStatusDto } from './dto/repair.dto';
 import { TechnicianManagementService } from '../technician-management/technician-management.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RepairsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly technicianManagement: TechnicianManagementService,
+    private readonly config: ConfigService,
   ) {}
 
   async create(dto: CreateRepairDto) {
@@ -106,8 +108,34 @@ export class RepairsService {
     return { data, total, page: query.page, limit: query.limit };
   }
 
-  findOne(id: string) {
-    return this.prisma.repair.findUniqueOrThrow({ where: { id }, include: this.repairInclude() });
+  async findOne(id: string) {
+    const repair = await this.prisma.repair.findUniqueOrThrow({ where: { id }, include: this.repairInclude() });
+    const status = await this.prisma.customStatus.findUnique({ where: { name: repair.status } });
+    const actor = repair.technician?.user?.fullName ?? null;
+    const activities = [
+      ...(repair.deliveredAt ? [{ date: repair.deliveredAt, action: 'Installation livrée au client', actor, remark: null }] : []),
+      ...repair.timerLogs.flatMap((timer) => [
+        ...(timer.endedAt ? [{ date: timer.endedAt, action: 'Intervention terminée', actor, remark: null }] : []),
+        { date: timer.startedAt, action: 'Intervention démarrée', actor, remark: null },
+      ]),
+      { date: repair.createdAt, action: "Fiche d'installation créée", actor, remark: null },
+    ].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+    return {
+      ...repair,
+      workSheet: {
+        company: {
+          name: this.config.get<string>('COMPANY_NAME') ?? null,
+          address: this.config.get<string>('COMPANY_ADDRESS') ?? null,
+          phone: this.config.get<string>('COMPANY_PHONE') ?? null,
+          email: this.config.get<string>('COMPANY_EMAIL') ?? null,
+        },
+        location: this.config.get<string>('COMPANY_LOCATION') ?? null,
+        serviceType: repair.repairType?.name ?? null,
+        statusLabel: status?.label ?? null,
+        activities,
+      },
+    };
   }
 
   async technicianTasks(technicianId: string, query: RepairFilterDto) {

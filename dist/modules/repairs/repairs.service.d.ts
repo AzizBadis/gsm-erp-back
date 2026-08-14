@@ -2,10 +2,12 @@ import { RepairFilterDto } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AssignRepairDto, CreateRepairDto, RequestPartsDto, UpdateRepairNotesDto, UpdateRepairStatusDto } from './dto/repair.dto';
 import { TechnicianManagementService } from '../technician-management/technician-management.service';
+import { ConfigService } from '@nestjs/config';
 export declare class RepairsService {
     private readonly prisma;
     private readonly technicianManagement;
-    constructor(prisma: PrismaService, technicianManagement: TechnicianManagementService);
+    private readonly config;
+    constructor(prisma: PrismaService, technicianManagement: TechnicianManagementService, config: ConfigService);
     create(dto: CreateRepairDto): Promise<{
         contact: {
             id: string;
@@ -675,7 +677,24 @@ export declare class RepairsService {
         page: number;
         limit: number;
     }>;
-    findOne(id: string): import(".prisma/client").Prisma.Prisma__RepairClient<{
+    findOne(id: string): Promise<{
+        workSheet: {
+            company: {
+                name: string | null;
+                address: string | null;
+                phone: string | null;
+                email: string | null;
+            };
+            location: string | null;
+            serviceType: string | null;
+            statusLabel: string | null;
+            activities: {
+                date: Date;
+                action: string;
+                actor: string | null;
+                remark: null;
+            }[];
+        };
         contact: {
             id: string;
             createdAt: Date;
@@ -813,7 +832,6 @@ export declare class RepairsService {
             total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
         }[];
-    } & {
         id: string;
         reference: string;
         status: string;
@@ -840,7 +858,7 @@ export declare class RepairsService {
         gpsModelId: string | null;
         operatorId: string | null;
         repairTypeId: string | null;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs>;
+    }>;
     technicianTasks(technicianId: string, query: RepairFilterDto): Promise<{
         data: ({
             contact: {
@@ -1013,6 +1031,23 @@ export declare class RepairsService {
         limit: number;
     }>;
     technicianTask(id: string, technicianId: string): Promise<{
+        workSheet: {
+            company: {
+                name: string | null;
+                address: string | null;
+                phone: string | null;
+                email: string | null;
+            };
+            location: string | null;
+            serviceType: string | null;
+            statusLabel: string | null;
+            activities: {
+                date: Date;
+                action: string;
+                actor: string | null;
+                remark: null;
+            }[];
+        };
         contact: {
             id: string;
             createdAt: Date;
@@ -1150,7 +1185,6 @@ export declare class RepairsService {
             total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
         }[];
-    } & {
         id: string;
         reference: string;
         status: string;

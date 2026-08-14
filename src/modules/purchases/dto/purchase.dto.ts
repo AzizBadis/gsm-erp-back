@@ -32,3 +32,11 @@ export class CreatePurchaseDto {
   @IsOptional() @IsString() notes?: string;
   @IsArray() @ArrayMinSize(1) @ValidateNested({ each: true }) @Type(() => CreatePurchaseItemDto) items: CreatePurchaseItemDto[];
 }
+
+export class RecordPurchasePaymentDto {
+  @IsString() accountId: string;
+  @Type(() => Number) @IsNumber() @Min(0.01) amount: number;
+  @IsOptional() @IsDateString() paymentDate?: string;
+  @IsOptional() @IsString() paymentType?: string;
+  @IsOptional() @IsString() note?: string;
+}

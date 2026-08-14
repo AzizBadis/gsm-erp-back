@@ -177,6 +177,23 @@ export declare class TechnicianTasksController {
         limit: number;
     }>;
     task(id: string, user: AuthUser): Promise<{
+        workSheet: {
+            company: {
+                name: string | null;
+                address: string | null;
+                phone: string | null;
+                email: string | null;
+            };
+            location: string | null;
+            serviceType: string | null;
+            statusLabel: string | null;
+            activities: {
+                date: Date;
+                action: string;
+                actor: string | null;
+                remark: null;
+            }[];
+        };
         contact: {
             id: string;
             createdAt: Date;
@@ -314,7 +331,6 @@ export declare class TechnicianTasksController {
             total: import("@prisma/client/runtime/library").Decimal;
             paidAmount: import("@prisma/client/runtime/library").Decimal;
         }[];
-    } & {
         id: string;
         reference: string;
         status: string;

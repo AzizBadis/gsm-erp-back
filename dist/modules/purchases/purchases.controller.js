@@ -27,6 +27,7 @@ let PurchasesController = class PurchasesController {
     }
     findAll(query) { return this.service.findAll(query); }
     create(dto, user) { return this.service.create(dto, user.fullName || user.email); }
+    recordPayment(id, dto, user) { return this.service.recordPayment(id, dto, user.fullName || user.email); }
 };
 exports.PurchasesController = PurchasesController;
 __decorate([
@@ -44,6 +45,15 @@ __decorate([
     __metadata("design:paramtypes", [purchase_dto_1.CreatePurchaseDto, Object]),
     __metadata("design:returntype", void 0)
 ], PurchasesController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)(':id/payments'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, purchase_dto_1.RecordPurchasePaymentDto, Object]),
+    __metadata("design:returntype", void 0)
+], PurchasesController.prototype, "recordPayment", null);
 exports.PurchasesController = PurchasesController = __decorate([
     (0, common_1.Controller)('purchases'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

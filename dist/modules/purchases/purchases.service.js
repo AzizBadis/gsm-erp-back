@@ -61,6 +61,47 @@ let PurchasesService = class PurchasesService {
             });
         });
     }
+    async recordPayment(id, dto, addedBy) {
+        return this.prisma.$transaction(async (tx) => {
+            const [purchase, account] = await Promise.all([
+                tx.purchase.findUnique({ where: { id } }),
+                tx.paymentAccount.findUnique({ where: { id: dto.accountId } }),
+            ]);
+            if (!purchase)
+                throw new common_1.BadRequestException('Purchase not found');
+            if (purchase.kind !== client_1.PurchaseKind.PURCHASE)
+                throw new common_1.BadRequestException('Only received purchases can be paid');
+            if (!account || !account.isActive)
+                throw new common_1.BadRequestException('Select an active payment account');
+            const remaining = Math.max(0, Number(purchase.total) - Number(purchase.paidAmount));
+            if (remaining <= 0)
+                throw new common_1.BadRequestException('This purchase is already paid');
+            if (dto.amount > remaining)
+                throw new common_1.BadRequestException(`Payment cannot exceed the remaining amount (${remaining.toFixed(2)})`);
+            const paidAmount = Number(purchase.paidAmount) + dto.amount;
+            const paymentStatus = paidAmount >= Number(purchase.total) ? client_1.PurchasePaymentStatus.PAID : client_1.PurchasePaymentStatus.PARTIAL;
+            const paymentDate = dto.paymentDate ? new Date(dto.paymentDate) : new Date();
+            const updatedPurchase = await tx.purchase.update({
+                where: { id },
+                data: { paidAmount, paymentStatus },
+                include: { items: true },
+            });
+            await tx.accountTransaction.create({
+                data: {
+                    accountId: account.id,
+                    transactionDate: paymentDate,
+                    reference: purchase.reference,
+                    invoiceReference: purchase.reference,
+                    amount: dto.amount,
+                    paymentType: dto.paymentType ?? 'Supplier payment',
+                    direction: client_1.AccountTransactionDirection.DEBIT,
+                    description: dto.note?.trim() || `Supplier payment for ${purchase.reference} (${purchase.supplierName})`,
+                    createdBy: addedBy,
+                },
+            });
+            return updatedPurchase;
+        });
+    }
 };
 exports.PurchasesService = PurchasesService;
 exports.PurchasesService = PurchasesService = __decorate([

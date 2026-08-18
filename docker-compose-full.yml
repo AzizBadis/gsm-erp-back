@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-gsm_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-this-postgres-password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: ${POSTGRES_DB:-gsm_repair_erp}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -24,7 +24,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: postgresql://${POSTGRES_USER:-gsm_user}:${POSTGRES_PASSWORD:-change-this-postgres-password}@postgres:5432/${POSTGRES_DB:-gsm_repair_erp}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gsm_user}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-gsm_repair_erp}?schema=public
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env before starting the stack}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
       ADMIN_SEED_PASSWORD: ${ADMIN_SEED_PASSWORD:-}
@@ -52,16 +52,22 @@ services:
 
   frontend:
     build:
-      context: ../gsm-fix-desk-main
+      context: ${FRONTEND_CONTEXT:-../gsm-erp}
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:3001}
+        VITE_API_URL: ${VITE_API_URL:?Set VITE_API_URL in .env}
     restart: unless-stopped
     depends_on:
       backend:
         condition: service_healthy
     ports:
-      - "${FRONTEND_PORT:-8080}:8080"
+      - "${FRONTEND_PORT:-8081}:8080"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     networks:
       - gsm_network
 
